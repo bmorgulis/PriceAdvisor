@@ -34,6 +34,7 @@ public class Application {
 
        try {
             logger.info("Starting the Spring Boot application.");
+            logger.info("Spring Boot application started successfully. Access it at http://localhost:{}", PORT);
             SpringApplication.run(Application.class, args);
             logger.info("Spring Boot application started successfully.");
         } catch (Exception e) {
