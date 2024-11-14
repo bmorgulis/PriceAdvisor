@@ -159,3 +159,25 @@ footer {
 	padding-right: 250px;
 	padding-left: 250px;
 }
+.login-container {
+	background-color: #f4f4f4;
+}
+
+#login-page {
+	background-color: #f4f4f4;
+	/* display: flex; */
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+	text-align: center;
+}
+#loginText {
+	text-align: center;
+	color: #333;
+}
+
+.loginlabel {
+	display: block;
+	margin-bottom: 8px;
+	color: #555;
+}

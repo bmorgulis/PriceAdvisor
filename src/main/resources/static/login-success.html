@@ -21,10 +21,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-fill w-100">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#about">About</a>
+                    <a class="nav-link" href="/#about">About</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="add-items.html">Add Items</a>
@@ -36,65 +36,31 @@
                     <a class="nav-link" href="watchlist.html">Watchlist</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="manage-accounts.html">Manage Accounts</a>
+                    <a class="nav-link active" aria-current="page" href="manage-accounts.html">Manage Accounts</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="settings.html">Settings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="sign-in.html">Sign In</a>
+                    <a class="nav-link" href="logout.html">Sign In</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 <!-- end of header -->
+<br>
+<h1>You have signed in successfully.</h1>
+<br>
+<h2>Redirecting to the home page...</h2>
+<br>
+<!-- redirect to indedx.html after 2 seconds -->
+<script>
+    setTimeout(function() {
+        window.location.href = "index.html";
+    }, 2000);
+</script>
 
-<div class="card text-white text-center d-flex flex-column justify-content-center align-items-center" style="background-color: #161927;">
-    <img src="logo.jpg" class="card-img" style="height: 100vh; width: auto;">
-    <div class="card-img-overlay">
-        <br>
-        <div style="margin-bottom: 5px;"></div>
-        <h1 class="card-title" id="site-title">Price Advisor</h1>
-        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        <div class="d-flex justify-content-center w-100">
-            <div class="mx-5">
-                <a href="#about" class="btn button btn-lg" style="width: 170px;">Add Items</a>
-            </div>
-            <div class="mx-5">
-                <a href="#about" class="btn button btn-lg" style="width: 170px;">Compare Prices</a>
-            </div>
-            <div class="mx-5">
-                <a href="#about" class="btn button btn-lg" style="width: 170px;">Manage Users</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="about">
-    <br>
-    <br>
-    <br>
-    <h2 class="header">About Price Advisor</h2>
-    <br>
-    <p class="about-points">
-        because
-    </p>
-    <div class="d-flex justify-content-center w-100">
-        <div class="mx-5">
-            <a href="#about" class="btn btn-lg" style="width: 170px;">Add Items</a>
-        </div>
-        <div class="mx-5">
-            <a href="#about" class="btn btn-lg" style="width: 170px;">Compare Prices</a>
-        </div>
-        <div class="mx-5">
-            <a href="#about" class="btn btn-lg" style="width: 170px;">Manage Users</a>
-        </div>
-    </div>
-    <br>
-    <br>
-    <br>
-</div>
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <!-- beginning of footer -->
