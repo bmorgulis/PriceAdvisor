@@ -1,13 +1,9 @@
 package com.example;
 
-import com.example.itemmgr.ItemController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -36,7 +32,7 @@ public class Application {
             System.exit(1);
         }
 
-        try {
+       try {
             logger.info("Starting the Spring Boot application.");
             SpringApplication.run(Application.class, args);
             logger.info("Spring Boot application started successfully.");
