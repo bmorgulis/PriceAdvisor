@@ -34,8 +34,9 @@ public class Application {
 
        try {
             logger.info("Starting the Spring Boot application.");
+           logger.info("Spring Boot application started successfully. Access it at http://localhost:{}", PORT);
             SpringApplication.run(Application.class, args);
-            logger.info("At http://localhost:{}, Spring Boot application started successfully.", PORT);
+            logger.info("Spring Boot application started successfully.");
        } catch (Exception e) {
             logger.error("An error occurred while starting the Spring Boot application.", e);
             System.exit(1); // Exit with a non-zero status to indicate failure
