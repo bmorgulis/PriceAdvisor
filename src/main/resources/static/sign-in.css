@@ -1,12 +1,5 @@
-.login-container {
-	background-color: #f4f4f4;
-	/*justify-content: center;*/
-	/*align-items: center;*/
-
-}
-#login-page {
-	background-color: #f4f4f4;
-	/* display: flex; */
+/*#login-page {
+	/* display: flex;
 	justify-content: center;
 	align-items: center;
 	margin: 0;
@@ -21,4 +14,177 @@ loginLabel {
 	display: block;
 	margin-bottom: 8px;
 	color: #555;
+}
+/* Website Final Project - Abraham Edelstein */
+* {
+    font-family: Helvetica;
+}
+body{
+	padding-top: 56px;
+}
+.header {
+	text-align: center;
+	font-family: Courier New;
+	font-size: 35px;
+
+}
+#instructions {
+	background: #761EE8;
+	color: white;
+
+}
+.instructions-points {
+	margin: 30px;
+	margin-left: 250px;
+	margin-right: 250px;
+}
+.btn {
+	background-color: white ;
+	color:#761EE8;
+	border-color: white;
+	box-shadow: rgba(0, 0, 0, 0.56) 0px 0px 40px;
+	border-radius: 25px;
+
+}
+.btn:hover {
+	background-color: #761EE8;
+	color:white;
+	border-color: #761EE8;
+	border-radius: 25px;
+}
+.button {
+	background-color: #761EE8;
+	color:white !important;
+	border-color: #761EE8;
+	box-shadow: none;
+	font-size: 18px;
+}
+.button:hover {
+	background-color: white;
+	color:#761EE8 !important;
+	border-color: white;
+}
+.center{
+	text-align: center;
+}
+img {
+   opacity: 0.6;
+}
+#site-title {
+	font-size: 110px;
+	font-variant: small-caps;
+}
+#site-title-line-2 {
+	font-size: 75px;
+}
+#slogan
+{
+	font-family:Comic Sans MS;
+	font-size: 50px;
+	padding-top: 30px;
+}
+#lessons-carousel-introduction, #lessons-carousel-conclusion {
+	font-size: 25px;
+	color: #761EE8;
+}
+.carousel {
+    width:640px;
+    height:360px;
+    margin: 0 auto;
+}
+.form {
+	color: #761EE8;
+	background-color: white;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-left: 50px;
+	margin-right: 50px;
+	border-radius: 25px;
+
+}
+label{
+	font-weight: bold;
+    width: 250px;
+    text-align: right;
+}
+input {
+    border-radius: 4px;
+    margin-bottom:10px;
+    padding: 5px;
+    border-color: #761EE8;
+}
+input:focus {
+	background-color: #E1DCF7;
+}
+.error {
+	color: red;
+	font-size: 13px;
+	padding-bottom: 4px;
+	padding-left: 50px;
+}
+#nameError {
+	position: relative;
+	left: 45px;
+}
+#emailError {
+	position: relative;
+	left: 45px;
+}
+#phoneError {
+	position: relative;
+	left: 190px;
+}
+#satError {
+	position: relative;
+	left: 113px;
+}
+#subscribe {
+	background-image: url("purple-background.jpg");
+}
+#subscribeButton{
+	position: relative;
+	left: 25px;
+}
+.logo, .logo:hover {
+	font-variant: small-caps;
+	border-radius: 15px;
+}
+.navbar {
+	background-color: #F0F6FA !important;
+	font-size: 20px !important;
+}
+.navbar-nav a{
+  color: #761EE8 !important;
+}
+.navbar-nav .active {
+  color: #B187E8 !important;
+}
+.navbar-nav a:hover{
+	color: #B187E8 !important;
+}
+footer {
+	background-color: #F0F6FA;
+	padding: 15px;
+	padding-top: 30px;
+	padding-left: 50px;
+	color: #761EE8;
+	font-size: 14px;
+}
+#disclaimer {
+	color: black;
+	font-size: 12px;
+	padding-top: 10px;
+}
+#terms {
+	font-size: 17px;
+	text-decoration: none;
+	color: inherit;
+}
+#info {
+	font-size: 18px;
+	text-decoration: underline;
+}
+#termsOfUse {
+	padding-right: 250px;
+	padding-left: 250px;
 }
