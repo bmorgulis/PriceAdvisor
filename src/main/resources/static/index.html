@@ -11,7 +11,7 @@
 
 <body>
 <!-- beginning of header -->
-<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+<nav class=" navbar fixed-top navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">
             <span class="btn button logo">Price Advisor</span>
@@ -51,7 +51,7 @@
 </nav>
 <!-- end of header -->
 
-<div class="card text-white text-center d-flex flex-column justify-content-center align-items-center" style="background-color: #161927;">
+<div class="bg card text-white text-center d-flex flex-column justify-content-center align-items-center" style="background-color: #161927;">
     <img src="logo.jpg" class="card-img" style="height: 100vh; width: auto;">
     <div class="card-img-overlay">
         <br>
@@ -99,7 +99,30 @@
 
 <!-- Load Bootstrap 5 JavaScript bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+  const bg = document.querySelector('.bg'); // Select the element with the class 'bg'
 
+  let load = 0; // Initialize the load counter
+
+  // Create an interval that calls the blurring function every 15ms
+  let int = setInterval(blurring, 15);
+
+  function blurring() {
+    load++; // Increment the load variable
+
+    if (load > 99) {
+      clearInterval(int); // Stop the interval when the load reaches 100
+    }
+
+    // Apply the blur effect to the background image
+    bg.style.filter = `blur(${scale(load, 0, 100, 30, 0)}px)`;
+  }
+
+  // Function to scale the load value from one range to another
+  const scale = (num, in_min, in_max, out_min, out_max) => {
+    return ((num - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
+  };
+</script>
 <!-- beginning of footer -->
 <footer>
     <p><a id="termsOfUseFooter" href="terms-of-use.html">Terms of Use</a></p>
