@@ -1,0 +1,24 @@
+.login-container {
+	background-color: #f4f4f4;
+	/*justify-content: center;*/
+	/*align-items: center;*/
+
+}
+#login-page {
+	background-color: #f4f4f4;
+	/* display: flex; */
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+	text-align: center;
+}
+#loginText {
+	text-align: center;
+	color: #333;
+}
+
+loginlabel {
+	display: block;
+	margin-bottom: 8px;
+	color: #555;
+}

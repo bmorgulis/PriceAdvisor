@@ -1,4 +1,6 @@
-/* Website Final Project - Abraham Edelstein */
+/*
+    This CSS file contains the core styling that applies across the entire website.
+*/
 * {
     font-family: Helvetica;
 }
@@ -8,16 +10,6 @@ body{
 .header {
 	text-align: center;
 	font-size: 35px;
-}
-#about {
-	background: #761EE8;
-	color: white;
-	
-}
-.about-points {
-	margin: 30px;
-	margin-left: 250px;
-	margin-right: 250px;
 }
 .btn {
 	background-color: white ;
@@ -54,9 +46,6 @@ body{
 	font-variant: small-caps;
 	color: #761EE8;
 }
-#site-title-line-2 {
-	font-size: 75px;
-}
 #slogan
 {
 	font-family:Comic Sans MS;
@@ -71,7 +60,6 @@ body{
 	margin-left: 50px;
 	margin-right: 50px;
 	border-radius: 25px;
-	
 }
 label{
 	font-weight: bold;    
@@ -105,17 +93,6 @@ input:focus {
 	position: relative; 
 	left: 190px;	
 }
-#satError {
-	position: relative; 
-	left: 113px;	
-}
-#subscribe {
-	background-image: url("purple-background.jpg");
-}
-#subscribeButton{
-	position: relative;
-	left: 25px;
-}
 .logo, .logo:hover {
 	font-variant: small-caps;
 	border-radius: 15px;
@@ -141,46 +118,9 @@ footer {
 	color: #761EE8;
 	font-size: 14px;
 }
-#disclaimer {
-	color: black;
-	font-size: 12px;
-	padding-top: 10px;
-}
-#terms {
+#termsOfUseFooter {
 	font-size: 17px;
 	text-decoration: none;
 	color: inherit;
 }
-#info {
-	font-size: 18px;
-	text-decoration: underline;
-}
-#termsOfUse {
-	padding-right: 250px;
-	padding-left: 250px;
-}
-.login-container {
-	background-color: #f4f4f4;
-	/*justify-content: center;*/
-	/*align-items: center;*/
 
-}
-
-#login-page {
-	background-color: #f4f4f4;
-	/* display: flex; */
-	justify-content: center;
-	align-items: center;
-	margin: 0;
-	text-align: center;
-}
-#loginText {
-	text-align: center;
-	color: #333;
-}
-
-loginlabel {
-	display: block;
-	margin-bottom: 8px;
-	color: #555;
-}
