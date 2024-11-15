@@ -161,6 +161,9 @@ footer {
 }
 .login-container {
 	background-color: #f4f4f4;
+	/*justify-content: center;*/
+	/*align-items: center;*/
+
 }
 
 #login-page {
@@ -176,7 +179,7 @@ footer {
 	color: #333;
 }
 
-.loginlabel {
+loginlabel {
 	display: block;
 	margin-bottom: 8px;
 	color: #555;
