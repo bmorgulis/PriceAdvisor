@@ -1,6 +1,4 @@
-/*
-    This CSS file contains the core styling that applies across the entire website.
-*/
+/* This CSS file contains the core styling that applies across the entire website. */
 * {
     font-family: Helvetica;
 }
@@ -123,4 +121,12 @@ footer {
 	text-decoration: none;
 	color: inherit;
 }
+
+/* CSS for Terms Of Use. */
+#termsOfUse {
+	padding-right: 250px;
+	padding-left: 250px;
+}
+
+
 
