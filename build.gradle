@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
     implementation 'org.apache.poi:poi:5.2.3'
     implementation 'org.htmlunit:htmlunit:4.4.0'
+    implementation 'mysql:mysql-connector-java:8.0.33'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
