@@ -1,9 +1,12 @@
-package com.example;
+package com.example.priceadvisor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,7 +16,10 @@ import java.net.ServerSocket;
  * This class contains the main method to launch the application and
  * configuration setup for the application context.
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.example.priceadvisor")
+@EnableJpaRepositories(basePackages = "com.example.priceadvisor.repository")
+@ComponentScan(basePackages = {"com.example.priceadvisor.service"})
+@EntityScan(basePackages = "com.example.priceadvisor.entity")
 public class Application {
 
     // Logger for this class

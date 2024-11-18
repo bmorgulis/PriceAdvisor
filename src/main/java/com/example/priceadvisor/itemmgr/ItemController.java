@@ -1,4 +1,4 @@
-package com.example.itemmgr;
+package com.example.priceadvisor.itemmgr;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

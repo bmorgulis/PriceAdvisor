@@ -51,21 +51,24 @@
 </nav>
 <!-- end of header -->
 
+<!-- Login form -->
 <div class="login-container center">
     <div id="login-page">
         <br><br><br><br><br>
         <h1 id="loginText">Sign In</h1><br><br>
-        <form method="GET" action="/">
-            <label for="username" >E-mail:</label>
-            <input type="text" id="username" name="username" required><br><br>
+        <form method="POST" action="/login">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="username" class="form-control" required><br><br>
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br><br>
-            <input class="btn button" type="submit" value="Sign In">
+            <input type="password" id="password" name="password" class="form-control" required><br><br>
+            <input class="button btn btn-primary" type="submit" value="Sign In">
             <br><br>
         </form>
     </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 <!-- beginning of footer -->
 <footer>
     <p><a id="termsOfUseFooter" href="terms-of-use.html">Terms of Use</a></p>

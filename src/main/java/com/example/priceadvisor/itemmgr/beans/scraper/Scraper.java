@@ -1,4 +1,4 @@
-package com.example.itemmgr.beans.scraper;
+package com.example.priceadvisor.itemmgr.beans.scraper;
 
 /**
  * Interface for Object that can scrape data from a website.
