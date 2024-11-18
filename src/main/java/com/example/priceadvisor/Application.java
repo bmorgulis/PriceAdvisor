@@ -38,11 +38,11 @@ public class Application {
             System.exit(1);
         }
 
-       try {
+        try {
             logger.info("Starting the Spring Boot application.");
             SpringApplication.run(Application.class, args);
             logger.info("At http://localhost:{}, Spring Boot application started successfully.", PORT);
-       } catch (Exception e) {
+        } catch (Exception e) {
             logger.error("An error occurred while starting the Spring Boot application.", e);
             System.exit(1); // Exit with a non-zero status to indicate failure
         }
