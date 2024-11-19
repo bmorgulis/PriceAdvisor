@@ -18,8 +18,6 @@ import java.util.Collections;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
-
-    // Logger instance
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     public UserDetailsServiceImpl(UserRepository userRepository) {

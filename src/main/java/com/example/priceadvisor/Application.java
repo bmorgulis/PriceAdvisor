@@ -16,15 +16,14 @@ import java.net.ServerSocket;
  * This class contains the main method to launch the application and
  * configuration setup for the application context.
  */
-@SpringBootApplication(scanBasePackages = "com.example.priceadvisor")
-@EnableJpaRepositories(basePackages = "com.example.priceadvisor.repository")
-@ComponentScan(basePackages = {"com.example.priceadvisor.service"})
-@EntityScan(basePackages = "com.example.priceadvisor.entity")
+@SpringBootApplication
+//@EnableJpaRepositories(basePackages = "com.example.priceadvisor.repository")
+//@ComponentScan(basePackages = {"com.example.priceadvisor.service"})
+//@EntityScan(basePackages = "com.example.priceadvisor.entity")
 public class Application {
 
     // Logger for this class
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
-
     private static final int PORT = 8080; // Port number to check for existing instances
 
     /**

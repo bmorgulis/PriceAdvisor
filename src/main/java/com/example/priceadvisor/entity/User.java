@@ -24,8 +24,8 @@ public class User {
     private int businessId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "emailNotificationFrequency")
-    private EmailNotificationFrequency emailNotificationFrequency;
+    @Column(name = "emailNotificationsFrequency")
+    private EmailNotificationsFrequency emailNotificationsFrequency;
 
     // Default constructor
     public User() {}
@@ -77,16 +77,16 @@ public class User {
         this.businessId = businessId;
     }
 
-    public EmailNotificationFrequency getEmailNotificationFrequency() {
-        return emailNotificationFrequency;
+    public EmailNotificationsFrequency getEmailNotificationsFrequency() {
+        return emailNotificationsFrequency;
     }
 
-    public void setEmailNotificationFrequency(EmailNotificationFrequency emailNotificationFrequency) {
-        this.emailNotificationFrequency = emailNotificationFrequency;
+    public void setEmailNotificationsFrequency(EmailNotificationsFrequency emailNotificationFrequency) {
+        this.emailNotificationsFrequency = emailNotificationsFrequency;
     }
 
     // Enum for email notification frequency
-    public enum EmailNotificationFrequency {
+    public enum EmailNotificationsFrequency {
         HOURLY,
         DAILY,
         WEEKLY,
