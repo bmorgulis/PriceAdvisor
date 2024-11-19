@@ -8,13 +8,24 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userID")
     private Long userId;
 
+    @Column(name = "email", length = 255, nullable = false, unique = true)
     private String email;
+
+    @Column(name = "password", length = 60, nullable = false)
     private String password;
+
+    @Column(name = "role", length = 255)
     private String role;
-    private String businessId;
-    private String emailNotificationsFrequency;
+
+    @Column(name = "businessID", nullable = false)
+    private int businessId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "emailNotificationFrequency")
+    private EmailNotificationFrequency emailNotificationFrequency;
 
     // Default constructor
     public User() {}
@@ -58,19 +69,27 @@ public class User {
         this.role = role;
     }
 
-    public String getBusinessId() {
+    public int getBusinessId() {
         return businessId;
     }
 
-    public void setBusinessId(String businessId) {
+    public void setBusinessId(int businessId) {
         this.businessId = businessId;
     }
 
-    public String getEmailNotificationsFrequency() {
-        return emailNotificationsFrequency;
+    public EmailNotificationFrequency getEmailNotificationFrequency() {
+        return emailNotificationFrequency;
     }
 
-    public void setEmailNotificationsFrequency(String emailNotificationsFrequency) {
-        this.emailNotificationsFrequency = emailNotificationsFrequency;
+    public void setEmailNotificationFrequency(EmailNotificationFrequency emailNotificationFrequency) {
+        this.emailNotificationFrequency = emailNotificationFrequency;
+    }
+
+    // Enum for email notification frequency
+    public enum EmailNotificationFrequency {
+        HOURLY,
+        DAILY,
+        WEEKLY,
+        MONTHLY
     }
 }
