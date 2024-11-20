@@ -51,6 +51,18 @@
 </nav>
 <!-- end of header -->
 
+<!-- Modal for Logout Confirmation -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #39DB14; color: white;"> <!-- Even lighter green -->
+            <div class="modal-body text-center">
+                <h5 class="modal-title" id="logoutModalLabel">Logout Successful</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Login form -->
 <div class="login-container center">
     <div id="login-page">
@@ -69,11 +81,29 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
+<!-- JavaScript to Show and Hide Modal -->
+<script>
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('logout')) {
+            // Show the logout modal
+            const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+            logoutModal.show();
+
+            // Automatically hide the modal after 3 seconds (3000 ms)
+            setTimeout(function() {
+                logoutModal.hide();
+            }, 1500);
+        }
+    }
+</script>
+
 <!-- beginning of footer -->
 <footer>
-    <p><a id="termsOfUseFooter" href="terms-of-use.html">Terms of Use</a></p>
+    <p><a id="termsOfUseFooter" href="/terms-of-use">Terms of Use</a></p>
     <p>&#169;2024 Price Advisor. All rights reserved.</p>
 </footer>
 <!-- end of footer -->
+
 </body>
 </html>

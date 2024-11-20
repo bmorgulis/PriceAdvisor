@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,7 +13,7 @@
 <!-- beginning of header -->
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="#">
+		<a class="navbar-brand" href="/">
 			<span class="btn button logo">Price Advisor</span>
 		</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,8 +42,9 @@
 				<li class="nav-item">
 					<a class="nav-link" href="settings.html">Settings</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="sign-in.html">Sign In</a>
+				<li class="nav-item" th:switch="${#authentication.name}">
+					<a class="nav-link" th:case="'anonymousUser'" href="/sign-in.html">Sign In</a>
+					<a class="nav-link" th:case="*" href="/logout">Sign Out</a>
 				</li>
 			</ul>
 		</div>
@@ -78,7 +79,7 @@
 
 <!-- beginning of footer -->
 <footer>
-	<p><a id="termsOfUseFooter" href="terms-of-use.html" aria-label="Terms of Use">Terms of Use</a></p>
+	<p><a id="termsOfUseFooter" href="/terms-of-use">Terms of Use</a></p>
 	<p>&#169;2024 Price Advisor. All rights reserved.</p>
 </footer>
 <!-- end of footer -->
