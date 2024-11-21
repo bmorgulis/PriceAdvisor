@@ -1,53 +1,32 @@
-.form {
-	color: #761EE8;
-	background-color: white;
-	padding-top: 20px;
-	padding-bottom: 20px;
-	margin-left: 50px;
-	margin-right: 50px;
-	border-radius: 25px;
+h1 {
+    font-size: 50px;
+}
+label {
+    font-size: 1.2rem;
+}
+/* Overlay style */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Semi-transparent black */
+    z-index: 999; /* Make sure it's behind the login form */
+}
 
+/* Login form container */
+.login-container {
+    position: relative;
+    z-index: 1000; /* Ensures the form is above the overlay */
 }
-label{
-	font-weight: bold;
-    width: 250px;
-    text-align: right;
+
+/* Adjust the background color for the login form */
+#login-page {
+    background-color: rgba(255, 255, 255, 0.9); /* White with some transparency */
 }
-input {
-    border-radius: 4px;
-    margin-bottom:10px;
-    padding: 5px;
-    border-color: #761EE8;
-}
-input:focus {
-	background-color: #E1DCF7;
-}
-.error {
-	color: red;
-	font-size: 13px;
-	padding-bottom: 4px;
-	padding-left: 50px;
-}
-#nameError {
-	position: relative;
-	left: 45px;
-}
-#emailError {
-	position: relative;
-	left: 45px;
-}
-#phoneError {
-	position: relative;
-	left: 190px;
-}
-#satError {
-	position: relative;
-	left: 113px;
-}
-#subscribe {
-	background-image: url("purple-background.jpg");
-}
-#subscribeButton{
-	position: relative;
-	left: 25px;
+
+footer {
+    position: relative;
+    z-index: 1050; /* Ensure footer is in front of the overlay */
 }

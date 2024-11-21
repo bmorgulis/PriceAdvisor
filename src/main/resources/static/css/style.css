@@ -50,47 +50,6 @@ body{
 	font-size: 50px;
 	padding-top: 30px;
 }
-.form {
-	color: #761EE8;
-	background-color: white;
-	padding-top: 20px;
-	padding-bottom: 20px;
-	margin-left: 50px;
-	margin-right: 50px;
-	border-radius: 25px;
-}
-label{
-	font-weight: bold;    
-    width: 250px;
-    text-align: right;
-}  
-input {
-    border-radius: 4px;
-    margin-bottom:10px;
-    padding: 5px;
-    border-color: #761EE8;
-}
-input:focus {
-	background-color: #E1DCF7;
-}
-.error {
-	color: red;
-	font-size: 13px;
-	padding-bottom: 4px;
-	padding-left: 50px;
-}
-#nameError {
-	position: relative; 
-	left: 45px;	
-}
-#emailError {
-	position: relative; 
-	left: 45px;	
-}
-#phoneError {
-	position: relative; 
-	left: 190px;	
-}
 .logo, .logo:hover {
 	font-variant: small-caps;
 	border-radius: 15px;

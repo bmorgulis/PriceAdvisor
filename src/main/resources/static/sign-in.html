@@ -10,6 +10,9 @@
 </head>
 
 <body>
+<!-- Layover Overlay -->
+<div class="overlay"></div>
+
 <!-- beginning of header -->
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
@@ -51,31 +54,34 @@
 </nav>
 <!-- end of header -->
 
+<!-- Login form -->
+<div class="login-container d-flex justify-content-center align-items-center flex-column mt-5 mb-5">
+    <div id="login-page" class="bg-light p-5 rounded shadow w-50">
+        <h1 id="loginText" class="text-center mb-5">Sign In</h1>
+        <form method="POST" action="/login">
+            <div class="mb-3">
+                <label for="email" class="form-label">E-mail:</label>
+                <input type="email" id="email" name="username" class="form-control form-control-lg" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-control form-control-lg" required>
+            </div>
+            <div class="text-center">
+                <input class="button btn btn-primary btn-lg" type="submit" value="Sign In">
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Modal for Logout Confirmation -->
 <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content" style="background-color: #39DB14; color: white;"> <!-- Even lighter green -->
+        <div class="modal-content" style="background-color: #39DB14; color: white;">
             <div class="modal-body text-center">
                 <h5 class="modal-title" id="logoutModalLabel">Logout Successful</h5>
             </div>
         </div>
-    </div>
-</div>
-
-
-<!-- Login form -->
-<div class="login-container center">
-    <div id="login-page">
-        <br><br><br><br><br>
-        <h1 id="loginText">Sign In</h1><br><br>
-        <form method="POST" action="/login">
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" name="username" class="form-control" required><br><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" class="form-control" required><br><br>
-            <input class="button btn btn-primary" type="submit" value="Sign In">
-            <br><br>
-        </form>
     </div>
 </div>
 
