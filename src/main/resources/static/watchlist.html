@@ -50,6 +50,35 @@
 </nav>
 <!-- end of header -->
 
+<!-- Login Success Confirmation -->
+<div class="modal fade" id="loginSuccessModal" tabindex="-1" aria-labelledby="loginSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #39DB14; color: white;"> <!-- Even lighter green -->
+            <div class="modal-body text-center">
+                <h5 class="modal-title" id="loginSuccessModalLabel">Login Successful</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('continue')) {
+            // Show the login success modal
+            const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'));
+            loginSuccessModal.show();
+
+            // Automatically hide the modal after 1.5 seconds (1500 ms)
+            setTimeout(function() {
+                loginSuccessModal.hide();
+            }, 1500);
+        }
+    }
+</script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <!-- beginning of footer -->
 <footer>
