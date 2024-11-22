@@ -4,9 +4,8 @@ import com.example.priceadvisor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import com.example.priceadvisor.entity.User;
 
 
@@ -30,19 +29,40 @@ public class PageController {
             //Get values from form
             @RequestParam String email,
             @RequestParam String password,
-            @RequestParam String role) {
+            @RequestParam String role,
+            @RequestParam(required = false) User.EmailNotificationsFrequency emailNotificationsFrequency,
+            Model model) {
 
-            //ToDo check that email is not already in the database. If it is, return an error message.
+        //ToDo check that email is not already in the database. If it is, return an error message.
+        try {
+            if (userRepository.findByEmail(email).isPresent()) {
+                model.addAttribute("error", "Email is already taken. Please try another.");
+                return "manage-accounts"; // Return to the same page with an error message
+            }
 
-        // Create a new user object. sets the values from the form.
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(hashPassword.encode(password));  //hash the password before saving it to the database
-        user.setRole(role);
+            if (emailNotificationsFrequency == null) {
+                emailNotificationsFrequency = User.EmailNotificationsFrequency.WEEKLY; //default value since none was provided
+            }
 
-        // Save the user
-        userRepository.save(user);
 
+            // Create a new user object. sets the values from the form.
+            User user = new User();
+            user.setEmail(email);
+            user.setPassword(hashPassword.encode(password));  //hash the password before saving it to the database
+            user.setRole(role);
+            user.setEmailNotificationsFrequency(emailNotificationsFrequency);
+
+            // Save the user
+            userRepository.save(user);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            model.addAttribute("error", "Email already exists. Try another.");
+            ex.printStackTrace(); //log the exception
+            return "manage-accounts"; // Return to the same page with an error message
+        } catch (Exception e) {
+            model.addAttribute("error", "An error occurred while adding the user. Try again.");
+            e.printStackTrace(); //log the exception
+            return "manage-accounts"; // Return to the same page with an error message
+        }
         return "redirect:/manage-accounts";
     }
 
