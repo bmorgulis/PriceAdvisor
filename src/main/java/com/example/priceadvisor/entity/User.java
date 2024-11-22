@@ -36,6 +36,13 @@ public class User {
         this.password = password;
     }
 
+    // Constructor with parameters for adding a new user to the database
+    public User(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     // Getters and setters
     public Long getUserId() {
         return userId;
