@@ -32,8 +32,7 @@ public class PageController {
             @RequestParam String password,
             @RequestParam String role) {
 
-            //ToDo check that email is not already in the database
-
+            //ToDo check that email is not already in the database. If it is, return an error message.
 
         // Create a new user object. sets the values from the form.
         User user = new User();
