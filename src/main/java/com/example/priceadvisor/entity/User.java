@@ -88,7 +88,7 @@ public class User {
         return emailNotificationsFrequency;
     }
 
-    public void setEmailNotificationsFrequency(EmailNotificationsFrequency emailNotificationFrequency) {
+    public void setEmailNotificationsFrequency(EmailNotificationsFrequency emailNotificationsFrequency) {
         this.emailNotificationsFrequency = emailNotificationsFrequency;
     }
 
