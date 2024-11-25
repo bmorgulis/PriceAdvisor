@@ -1,6 +1,8 @@
 package com.example.priceadvisor.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -14,6 +16,8 @@ public class User {
     @Column(name = "email", length = 255, nullable = false, unique = true)
     private String email;
 
+    @Size(min = 6, message = "Password must be at least 6 characters long.")
+    @Pattern(regexp = ".*\\d.*" , message = "Password must contain at least one number.") // regexp = ".*\\d.*" says that the password must contain at least one number
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 
@@ -35,6 +39,13 @@ public class User {
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    // Constructor with parameters for adding a new user to the database
+    public User(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
     // Getters and setters
