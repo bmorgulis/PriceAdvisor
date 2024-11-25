@@ -44,7 +44,7 @@ public class SecurityConfig {
                             .permitAll()
                             .loginProcessingUrl("/login"))
                     .logout(logout -> logout.logoutUrl("/logout")
-                            .logoutSuccessUrl("/sign-in.html?logout")
+                            .logoutSuccessUrl("/sign-in.html?logout=true")
                             .permitAll());
             logger.info("HTTP Security Configured");
         } catch (Exception e) {

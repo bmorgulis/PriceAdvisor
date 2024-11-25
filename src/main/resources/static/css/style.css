@@ -1,6 +1,6 @@
 /* This CSS file contains the core styling that applies across the entire website. */
 * {
-    font-family: Helvetica;
+	font-family: Helvetica, serif;
 }
 body{
 	padding-top: 56px;
@@ -13,7 +13,7 @@ body{
 	background-color: white ;
 	color:#761EE8;
 	border-color: white;
-	box-shadow: rgba(0, 0, 0, 0.56) 0px 0px 40px; 
+	box-shadow: rgba(0, 0, 0, 0.56) 0 0 40px;
 	border-radius: 25px;
 	font-size: 18px;
 }
@@ -36,9 +36,6 @@ body{
 	color:#761EE8 !important;
 	border-color: white;
 }
-.center{
-	text-align: center;
-}
 #site-title {
 	font-size: 110px;
 	font-variant: small-caps;
@@ -46,7 +43,7 @@ body{
 }
 #slogan
 {
-	font-family:Comic Sans MS;
+	font-family: Comic Sans MS, serif;
 	font-size: 50px;
 	padding-top: 30px;
 }
@@ -69,9 +66,7 @@ body{
 }
 footer {
 	background-color: #F0F6FA;
-	padding: 15px;
-	padding-top: 30px;
-	padding-left: 50px;
+	padding: 30px 15px 15px 50px;
 	color: #761EE8;
 	font-size: 14px;
 }

@@ -4,8 +4,6 @@
 
 }
 .about-points {
-	margin: 30px;
-	margin-left: 250px;
-	margin-right: 250px;
+	margin: 30px 250px;
 	line-height: 2;
 }

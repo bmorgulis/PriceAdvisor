@@ -1,8 +1,6 @@
 package com.example.priceadvisor.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -13,11 +11,9 @@ public class User {
     @Column(name = "userID")
     private Long userId;
 
-    @Column(name = "email", length = 255, nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Size(min = 6, message = "Password must be at least 6 characters long.")
-    @Pattern(regexp = ".*\\d.*" , message = "Password must contain at least one number.") // regexp = ".*\\d.*" says that the password must contain at least one number
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 
@@ -42,19 +38,15 @@ public class User {
     }
 
     // Constructor with parameters for adding a new user to the database
-    public User(String email, String password, String role) {
+    public User(String email, String password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.emailNotificationsFrequency = EmailNotificationsFrequency.NONE;
     }
 
-    // Getters and setters
     public Long getUserId() {
         return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getEmail() {
@@ -97,13 +89,11 @@ public class User {
         this.emailNotificationsFrequency = emailNotificationsFrequency;
     }
 
-    // Enum for role
     public enum Role {
         ANALYST,
         MANAGER
     }
 
-    // Enum for email notification frequency
     public enum EmailNotificationsFrequency {
         NONE,
         HOURLY,
