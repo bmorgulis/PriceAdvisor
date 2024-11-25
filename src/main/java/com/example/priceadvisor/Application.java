@@ -14,9 +14,6 @@ import java.net.ServerSocket;
  * configuration setup for the application context.
  */
 @SpringBootApplication
-//@EnableJpaRepositories(basePackages = "com.example.priceadvisor.repository")
-//@ComponentScan(basePackages = {"com.example.priceadvisor.service"})
-//@EntityScan(basePackages = "com.example.priceadvisor.entity")
 public class Application {
 
     // Logger for this class

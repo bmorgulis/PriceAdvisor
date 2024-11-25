@@ -50,36 +50,75 @@
 </nav>
 <!-- end of header -->
 
+<!-- Settings Form -->
+<div class="container mt-5 pt-5">
+    <h2>Email Notifications</h2>
+    <br>
+    <!-- Toggle switch for email notifications -->
+    <div class="form-check form-switch mb-4 ms-5">
+        <input class="form-check-input" type="checkbox" id="emailNotificationsToggle">
+        <label class="form-check-label" for="emailNotificationsToggle">Enable Email Notifications</label>
+    </div>
+
+    <!-- Email Frequency Options (Disabled by default) -->
+    <div class="mb-4 ms-5">
+        <h4 id="emailFrequencyLabel" class="text-muted">Select Email Frequency</h4>
+        <div class="form-check ms-3">
+            <input class="form-check-input" type="radio" name="emailFrequency" id="hourly" value="hourly" disabled>
+            <label class="form-check-label" for="hourly">
+                Hourly
+            </label>
+        </div>
+        <div class="form-check ms-3">
+            <input class="form-check-input" type="radio" name="emailFrequency" id="daily" value="daily" disabled>
+            <label class="form-check-label" for="daily">
+                Daily
+            </label>
+        </div>
+        <div class="form-check ms-3">
+            <input class="form-check-input" type="radio" name="emailFrequency" id="weekly" value="weekly" disabled>
+            <label class="form-check-label" for="weekly">
+                Weekly
+            </label>
+        </div>
+        <div class="form-check ms-3">
+            <input class="form-check-input" type="radio" name="emailFrequency" id="monthly" value="monthly" disabled>
+            <label class="form-check-label" for="monthly">
+                Monthly
+            </label>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle the enablement of email frequency options based on the checkbox
+    document.getElementById('emailNotificationsToggle').addEventListener('change', function() {
+        const emailFrequencyOptions = document.querySelectorAll('input[name="emailFrequency"]');
+        const emailFrequencyLabel = document.getElementById('emailFrequencyLabel');
+
+        // Enable or disable all radio buttons based on the checkbox
+        const isChecked = this.checked;
+
+        emailFrequencyOptions.forEach(function(option) {
+            option.disabled = !isChecked;
+        });
+
+        // Change label appearance when disabled (visual indication)
+        emailFrequencyLabel.classList.toggle('text-muted', !isChecked);
+        emailFrequencyLabel.classList.toggle('text-secondary', isChecked); // Adds a nice muted tone
+    });
+</script>
 
 <!-- Login Success Confirmation -->
 <div class="modal fade" id="loginSuccessModal" tabindex="-1" aria-labelledby="loginSuccessModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content" style="background-color: #39DB14; color: white;"> <!-- Even lighter green -->
+        <div class="modal-content" style="background-color: #39DB14; color: white;">
             <div class="modal-body text-center">
                 <h5 class="modal-title" id="loginSuccessModalLabel">Login Successful</h5>
             </div>
         </div>
     </div>
 </div>
-
-
-<script>
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('continue')) {
-            // Show the login success modal
-            const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'));
-            loginSuccessModal.show();
-
-            // Automatically hide the modal after 1.5 seconds (1500 ms)
-            setTimeout(function() {
-                loginSuccessModal.hide();
-            }, 1500);
-        }
-    }
-</script>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <!-- beginning of footer -->

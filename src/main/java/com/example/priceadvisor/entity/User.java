@@ -17,8 +17,9 @@ public class User {
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 
-    @Column(name = "role", length = 255)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;  // Changed to Role enum
 
     @Column(name = "businessID", nullable = false)
     private int businessId;
@@ -61,11 +62,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -81,12 +82,19 @@ public class User {
         return emailNotificationsFrequency;
     }
 
-    public void setEmailNotificationsFrequency(EmailNotificationsFrequency emailNotificationFrequency) {
+    public void setEmailNotificationsFrequency(EmailNotificationsFrequency emailNotificationsFrequency) {
         this.emailNotificationsFrequency = emailNotificationsFrequency;
+    }
+
+    // Enum for role
+    public enum Role {
+        ANALYST,
+        MANAGER
     }
 
     // Enum for email notification frequency
     public enum EmailNotificationsFrequency {
+        NONE,
         HOURLY,
         DAILY,
         WEEKLY,
