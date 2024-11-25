@@ -52,10 +52,9 @@
     </div>
 </nav>
 <!-- end of header -->
-
-
-<button id="openAddUserModal" class="btn btn-primary btn-lg button" style="position: absolute; top: 33%; left: 5%;">Add User</button>
-
+<br><br>
+<button id="openAddUserModal" class="btn btn-primary btn-lg button">Add User</button>
+<br><br>
 
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -77,7 +76,7 @@
                     <div class="mb-5">
                         <label for="role" class="form-label">Role:</label>
                         <select id="role" name="role" class="form-select form-select-lg" required>
-                            <option value="" selected disabled>Select Role</option>
+                            <option value="" selected disabled></option>
                             <option value="Analyst">Analyst</option>
                             <option value="Manager">Manager</option>
                         </select>
@@ -90,95 +89,6 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-
-<script>
-    const addUserModal = new bootstrap.Modal(document.getElementById('addUserModal'));
-    document.getElementById('openAddUserModal').addEventListener('click', function() {
-        addUserModal.show();
-    });
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--&lt;!&ndash; Add user form &ndash;&gt;-->
-<!--<div class="add-user-container d-flex justify-content-center align-items-center flex-column mt-5 mb-5">-->
-<!--    <div id="add-user-page" class="bg-light p-5 rounded shadow w-50">-->
-<!--        <h1 id="addUserText" class="text-center mb-5">Add User</h1>-->
-<!--        <form method="POST" action="/add-user">-->
-<!--            <div class="mb-3">-->
-<!--                <label for="email" class="form-label">E-mail:</label>-->
-<!--                <input type="email" id="email" name="username" class="form-control form-control-lg" required>-->
-<!--            </div>-->
-<!--            <div class="mb-4">-->
-<!--                <label for="password" class="form-label">Password:</label>-->
-<!--                <input type="password" id="password" name="password" class="form-control form-control-lg" required>-->
-<!--            </div>-->
-<!--            <div class="mb-5">-->
-<!--                <label for="role" class="form-label">Role:</label>-->
-<!--                <select id="role" name="role" class="form-select form-select-lg" required>-->
-<!--                    <option value="" selected disabled>Select Role</option>-->
-<!--                    <option value="Analyst">Analyst</option>-->
-<!--                    <option value="Manager">Manager</option>-->
-<!--                </select>-->
-<!--            </div>-->
-<!--            <div class="text-center">-->
-<!--                <input class="button btn btn-primary btn-lg" type="submit" value="Add User">-->
-<!--            </div>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- Login Success Confirmation -->
 <div class="modal fade" id="loginSuccessModal" tabindex="-1" aria-labelledby="loginSuccessModalLabel" aria-hidden="true">
@@ -191,6 +101,14 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script>
+    const addUserModal = new bootstrap.Modal(document.getElementById('addUserModal'));
+    document.getElementById('openAddUserModal').addEventListener('click', function() {
+        addUserModal.show();
+    });
+</script>
 
 <script>
     window.onload = function() {
@@ -208,8 +126,8 @@
     }
 </script>
 
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 <!-- beginning of footer -->
 <footer>
     <p><a id="termsOfUseFooter" href="/terms-of-use">Terms of Use</a></p>
