@@ -52,6 +52,7 @@
     </div>
 </nav>
 <!-- end of header -->
+
 <br><br>
 <button id="openAddUserModal" class="btn btn-primary btn-lg button">Add User</button>
 <br><br>
@@ -71,7 +72,11 @@
                     </div>
                     <div class="mb-4">
                         <label for="password" class="form-label">Password:</label>
-                        <input type="password" id="password" name="password" class="form-control form-control-lg" required>
+                        <input type="password" id="password" name="password" class="form-control form-control-lg" required
+                               minlength="6"
+                               pattern=".*\d.*"
+                               oninvalid="this.setCustomValidity('Your password must be at least 6 characters long and contain at least one number.')"
+                               oninput="this.setCustomValidity('')">
                     </div>
                     <div class="mb-5">
                         <label for="role" class="form-label">Role:</label>
