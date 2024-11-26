@@ -69,6 +69,9 @@ footer {
 	padding: 30px 15px 15px 50px;
 	color: #761EE8;
 	font-size: 14px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
 }
 #termsOfUseFooter {
 	font-size: 17px;
