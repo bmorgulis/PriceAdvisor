@@ -55,7 +55,7 @@ public class PageController {
             }
 
             if (emailNotificationsFrequency == null) {
-                emailNotificationsFrequency = User.EmailNotificationsFrequency.WEEKLY; //default value since none was provided
+                emailNotificationsFrequency = User.EmailNotificationsFrequency.NONE; //default value since none was provided
             }
 
 
