@@ -54,11 +54,6 @@ public class PageController {
                 return "redirect:/manage-accounts.html"; // Return to the same page with an error message
             }
 
-            if (emailNotificationsFrequency == null) {
-                emailNotificationsFrequency = User.EmailNotificationsFrequency.NONE; //default value since none was provided
-            }
-
-
             // Create a new user object. sets the values from the form.
             user = new User(email, passwordEncoder.encode(password), role);
 
