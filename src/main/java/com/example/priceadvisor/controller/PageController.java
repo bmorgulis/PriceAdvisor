@@ -60,11 +60,7 @@ public class PageController {
 
 
             // Create a new user object. sets the values from the form.
-            user = new User();
-            user.setEmail(email);
-            user.setPassword(passwordEncoder.encode(password));  //hash the password before saving it to the database
-            user.setRole(role);
-            user.setEmailNotificationsFrequency(emailNotificationsFrequency);
+            user = new User(email, passwordEncoder.encode(password), role);
 
             // Save the user
             userRepository.save(user);
