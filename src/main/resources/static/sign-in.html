@@ -65,12 +65,7 @@
             </div>
             <div class="mb-4">
                 <label for="password" class="form-label">Password:</label>
-                <!-- Password input with validation for minimum length of 6 characters and at least one number -->
-                <input type="password" id="password" name="password" class="form-control form-control-lg" required
-                       minlength="6"
-                       pattern=".*\d.*"
-                       oninvalid="this.setCustomValidity('Your password must be at least 6 characters long and contain at least one number.')"
-                       oninput="this.setCustomValidity('')">
+                <input type="password" id="password" name="password" class="form-control form-control-lg" required>
             </div>
             <div class="text-center">
                 <input class="button btn btn-primary btn-lg" type="submit" value="Sign In">
@@ -110,7 +105,7 @@
 <!-- beginning of footer -->
 <footer>
     <p><a id="termsOfUseFooter" href="/terms-of-use">Terms of Use</a></p>
-    <p>&#169;2024 Price Advisor. All rights reserved.</p>
+    <p>&#169; 2024 Price Advisor. All rights reserved.</p>
 </footer>
 <!-- end of footer -->
 
