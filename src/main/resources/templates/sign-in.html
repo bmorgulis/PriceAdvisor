@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Sign In | Price Advisor</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/sign-in.css">
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sign-in.css}" rel="stylesheet"/>
 </head>
 
 <body>
-<!-- Layover Overlay -->
+<!-- Overlay -->
 <div class="overlay"></div>
 
 <!-- beginning of header -->
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="/static">
             <span class="btn button logo">Price Advisor</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,22 +31,22 @@
                     <a class="nav-link" href="/#about">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="add-items.html">Add Items</a>
+                    <a class="nav-link" href="/add-items.html">Add Items</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="compare-prices.html">Compare Prices</a>
+                    <a class="nav-link" href="/compare-prices.html">Compare Prices</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="watchlist.html">Watchlist</a>
+                    <a class="nav-link" href="/watchlist.html">Watchlist</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="manage-accounts.html">Manage Accounts</a>
+                    <a class="nav-link" href="/manage-accounts">Manage Accounts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="settings.html">Settings</a>
+                    <a class="nav-link" href="/settings.html">Settings</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="sign-in.html">Sign In</a>
+                    <a class="nav-link active" aria-current="page" href="/sign-in">Sign In</a>
                 </li>
             </ul>
         </div>
@@ -57,7 +57,8 @@
 <!-- Login form -->
 <div class="login-container d-flex justify-content-center align-items-center flex-column mt-5 mb-5">
     <div id="login-page" class="bg-light p-5 rounded shadow w-50">
-        <h1 id="loginText" class="text-center mb-5">Sign In</h1>
+        <h1 id="loginText" class="text-center mb-3">Sign In</h1>
+
         <form method="POST" action="/login">
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail:</label>
@@ -67,6 +68,10 @@
                 <label for="password" class="form-label">Password:</label>
                 <input type="password" id="password" name="password" class="form-control form-control-lg" required>
             </div>
+            <!-- Display Error Message if it exists -->
+            <div th:if="${session.loginErrorMessage}" class="alert alert-danger" role="alert">
+                <span th:text="${session.loginErrorMessage}"></span>
+            </div>
             <div class="text-center">
                 <input class="button btn btn-primary btn-lg" type="submit" value="Sign In">
             </div>
@@ -74,12 +79,12 @@
     </div>
 </div>
 
-<!-- Modal for Logout Confirmation -->
-<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+<!-- Modal for Successful Logout -->
+<div class="modal fade" id="logout-success-modal" tabindex="-1" aria-labelledby="logout-success-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="background-color: #39DB14; color: white;">
             <div class="modal-body text-center">
-                <h5 class="modal-title" id="logoutModalLabel">Logout Successful</h5>
+                <h5 class="modal-title" id="logout-success-modal-label">You Signed Out Successfully</h5>
             </div>
         </div>
     </div>
@@ -87,24 +92,26 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-<!-- JavaScript to Show and Hide Modal -->
+<!-- JavaScript to Show and Hide Modals -->
 <script>
-    window.onload = function() {
+    document.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
+
+        // Trigger logout modal if 'logout=true' in URL
         if (urlParams.has('logout') && urlParams.get('logout') === 'true') {
-            const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+            const logoutModal = new bootstrap.Modal(document.getElementById('logout-success-modal'));
             logoutModal.show();
             history.replaceState(null, null, window.location.pathname);
             setTimeout(function() {
                 logoutModal.hide();
             }, 1000);
         }
-    }
+    })
 </script>
 
 <!-- beginning of footer -->
 <footer>
-    <p><a id="termsOfUseFooter" href="/terms-of-use">Terms of Use</a></p>
+    <p><a id="terms-of-use-footer" href="/terms-of-use">Terms of Use</a></p>
     <p>&#169; 2024 Price Advisor. All rights reserved.</p>
 </footer>
 <!-- end of footer -->

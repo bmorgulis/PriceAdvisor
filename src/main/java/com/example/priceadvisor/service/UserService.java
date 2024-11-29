@@ -20,8 +20,16 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Authenticate a user by email and password
     public Optional<User> authenticate(String email, String password) {
         Optional<User> user = userRepository.findByEmail(email);
         return user.filter(u -> passwordEncoder.matches(password, u.getPassword()));
+    }
+
+    // Add a new user with a businessId
+    public User addUser(String email, String password, User.Role role, int businessId) {
+        String hashedPassword = passwordEncoder.encode(password);
+        User newUser = new User(email, hashedPassword, role, businessId); // Include businessId
+        return userRepository.save(newUser);
     }
 }

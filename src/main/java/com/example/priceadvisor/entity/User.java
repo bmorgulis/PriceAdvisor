@@ -19,7 +19,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role;  // Changed to Role enum
+    private Role role;
 
     @Column(name = "businessID", nullable = false)
     private int businessId;
@@ -38,11 +38,12 @@ public class User {
     }
 
     // Constructor with parameters for adding a new user to the database
-    public User(String email, String password, Role role) {
+    public User(String email, String password, Role role, int businessId) {
         this.email = email;
         this.password = password;
         this.role = role;
         this.emailNotificationsFrequency = EmailNotificationsFrequency.NONE;
+        this.businessId = businessId;
     }
 
     public Long getUserId() {

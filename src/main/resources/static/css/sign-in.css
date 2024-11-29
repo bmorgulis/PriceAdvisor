@@ -11,7 +11,7 @@ label {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4); /* Semi-transparent black */
+    background: #7F7F7F; /* Semi-transparent black */
     z-index: 999; /* Make sure it's behind the login form */
 }
 

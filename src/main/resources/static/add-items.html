@@ -36,7 +36,7 @@
                     <a class="nav-link" href="watchlist.html">Watchlist</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="manage-accounts.html">Manage Accounts</a>
+                    <a class="nav-link" href="/manage-accounts">Manage Accounts</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="settings.html">Settings</a>
@@ -50,42 +50,36 @@
 </nav>
 <!-- end of header -->
 
-
-
-<!-- Login Success Confirmation -->
-<div class="modal fade" id="loginSuccessModal" tabindex="-1" aria-labelledby="loginSuccessModalLabel" aria-hidden="true">
+<!-- Modal for Successful Login -->
+<div class="modal fade" id="login-success-modal" tabindex="-1" aria-labelledby="login-success-modal-label" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content" style="background-color: #39DB14; color: white;"> <!-- Even lighter green -->
+        <div class="modal-content" style="background-color: #39DB14; color: white;">
             <div class="modal-body text-center">
-                <h5 class="modal-title" id="loginSuccessModalLabel">Login Successful</h5>
+                <h5 class="modal-title" id="login-success-modal-label">You Signed In Successfully</h5>
             </div>
         </div>
     </div>
 </div>
 
-
 <script>
-    window.onload = function() {
+    document.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('continue')) {
-            // Show the login success modal
-            const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'));
+        if (urlParams.has('login') && urlParams.get('login') === 'true') {
+            const loginSuccessModal = new bootstrap.Modal(document.getElementById('login-success-modal'));
             loginSuccessModal.show();
-
-            // Automatically hide the modal after 1 second
+            history.replaceState(null, null, window.location.pathname);
             setTimeout(function() {
                 loginSuccessModal.hide();
             }, 1000);
         }
-    }
+    });
 </script>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <!-- beginning of footer -->
 <footer>
-    <p><a id="termsOfUseFooter" href="/terms-of-use">Terms of Use</a></p>
+    <p><a id="terms-of-use-footer" href="/terms-of-use">Terms of Use</a></p>
     <p>&#169; 2024 Price Advisor. All rights reserved.</p>
 </footer>
 <!-- end of footer -->
