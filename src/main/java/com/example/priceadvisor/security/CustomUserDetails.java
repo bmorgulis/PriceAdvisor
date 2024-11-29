@@ -27,31 +27,6 @@ public record CustomUserDetails(User user) implements UserDetails {
         return user.getEmail();
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    /**
-     * Exposes the businessId of the user for application-specific use cases.
-     *
-     * @return the businessId of the associated User.
-     */
     public int getBusinessId() {
         return user.getBusinessId();
     }
