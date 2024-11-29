@@ -55,11 +55,8 @@ public class Controllers {
             CustomUserDetails managerDetails = (CustomUserDetails) authentication.getPrincipal();
             int managerBusinessId = managerDetails.getBusinessId(); // Retrieve `businessId` as an int
 
-            // Hash the password before saving
-            String hashedPassword = passwordEncoder.encode(password);
-
             // Add the new user with hashed password
-            userService.addUser(email, hashedPassword, role, managerBusinessId);
+            userService.addUser(email, password, role, managerBusinessId);
 
             // Add success flag to trigger the modal and persist it after the redirect
             redirectAttributes.addFlashAttribute("userAddSuccess", true);
