@@ -4,9 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Locale;
 
 /**
  * Entry point for the Spring Boot application.
@@ -54,4 +60,40 @@ public class Application {
             return true; // Port is in use
         }
     }
+
+//    //This is from chatgpt
+////Will open the application in the default browser when the application starts.
+//    @EventListener(ContextRefreshedEvent.class)
+//    public void openBrowser() {
+//        String url = "http://localhost:" + PORT;
+//
+//        // Use Desktop API to open the default browser
+//        if (Desktop.isDesktopSupported()) {
+//            try {
+//                Desktop.getDesktop().browse(new URI(url));
+//                logger.info("Opened browser to {}", url);
+//                return;
+//            } catch (IOException | URISyntaxException e) {
+//                logger.error("Failed to open browser using Desktop API", e);
+//            }
+//        }
+//
+//        // Opens the browser using OS-specific command when Desktop API is not supported
+//        try {
+//            String os = System.getProperty("os.name").toLowerCase(Locale.ROOT);
+//            if (os.contains("win")) {
+//                new ProcessBuilder("rundll32", "url.dll,FileProtocolHandler", url).start();
+//            } else if (os.contains("mac")) {
+//                new ProcessBuilder("open", url).start();
+//            } else if (os.contains("nix") || os.contains("nux")) {
+//                new ProcessBuilder("xdg-open", url).start();
+//            } else {
+//                logger.warn("Unsupported operating system. Please open {} manually.", url);
+//            }
+//            logger.info("Opened browser to {} using OS-specific command.", url);
+//        } catch (IOException e) {
+//            logger.error("Failed to open browser using OS-specific command", e);
+//            logger.warn("Please open {} manually.", url);
+//        }
+//    }
 }
