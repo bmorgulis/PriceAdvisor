@@ -9,7 +9,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userID")
-    private Long userId;
+    private Integer userId;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -21,12 +21,12 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @Column(name = "businessID", nullable = false)
-    private int businessId;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "emailNotificationsFrequency")
+    @Column(name = "emailNotificationsFrequency", nullable = false)
     private EmailNotificationsFrequency emailNotificationsFrequency;
+
+    @Column(name = "businessID", nullable = false)
+    private Integer businessId;
 
     // Default constructor
     public User() {}
@@ -38,7 +38,7 @@ public class User {
     }
 
     // Constructor with parameters for adding a new user to the database
-    public User(String email, String password, Role role, int businessId) {
+    public User(String email, String password, Role role, Integer businessId) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -46,7 +46,7 @@ public class User {
         this.businessId = businessId;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
@@ -74,11 +74,11 @@ public class User {
         this.role = role;
     }
 
-    public int getBusinessId() {
+    public Integer getBusinessId() {
         return businessId;
     }
 
-    public void setBusinessId(int businessId) {
+    public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
     }
 

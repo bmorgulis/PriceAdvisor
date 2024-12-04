@@ -39,7 +39,7 @@
                     <a class="nav-link active" aria-current="page" href="/manage-accounts">Manage Accounts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/settings.html">Settings</a>
+                    <a class="nav-link" href="/settings">Settings</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Sign Out</a>
@@ -50,16 +50,14 @@
 </nav>
 <!-- end of header -->
 
-<div id="userAddedErrorMessage" style="top: 10px;" class="alert alert-danger text-center" th:if="${userAddErrorMessage != null}" role="alert">
+<div id="user-added-error-message" style="top: 10px;" class="alert alert-danger text-center" th:if="${userAddErrorMessage != null}" role="alert">
     <span th:text="${userAddErrorMessage}"></span>
 </div>
 
-<br><br>
-<button id="addUserModalButton" class="btn btn-primary btn-lg button">Add User</button>
-<br><br>
+<button id="add-user-modal-button" class="btn button btn-lg" style="margin-top: 20px; margin-bottom: 10px; margin-left: 50px">Add User</button>
 
 <!-- User Added Successfully Modal -->
-<div class="modal fade" id="userAddedSuccessModal" tabindex="-1" aria-labelledby="userAddedSuccessModalLabel" aria-hidden="true">
+<div class="modal fade" id="user-added-success-modal" tabindex="-1" aria-labelledby="user-added-success-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="background-color: #39DB14; color: white;">
             <div class="modal-body text-center">
@@ -70,12 +68,12 @@
 </div>
 
 <!-- Add User Form Modal -->
-<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+<div class="modal fade" id="add-user-modal" tabindex="-1" aria-labelledby="add-user-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content bg-light p-5 rounded shadow mx-auto">
             <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-header d-flex justify-content-between align-items-center">
-                <h1 class="modal-title flex-grow-1 text-center" id="addUserModalLabel">Add User</h1>
+                <h1 class="modal-title flex-grow-1 text-center" id="add-user-modal-label">Add User</h1>
             </div>
             <div class="modal-body">
                 <!-- Add User Form -->
@@ -122,25 +120,6 @@
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
-        const addUserModal = new bootstrap.Modal(document.getElementById('addUserModal'));
-        const successModal = new bootstrap.Modal(document.getElementById('userAddedSuccessModal'));
-        const addUserModalButton = document.getElementById('addUserModalButton');
-
-        // Trigger modal for adding user
-        addUserModalButton.addEventListener('click', function() {
-            addUserModal.show();
-        });
-
-        // Assuming these variables are passed from the backend:
-        const userAddSuccess = /*[[${userAddSuccess}]]*/ false;  // success or failure
-
-        if (userAddSuccess) {
-            successModal.show();
-            setTimeout(function() {
-                successModal.hide();
-            }, 1000);
-        }
-
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('login') && urlParams.get('login') === 'true') {
             const loginSuccessModal = new bootstrap.Modal(document.getElementById('login-success-modal'));
@@ -148,6 +127,24 @@
             history.replaceState(null, null, window.location.pathname);
             setTimeout(function() {
                 loginSuccessModal.hide();
+            }, 1000);
+        }
+
+        const addUserModal = new bootstrap.Modal(document.getElementById('add-user-modal'));
+        const addUserModalButton = document.getElementById('add-user-modal-button');
+
+        // Trigger modal for adding user
+        addUserModalButton.addEventListener('click', function() {
+            addUserModal.show();
+        });
+
+        const userAddSuccess = /*[[${userAddSuccess}]]*/ false;  // success or failure
+        const userAddedSuccessModal = new bootstrap.Modal(document.getElementById('user-added-success-modal'));
+
+        if (userAddSuccess) {
+            userAddedSuccessModal.show();
+            setTimeout(function() {
+                userAddedSuccessModal.hide();
             }, 1000);
         }
     });

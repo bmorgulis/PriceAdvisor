@@ -3,13 +3,11 @@ package com.example.priceadvisor.controller;
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.security.CustomUserDetails;
 import com.example.priceadvisor.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,15 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class Controllers {
 
-    private static final Logger logger = LoggerFactory.getLogger(Controllers.class); // Logger setup
-
     private final UserService userService;
-    private final BCryptPasswordEncoder passwordEncoder; // Password encoder
 
     @Autowired
-    public Controllers(UserService userService, BCryptPasswordEncoder passwordEncoder) {
+    public Controllers(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/terms-of-use")
@@ -44,11 +38,23 @@ public class Controllers {
         return "sign-in";
     }
 
+    @GetMapping("/settings")
+    public String settings(Model model) {
+        try {
+            int userId = getCurrentUserId();
+            User.EmailNotificationsFrequency emailNotificationsFrequency = userService.getEmailNotificationsFrequency(userId);
+            model.addAttribute("emailNotificationsFrequency", emailNotificationsFrequency);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "settings";
+    }
+
     @PostMapping("/add-user")
     public String addUser(@RequestParam String email,
                           @RequestParam String password,
                           @RequestParam User.Role role,
-                          RedirectAttributes redirectAttributes) {  // Use RedirectAttributes here
+                          RedirectAttributes redirectAttributes) {
         try {
             // Retrieve the logged-in manager's details directly from SecurityContext
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,7 +69,6 @@ public class Controllers {
             return "redirect:/manage-accounts"; // Redirect to the same page
         } catch (Exception e) {
             String message = e.getMessage().toLowerCase();
-            logger.error("Error adding user: {}", message); // Log the error
             String errorMessage;
 
             if (message.contains("duplicate")) {
@@ -71,12 +76,35 @@ public class Controllers {
             } else {
                 errorMessage = "An unexpected error occurred. Please try again.";
             }
-            logger.error("Error message: {}", errorMessage); // Log the specific error message
 
             // Add the error message to the redirect attributes to persist it after redirect
             redirectAttributes.addFlashAttribute("userAddErrorMessage", errorMessage);
 
             return "redirect:/manage-accounts"; // Redirect to the same page
         }
+    }
+
+    // Set the email notifications frequency for the current user
+    @PostMapping("/set-email-notifications-frequency")
+    public String setEmailNotificationsFrequency(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency emailNotificationsFrequency, RedirectAttributes redirectAttributes) {
+        try {
+            int userId = getCurrentUserId();
+
+            if (emailNotificationsFrequency == null)
+                emailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
+
+            userService.setEmailNotificationsFrequency(userId, emailNotificationsFrequency);
+
+            redirectAttributes.addFlashAttribute("saveSettingsSuccess", true);
+            return "redirect:/settings";  // Redirect back to settings page
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("saveSettingsErrorMessage", "An unexpected error occurred. Please try again.");
+            return "redirect:/settings";
+        }
+    }
+
+    private int getCurrentUserId() {
+        return ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
     }
 }

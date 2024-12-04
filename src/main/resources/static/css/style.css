@@ -19,6 +19,7 @@ body{
 	box-shadow: rgba(0, 0, 0, 0.56) 0 0 40px;
 	border-radius: 25px;
 	font-size: 18px;
+	align-self: flex-start;
 }
 .btn:hover {
 	background-color: #761EE8;

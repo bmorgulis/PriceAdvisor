@@ -17,6 +17,10 @@ public record CustomUserDetails(User user) implements UserDetails {
                 .collect(Collectors.toList());
     }
 
+    public Integer getUserId() {
+        return user.getUserId();
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();
@@ -27,7 +31,11 @@ public record CustomUserDetails(User user) implements UserDetails {
         return user.getEmail();
     }
 
-    public int getBusinessId() {
+    public Integer getBusinessId() {
         return user.getBusinessId();
+    }
+
+    public User.EmailNotificationsFrequency getEmailNotificationsFrequency() {
+        return user.getEmailNotificationsFrequency();
     }
 }

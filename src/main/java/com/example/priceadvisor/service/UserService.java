@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class UserService {
 
@@ -20,16 +18,26 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Authenticate a user by email and password
-    public Optional<User> authenticate(String email, String password) {
-        Optional<User> user = userRepository.findByEmail(email);
-        return user.filter(u -> passwordEncoder.matches(password, u.getPassword()));
-    }
-
-    // Add a new user with a businessId
-    public User addUser(String email, String password, User.Role role, int businessId) {
+    public void addUser(String email, String password, User.Role role, int businessId) {
         String hashedPassword = passwordEncoder.encode(password);
         User newUser = new User(email, hashedPassword, role, businessId); // Include businessId
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
+    }
+
+    public void setEmailNotificationsFrequency(int userId, User.EmailNotificationsFrequency emailFrequency) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.setEmailNotificationsFrequency(emailFrequency);
+
+        userRepository.save(user);
+    }
+
+    // Get email notifications frequency for a user
+    public User.EmailNotificationsFrequency getEmailNotificationsFrequency(int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return user.getEmailNotificationsFrequency();  // Return the current frequency
     }
 }

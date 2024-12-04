@@ -40,7 +40,7 @@
                     <a class="nav-link" href="/manage-accounts">Manage Accounts</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/settings.html">Settings</a>
+                    <a class="nav-link" href="/settings">Settings</a>
                 </li>
                 <li class="nav-item" th:switch="${#authentication.name}">
                     <a class="nav-link" th:case="'anonymousUser'" href="/sign-in">Sign In</a>
@@ -57,7 +57,6 @@
     <div class="card-img-overlay d-flex flex-column justify-content-between">
         <!-- Header section -->
         <h1 class="card-title" id="site-title" style="margin-top: 20px; text-align: center;">Price Advisor</h1>
-
         <!-- Button section -->
         <div class="d-flex justify-content-center mb-5">
             <a href="#about" class="btn button btn-lg" style="width: 170px;">Compare Prices</a>
@@ -72,7 +71,7 @@
     <h2 class="header">About Price Advisor</h2>
     <br>
     <p class="about-points">
-Added         Price Advisor is an advanced pricing management application designed to help businesses stay competitive in today’s dynamic market. By integrating inventory data, competitor pricing, and intelligent algorithms, Price Advisor generates actionable price suggestions to maximize sales and profitability.
+         Price Advisor is an advanced pricing management application designed to help businesses stay competitive in today’s dynamic market. By integrating inventory data, competitor pricing, and intelligent algorithms, Price Advisor generates actionable price suggestions to maximize sales and profitability.
     </p>
     <p class="about-points">Key features include:</p>
     <ul class="about-points">
