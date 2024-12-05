@@ -77,26 +77,27 @@ public class Controllers {
         }
     }
 
-    @PostMapping("/set-email-notifications-frequency")
+    @PostMapping("/update-email-notifications-frequency")
     public String setEmailNotificationsFrequency(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency emailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
             Integer userId = userService.getCurrentUserId();
+            String userEmail = userService.getCurrentEmail();
 
             if (emailNotificationsFrequency == null)
                 emailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
 
-            String userEmail = userService.getCurrentEmail();
+            User.EmailNotificationsFrequency currentFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
 
-            if (userService.getCurrentEmailNotificationsFrequency(userId) != emailNotificationsFrequency) {
+            if (currentFrequency != emailNotificationsFrequency) {
                 emailNotificationService.unsubscribe(userEmail);
-                if (userService.getCurrentEmailNotificationsFrequency(userId) != User.EmailNotificationsFrequency.NONE) {
+                if (currentFrequency != User.EmailNotificationsFrequency.NONE) {
                     emailNotificationService.subscribe(userEmail, emailNotificationsFrequency);
                 }
             }
 
             userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency);
 
-            redirectAttributes.addFlashAttribute("saveSettingsSuccess", true);
+            redirectAttributes.addFlashAttribute("saveSettingsSuccess", true); // Add success message
             return "redirect:/settings";  // Redirect back to settings page
         } catch (Exception e) {
             e.printStackTrace();
