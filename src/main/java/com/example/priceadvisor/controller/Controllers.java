@@ -96,10 +96,8 @@ public class Controllers {
                 if (currentFrequency != User.EmailNotificationsFrequency.NONE) {
                     emailNotificationService.subscribe(userEmail, emailNotificationsFrequency);
                 }
+                userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency);
             }
-
-            // Update the email notifications frequency in the database
-            userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency);
 
             redirectAttributes.addFlashAttribute("saveSettingsSuccess", true); // Add success message
             return "redirect:/settings";  // Redirect back to settings page
