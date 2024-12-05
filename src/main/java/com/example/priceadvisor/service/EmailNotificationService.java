@@ -9,8 +9,8 @@ import software.amazon.awssdk.services.sns.model.*;
 @Service
 public class EmailNotificationService {
     private final SnsClient snsClient;
-    @Value("${aws.sns.topic.arn}")
-    private String topicArn;    // Inject the topic ARN from the application.properties file. for now for testing purposes ToDo: change to the actual topic ARN based off of that businesses topic and frequency
+    @Value("${aws.sns.topic.arn}") // Inject the topic ARN from the application.properties file.
+    private String topicArn;    //ToDo: change to the actual topic ARN based off of that businesses topic and frequency of the user
 //    private String topicArn  = "arn:aws:sns:us-east-1:471112717872:Test_Business_DAILY"; //for testing purposes
 
     public EmailNotificationService(SnsClient snsClient) {
@@ -23,13 +23,13 @@ public class EmailNotificationService {
             SubscribeRequest request = SubscribeRequest.builder()
                     .protocol("email")
                     .endpoint(userEmail)
-                    .returnSubscriptionArn(true)
+                    .returnSubscriptionArn(true) // Return the ARN, even if the subscription is not yet confirmed
                     .topicArn(topicArn)
                     .build();
 
             snsClient.subscribe(request);
-//            SubscribeResponse result = snsClient.subscribe(request);
-//            System.out.println("Subscription ARN: " + result.subscriptionArn());
+//            SubscribeResponse result = snsClient.subscribe(request);              //for testing purposes
+//            System.out.println("Subscription ARN: " + result.subscriptionArn()); //for testing purposes
         } catch (SnsException e) {
             System.err.println("Error Subscribing: " + e.getMessage());
         }
@@ -38,10 +38,10 @@ public class EmailNotificationService {
     }
 
     public void unsubscribe(String userEmail) {
-        publishNotification("You have successfully subscribed to Price Advisor Notifications great work");
+        publishNotification("You have successfully subscribed to Price Advisor Notifications great work"); //for testing purposes to make sure that publish method works
 
         try {
-            // List all subscriptions for the topic
+            // List all subscriptions for the topic and find the subscription to unsubscribe from
             ListSubscriptionsByTopicRequest listRequest = ListSubscriptionsByTopicRequest.builder()
                     .topicArn(topicArn)
                     .build();

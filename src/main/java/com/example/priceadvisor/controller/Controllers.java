@@ -83,11 +83,14 @@ public class Controllers {
             Integer userId = userService.getCurrentUserId();
             String userEmail = userService.getCurrentEmail();
 
+            // Set the email notifications frequency to NONE if it is null
             if (emailNotificationsFrequency == null)
                 emailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
 
+            // Get the current email notifications frequency for the user
             User.EmailNotificationsFrequency currentFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
 
+            // Unsubscribe and resubscribe to the SNS topic if the frequency has changed
             if (currentFrequency != emailNotificationsFrequency) {
                 emailNotificationService.unsubscribe(userEmail);
                 if (currentFrequency != User.EmailNotificationsFrequency.NONE) {
@@ -95,6 +98,7 @@ public class Controllers {
                 }
             }
 
+            // Update the email notifications frequency in the database
             userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency);
 
             redirectAttributes.addFlashAttribute("saveSettingsSuccess", true); // Add success message
