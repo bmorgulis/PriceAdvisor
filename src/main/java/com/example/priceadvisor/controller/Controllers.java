@@ -20,9 +20,9 @@ public class Controllers {
         this.userService = userService;
     }
 
-    @GetMapping("/terms-of-use")
-    public String termsOfUse() {
-        return "terms-of-use";
+    @GetMapping("/sign-in")
+    public String signIn() {
+        return "sign-in";
     }
 
     @GetMapping("/manage-accounts")
@@ -30,9 +30,9 @@ public class Controllers {
         return "manage-accounts";
     }
 
-    @GetMapping("/sign-in")
-    public String signIn() {
-        return "sign-in";
+    @GetMapping("/terms-of-use")
+    public String termsOfUse() {
+        return "terms-of-use";
     }
 
     @GetMapping("/settings")
@@ -91,5 +91,20 @@ public class Controllers {
             redirectAttributes.addFlashAttribute("saveSettingsErrorMessage", "An unexpected error occurred. Please try again.");
             return "redirect:/settings";
         }
+    }
+
+    @GetMapping("/add-items")
+    public String addItems() {
+        return "add-items";
+    }
+
+    @GetMapping("/compare-prices")
+    public String comparePrices() {
+        return "compare-prices";
+    }
+
+    @GetMapping("/watchlist")
+    public String watchlist() {
+        return "watchlist";
     }
 }

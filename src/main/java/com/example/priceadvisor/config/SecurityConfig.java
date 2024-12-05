@@ -46,7 +46,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/sign-in", "/", "/index.html", "/terms-of-use", "/css/**", "/images/**", "/js/**").permitAll();
 
                     // Restricted access for MANAGER role only
-                    auth.requestMatchers("/add-items.html", "/manage-accounts").hasRole("MANAGER");
+                    auth.requestMatchers("/add-items", "/manage-accounts").hasRole("MANAGER");
 
                     // Any other page requires authentication
                     auth.anyRequest().authenticated();
