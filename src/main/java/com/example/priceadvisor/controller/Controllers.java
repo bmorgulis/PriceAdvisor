@@ -38,8 +38,8 @@ public class Controllers {
     @GetMapping("/settings")
     public String settings(Model model) {
         try {
-            int userId = userService.getCurrentUserId();  // Use the service method to get the user ID
-            User.EmailNotificationsFrequency emailNotificationsFrequency = userService.getEmailNotificationsFrequency(userId);
+            Integer userId = userService.getCurrentUserId();  // Use the service method to get the user ID
+            User.EmailNotificationsFrequency emailNotificationsFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
             model.addAttribute("emailNotificationsFrequency", emailNotificationsFrequency);
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,7 +54,7 @@ public class Controllers {
                           RedirectAttributes redirectAttributes) {
         try {
             // Add the new user by passing the businessId from the security context
-            int managerBusinessId = userService.getCurrentUserId(); // Get the manager's business ID using the service
+            Integer managerBusinessId = userService.getCurrentBusinessId(); // Get the manager's business ID using the service
             userService.addUser(email, password, role, managerBusinessId);
 
             redirectAttributes.addFlashAttribute("userAddSuccess", true);
@@ -77,12 +77,12 @@ public class Controllers {
     @PostMapping("/set-email-notifications-frequency")
     public String setEmailNotificationsFrequency(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency emailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
-            int userId = userService.getCurrentUserId();
+            Integer userId = userService.getCurrentUserId();
 
             if (emailNotificationsFrequency == null)
                 emailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
 
-            userService.setEmailNotificationsFrequency(userId, emailNotificationsFrequency);
+            userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency);
 
             redirectAttributes.addFlashAttribute("saveSettingsSuccess", true);
             return "redirect:/settings";  // Redirect back to settings page

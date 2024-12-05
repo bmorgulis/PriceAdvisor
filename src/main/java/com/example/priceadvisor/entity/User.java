@@ -28,10 +28,9 @@ public class User {
     @Column(name = "businessID", nullable = false)
     private Integer businessId;
 
-    // Default constructor
+    // Default constructor needed for JPA
     public User() {}
 
-    // Constructor with parameters for adding a new user to the database
     public User(String email, String password, Role role, Integer businessId) {
         this.email = email;
         this.password = password;

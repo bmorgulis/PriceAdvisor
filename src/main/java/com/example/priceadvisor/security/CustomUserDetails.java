@@ -22,20 +22,16 @@ public record CustomUserDetails(User user) implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
-
-    @Override
     public String getUsername() {
         return user.getEmail();
     }
 
-    public Integer getBusinessId() {
-        return user.getBusinessId();
+    @Override
+    public String getPassword() {
+        return user.getPassword();
     }
 
-    public User.EmailNotificationsFrequency getEmailNotificationsFrequency() {
-        return user.getEmailNotificationsFrequency();
+    public Integer getBusinessId() {
+        return user.getBusinessId();
     }
 }
