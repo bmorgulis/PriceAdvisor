@@ -77,7 +77,7 @@ public class Controllers {
         }
     }
 
-    @PostMapping("/update-email-notifications-frequency")
+    @PostMapping("/set-email-notifications-frequency")
     public String setEmailNotificationsFrequency(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency emailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
             Integer userId = userService.getCurrentUserId();

@@ -10,8 +10,8 @@ import software.amazon.awssdk.services.sns.model.*;
 public class EmailNotificationService {
     private final SnsClient snsClient;
     @Value("${aws.sns.topic.arn}")
-    // Inject the topic ARN from the application.properties file. for now for testing purposes ToDo: change to the actual topic ARN based off of that businesses topic and frequency
-    private String topicArn;
+    private String topicArn;    // Inject the topic ARN from the application.properties file. for now for testing purposes ToDo: change to the actual topic ARN based off of that businesses topic and frequency
+//    private String topicArn  = "arn:aws:sns:us-east-1:471112717872:Test_Business_DAILY"; //for testing purposes
 
     public EmailNotificationService(SnsClient snsClient) {
         this.snsClient = snsClient;
@@ -23,11 +23,13 @@ public class EmailNotificationService {
             SubscribeRequest request = SubscribeRequest.builder()
                     .protocol("email")
                     .endpoint(userEmail)
-//                .returnSubscriptionArn(true)
+                    .returnSubscriptionArn(true)
                     .topicArn(topicArn)
                     .build();
 
             snsClient.subscribe(request);
+//            SubscribeResponse result = snsClient.subscribe(request);
+//            System.out.println("Subscription ARN: " + result.subscriptionArn());
         } catch (SnsException e) {
             System.err.println("Error Subscribing: " + e.getMessage());
         }

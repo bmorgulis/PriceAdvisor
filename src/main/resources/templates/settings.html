@@ -56,7 +56,7 @@
     <h3>Email Notifications</h3>
     <br>
     <!-- Form to save the settings -->
-    <form th:action="@{/update-email-notifications-frequency}" method="post">
+    <form th:action="@{/set-email-notifications-frequency}" method="post">
         <div class="form-check form-switch mb-4 ms-5">
             <input class="form-check-input" type="checkbox" id="email-notifications-toggle"
                    th:checked="${emailNotificationsFrequency != T(com.example.priceadvisor.entity.User$EmailNotificationsFrequency).NONE}">
