@@ -1,11 +1,8 @@
 package com.example.priceadvisor.controller;
 
 import com.example.priceadvisor.entity.User;
-import com.example.priceadvisor.security.CustomUserDetails;
 import com.example.priceadvisor.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +38,7 @@ public class Controllers {
     @GetMapping("/settings")
     public String settings(Model model) {
         try {
-            int userId = getCurrentUserId();
+            int userId = userService.getCurrentUserId();  // Use the service method to get the user ID
             User.EmailNotificationsFrequency emailNotificationsFrequency = userService.getEmailNotificationsFrequency(userId);
             model.addAttribute("emailNotificationsFrequency", emailNotificationsFrequency);
         } catch (Exception e) {
@@ -56,17 +53,12 @@ public class Controllers {
                           @RequestParam User.Role role,
                           RedirectAttributes redirectAttributes) {
         try {
-            // Retrieve the logged-in manager's details directly from SecurityContext
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            CustomUserDetails managerDetails = (CustomUserDetails) authentication.getPrincipal();
-            int managerBusinessId = managerDetails.getBusinessId(); // Retrieve `businessId` as an int
-
-            // Add the new user with hashed password
+            // Add the new user by passing the businessId from the security context
+            int managerBusinessId = userService.getCurrentUserId(); // Get the manager's business ID using the service
             userService.addUser(email, password, role, managerBusinessId);
 
-            // Add success flag to trigger the modal and persist it after the redirect
             redirectAttributes.addFlashAttribute("userAddSuccess", true);
-            return "redirect:/manage-accounts"; // Redirect to the same page
+            return "redirect:/manage-accounts";
         } catch (Exception e) {
             String message = e.getMessage().toLowerCase();
             String errorMessage;
@@ -77,18 +69,15 @@ public class Controllers {
                 errorMessage = "An unexpected error occurred. Please try again.";
             }
 
-            // Add the error message to the redirect attributes to persist it after redirect
             redirectAttributes.addFlashAttribute("userAddErrorMessage", errorMessage);
-
-            return "redirect:/manage-accounts"; // Redirect to the same page
+            return "redirect:/manage-accounts";
         }
     }
 
-    // Set the email notifications frequency for the current user
     @PostMapping("/set-email-notifications-frequency")
     public String setEmailNotificationsFrequency(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency emailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
-            int userId = getCurrentUserId();
+            int userId = userService.getCurrentUserId();
 
             if (emailNotificationsFrequency == null)
                 emailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
@@ -102,9 +91,5 @@ public class Controllers {
             redirectAttributes.addFlashAttribute("saveSettingsErrorMessage", "An unexpected error occurred. Please try again.");
             return "redirect:/settings";
         }
-    }
-
-    private int getCurrentUserId() {
-        return ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
     }
 }

@@ -31,12 +31,6 @@ public class User {
     // Default constructor
     public User() {}
 
-    // Constructor with parameters for login functionality
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
     // Constructor with parameters for adding a new user to the database
     public User(String email, String password, Role role, Integer businessId) {
         this.email = email;
