@@ -8,7 +8,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userID")
+    @Column(name = "userId")
     private Integer userId;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -25,7 +25,7 @@ public class User {
     @Column(name = "emailNotificationsFrequency", nullable = false)
     private EmailNotificationsFrequency emailNotificationsFrequency;
 
-    @Column(name = "businessID", nullable = false)
+    @Column(name = "businessId", nullable = false)
     private Integer businessId;
 
     // Default constructor needed for JPA

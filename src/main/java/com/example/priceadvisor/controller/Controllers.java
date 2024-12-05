@@ -1,6 +1,7 @@
 package com.example.priceadvisor.controller;
 
 import com.example.priceadvisor.entity.User;
+import com.example.priceadvisor.service.EmailNotificationService;
 import com.example.priceadvisor.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,10 +15,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class Controllers {
 
     private final UserService userService;
+    private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public Controllers(UserService userService) {
+    public Controllers(UserService userService, EmailNotificationService emailNotificationService) {
         this.userService = userService;
+        this.emailNotificationService = emailNotificationService;
     }
 
     @GetMapping("/sign-in")
@@ -81,6 +84,15 @@ public class Controllers {
 
             if (emailNotificationsFrequency == null)
                 emailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
+
+            String userEmail = userService.getCurrentEmail();
+
+            if (userService.getCurrentEmailNotificationsFrequency(userId) != emailNotificationsFrequency) {
+                emailNotificationService.unsubscribe(userEmail);
+                if (userService.getCurrentEmailNotificationsFrequency(userId) != User.EmailNotificationsFrequency.NONE) {
+                    emailNotificationService.subscribe(userEmail, emailNotificationsFrequency);
+                }
+            }
 
             userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency);
 

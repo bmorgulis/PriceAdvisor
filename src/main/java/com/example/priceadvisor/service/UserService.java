@@ -31,6 +31,10 @@ public class UserService {
         return securityContextService.getCurrentUserId();  // Use injected service to get user ID
     }
 
+    public String getCurrentEmail() {
+        return securityContextService.getCurrentEmail();  // Use injected service to get user ID
+    }
+
     public User.EmailNotificationsFrequency getCurrentEmailNotificationsFrequency(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));

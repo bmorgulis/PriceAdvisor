@@ -17,6 +17,10 @@ public class SecurityContextService {
         return getCurrentUserDetails().getUserId();
     }
 
+    public String getCurrentEmail() {
+        return getCurrentUserDetails().getUsername();
+    }
+
     // Get the current logged-in user's Business ID
     public Integer getCurrentBusinessId() {
         return getCurrentUserDetails().getBusinessId();
