@@ -92,11 +92,11 @@ public class Controllers {
 
             // Unsubscribe and resubscribe to the SNS topic if the frequency has changed
             if (currentFrequency != emailNotificationsFrequency) {
-                emailNotificationService.unsubscribe(userEmail);
+                emailNotificationService.unsubscribe(userEmail, currentFrequency, userService.getCurrentBusinessId());
                 if (currentFrequency != User.EmailNotificationsFrequency.NONE) {
-                    emailNotificationService.subscribe(userEmail, emailNotificationsFrequency);
+                    emailNotificationService.subscribe(userEmail, emailNotificationsFrequency, userService.getCurrentBusinessId());
                 }
-                userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency);
+                userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency, userService.BusinessRepository);
             }
 
             redirectAttributes.addFlashAttribute("saveSettingsSuccess", true); // Add success message

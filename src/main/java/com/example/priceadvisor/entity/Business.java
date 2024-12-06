@@ -15,7 +15,8 @@ public class Business {
     private String name;
 
     // Default constructor needed for JPA
-    public Business() {}
+    public Business() {
+    }
 
     public Business(String name) {
         this.name = name;
