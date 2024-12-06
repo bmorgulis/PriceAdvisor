@@ -110,6 +110,8 @@ public class Controllers {
 
     @GetMapping("/add-items")
     public String addItems() {
+//        DataFetchingService dataFetchingService = new DataFetchingService(items);
+//        dataFetchingService.fetchData();
         return "add-items";
     }
 
