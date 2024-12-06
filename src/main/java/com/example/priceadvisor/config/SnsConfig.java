@@ -7,7 +7,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sns.SnsClient;
 
 @Configuration
-public class AWSConfig {
+public class SnsConfig {
 
     // Create an SNS client
     @Bean
