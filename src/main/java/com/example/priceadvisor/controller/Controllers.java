@@ -110,13 +110,13 @@ public class Controllers {
 
     @GetMapping("/add-items")
     public String addItems() {
-//        DataFetchingService dataFetchingService = new DataFetchingService(items);
-//        dataFetchingService.fetchData();
         return "add-items";
     }
 
     @GetMapping("/compare-prices")
     public String comparePrices() {
+        // DataFetchingService dataFetchingService = new DataFetchingService(items);
+        // dataFetchingService.fetchData();
         return "compare-prices";
     }
 
