@@ -29,7 +29,8 @@ public class User {
     private Integer businessId;
 
     // Default constructor needed for JPA
-    public User() {}
+    public User() {
+    }
 
     public User(String email, String password, Role role, Integer businessId) {
         this.email = email;

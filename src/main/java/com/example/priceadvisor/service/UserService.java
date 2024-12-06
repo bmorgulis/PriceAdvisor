@@ -20,7 +20,6 @@ public class UserService {
     public final BusinessRepository BusinessRepository;
 
 
-
     @Autowired
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, SecurityContextService securityContextService, BusinessRepository BusinessRepository) {
         this.userRepository = userRepository;

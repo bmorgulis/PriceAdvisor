@@ -38,7 +38,8 @@ public class Item {
     private Integer inventoryId;
 
     // Default constructor needed for JPA
-    public Item() {}
+    public Item() {
+    }
 
     public Item(String name, Long UPC, Long SKU, String description, String additionalInfo,
                 BigDecimal price, Boolean starred, Integer inventoryId) {

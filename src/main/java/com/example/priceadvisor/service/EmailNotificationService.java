@@ -53,7 +53,7 @@ public class EmailNotificationService {
         return topicArn;
     }
 
-    public void unsubscribe(String userEmail,User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
+    public void unsubscribe(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
         try {
             String businessName = businessRepository.findById(businessId)
                     .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();
@@ -105,61 +105,4 @@ public class EmailNotificationService {
             System.err.println("Error Sending Notification: " + e.getMessage());
         }
     }
-
-
-//    public void updateNotificationSettings(String email, User.EmailNotificationsFrequency emailNotificationFrequency) {
-//        User user = userRepository.findByEmail(email)
-//                .orElseThrow(() -> new IllegalArgumentException("User not found."));
-//        user.setEmailNotificationsFrequency(emailNotificationFrequency);
-//        userRepository.save(user);
-//
-//        subscribeToSNSTopic(email, emailNotificationFrequency);
-//    }
-//
-//    private void subscribeToSNSTopic(String email, User.EmailNotificationsFrequency emailNotificationFrequency) {
-//
-//
-//        if (emailNotificationFrequency == User.EmailNotificationsFrequency.NONE)
-//            return;
-//
-//        String topicArn;
-//        switch (emailNotificationFrequency) {
-//            case DAILY:
-//                topicArn = "arn:aws:sns:us-east-1:471112717872:Test_Business_DAILY";
-//                break;
-//            case HOURLY:
-//                topicArn = "arn:aws:sns:us-east-1:471112717872:Test_Business_HOURLY\n";
-//                break;
-//            case WEEKLY:
-//                topicArn = "arn:aws:sns:us-east-1:471112717872:Test_Business_MONTHLY\n";
-//                break;
-//            case MONTHLY:
-//                topicArn = "arn:aws:sns:us-east-1:471112717872:Test_Business_WEEKLY\n";
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Invalid email notification frequency: " + emailNotificationFrequency + ". Enter valid information");
-//        }
-//
-//        SnsClient snsClient = SnsClient.builder()
-//                .region(Region.US_EAST_1)
-//                .credentialsProvider(ProfileCredentialsProvider.create())
-//                .build();
-//
-//
-//        try {
-//            SubscribeRequest request = SubscribeRequest.builder()
-//                    .protocol("email")
-//                    .endpoint(email)
-//                    .returnSubscriptionArn(true)
-//                    .topicArn(topicArn)
-//                    .build();
-//
-//            SubscribeResponse response = snsClient.subscribe(request);
-//            System.out.println("Subscription ARN: " + response.subscriptionArn());
-//            System.out.println("Subscription pending. Confirm via the email sent to " + email);
-//        } catch (
-//                SnsException e) {
-//            System.err.println(e.awsErrorDetails().errorMessage());
-//        }
-//    }
 }
