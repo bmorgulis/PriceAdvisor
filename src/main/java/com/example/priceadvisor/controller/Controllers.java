@@ -92,7 +92,9 @@ public class Controllers {
 
             // Unsubscribe and resubscribe to the SNS topic if the frequency has changed
             if (currentFrequency != emailNotificationsFrequency) {
-                emailNotificationService.unsubscribe(userEmail, currentFrequency, userService.getCurrentBusinessId());
+//                emailNotificationService.unsubscribe(userEmail, currentFrequency, userService.getCurrentBusinessId());  //for first way in emailNotificationService
+                emailNotificationService.unsubscribe(userEmail, emailNotificationsFrequency, userService.getCurrentBusinessId()); //for second way in emailNotificationService
+
                 if (currentFrequency != User.EmailNotificationsFrequency.NONE) {
                     emailNotificationService.subscribe(userEmail, emailNotificationsFrequency, userService.getCurrentBusinessId());
                 }

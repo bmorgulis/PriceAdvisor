@@ -38,7 +38,7 @@ public class EmailNotificationService {
                     .build();
 
             snsClient.subscribe(request);
-            publishNotification("You have successfully subscribed to Price Advisor Notifications great work", userEmail, emailNotificationsFrequency, businessId); //for testing purposes to make sure that publish method works
+            //publishNotification("You have successfully subscribed to Price Advisor Notifications great work", userEmail, emailNotificationsFrequency, businessId); //for testing purposes to make sure that publish method works
 
         } catch (SnsException e) {
             System.err.println("Error Subscribing: " + e.getMessage());
@@ -52,39 +52,84 @@ public class EmailNotificationService {
         String topicArn = baseArn + topicName;
         return topicArn;
     }
+// //will erase the old subscriptions from aws sns but not as good with multiple subscriptions
+//    public void unsubscribe(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
+//        try {
+//            String businessName = businessRepository.findById(businessId)
+//                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();
+//
+//
+//            String topicArn = buildTopicArn(emailNotificationsFrequency, businessName);
+//
+//
+//            // List all subscriptions for the topic and find the subscription to unsubscribe from
+//            ListSubscriptionsByTopicRequest listRequest = ListSubscriptionsByTopicRequest.builder()
+//                    .topicArn(topicArn)
+//                    .build();
+//
+//            // Get the list of subscriptions
+//            ListSubscriptionsByTopicResponse listResponse = snsClient.listSubscriptionsByTopic(listRequest);
+//
+//            // Unsubscribe from the topic
+//            for (Subscription subscription : listResponse.subscriptions()) { // Iterate through the list of subscriptions to find the one to unsubscribe from
+//                if (subscription.endpoint().equals(userEmail)) { // Check if the subscription endpoint(email) matches the user's email
+//                    UnsubscribeRequest unsubscribeRequest = UnsubscribeRequest.builder()
+//                            .subscriptionArn(subscription.subscriptionArn()) // Use the subscription ARN to unsubscribe
+//                            .build();
+//                    snsClient.unsubscribe(unsubscribeRequest);
+//                    break;
+//                }
+//            }
+//        } catch (SnsException e) {
+//            System.err.println("Error Unsubscribing: " + e.getMessage());
+//        }
+//
+//    }
 
-    public void unsubscribe(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
+
+
+
+
+
+
+    // checks for multiple subscriptions as opposed to just one subscription. will not erase the old subscriptions from aws sns but will mark them as deleted
+        public void unsubscribe(String userEmail, User.EmailNotificationsFrequency newFrequency, int businessId) {
         try {
+            // Fetch the business name from the repository
             String businessName = businessRepository.findById(businessId)
                     .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();
 
+            // Build the topic ARN for the new subscription
+            String newTopicArn = buildTopicArn(newFrequency, businessName);
 
-            String topicArn = buildTopicArn(emailNotificationsFrequency, businessName);
-
-
-            // List all subscriptions for the topic and find the subscription to unsubscribe from
+            // List all subscriptions for the relevant business topics
+            String baseTopicArn = baseArn + businessName; // Common base ARN for all topics related to this business
             ListSubscriptionsByTopicRequest listRequest = ListSubscriptionsByTopicRequest.builder()
-                    .topicArn(topicArn)
+                    .topicArn(baseTopicArn)
                     .build();
 
-            // Get the list of subscriptions
+            // Fetch the list of subscriptions
             ListSubscriptionsByTopicResponse listResponse = snsClient.listSubscriptionsByTopic(listRequest);
 
-            // Unsubscribe from the topic
-            for (Subscription subscription : listResponse.subscriptions()) { // Iterate through the list of subscriptions to find the one to unsubscribe from
-                if (subscription.endpoint().equals(userEmail)) {
-                    UnsubscribeRequest unsubscribeRequest = UnsubscribeRequest.builder()
-                            .subscriptionArn(subscription.subscriptionArn()) // Use the subscription ARN to unsubscribe
-                            .build();
-                    snsClient.unsubscribe(unsubscribeRequest);
-                    break;
+            // Iterate through the list of subscriptions to find the one to unsubscribe from
+            for (Subscription subscription : listResponse.subscriptions()) {
+                if (subscription.endpoint().equals(userEmail)) { // Check if the subscription endpoint(email) matches the user's email
+                    if (!subscription.topicArn().equals(newTopicArn)) {  // Check if subscription in the list has the same topic ARN as the new one. If not, unsubscribe.
+                        UnsubscribeRequest unsubscribeRequest = UnsubscribeRequest.builder()
+                                .subscriptionArn(subscription.subscriptionArn())
+                                .build();
+                        snsClient.unsubscribe(unsubscribeRequest);
+                    }
                 }
             }
         } catch (SnsException e) {
             System.err.println("Error Unsubscribing: " + e.getMessage());
         }
-
     }
+
+
+
+
 
     public void publishNotification(String message, String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
         try {
