@@ -116,7 +116,8 @@ public class EmailNotificationService {
             String newTopicArn = buildTopicArn(newFrequency, businessName);
 
             // List all subscriptions for the relevant business topics
-            String baseTopicArn = buildBaseTopicArn(businessName); // Common base ARN for all topics related to this business todo right now without this line we are not getting the correct arn for the topic because we are not adding in the "_" in the business name
+//            String baseTopicArn = buildBaseTopicArn(businessName); // Common base ARN for all topics related to this business todo right now without this line we are not getting the correct arn for the topic because we are not adding in the "_" in the business name
+            String baseTopicArn = baseArn + businessName; // Common base ARN for all topics related to this business
             ListSubscriptionsByTopicRequest listRequest = ListSubscriptionsByTopicRequest.builder()
                     .topicArn(baseTopicArn)
                     .build();
