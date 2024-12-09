@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class EmailNotificationService {
     private final SnsClient snsClient;
@@ -52,6 +55,16 @@ public class EmailNotificationService {
         String topicArn = baseArn + topicName;
         return topicArn;
     }
+
+
+    private String buildBaseTopicArn(String businessName) {
+        String formattedBusinessName = businessName.replaceAll("\\s+", "_");
+        String topicName = formattedBusinessName + "_";
+        String topicArn = baseArn + topicName;
+        return topicArn;
+    }
+
+
 // //will erase the old subscriptions from aws sns but not as good with multiple subscriptions
 //    public void unsubscribe(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
 //        try {
@@ -103,7 +116,7 @@ public class EmailNotificationService {
             String newTopicArn = buildTopicArn(newFrequency, businessName);
 
             // List all subscriptions for the relevant business topics
-            String baseTopicArn = baseArn + businessName; // Common base ARN for all topics related to this business
+            String baseTopicArn = buildBaseTopicArn(businessName); // Common base ARN for all topics related to this business todo right now without this line we are not getting the correct arn for the topic because we are not adding in the "_" in the business name
             ListSubscriptionsByTopicRequest listRequest = ListSubscriptionsByTopicRequest.builder()
                     .topicArn(baseTopicArn)
                     .build();
@@ -126,6 +139,7 @@ public class EmailNotificationService {
             System.err.println("Error Unsubscribing: " + e.getMessage());
         }
     }
+
 
 
 
