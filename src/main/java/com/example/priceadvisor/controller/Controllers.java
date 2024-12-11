@@ -105,25 +105,25 @@ public class Controllers {
     }
 
     @PostMapping("/save-settings")
-    public String saveSettings(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency emailNotificationsFrequency, RedirectAttributes redirectAttributes) {
+    public String saveSettings(@RequestParam(name = "chosenEmailNotificationsFrequency", required = false) User.EmailNotificationsFrequency chosenEmailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
             Integer userId = userService.getCurrentUserId();
             String userEmail = userService.getCurrentEmail();
 
             // Set the email notifications frequency to NONE if it is null
-            if (emailNotificationsFrequency == null)
-                emailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
+            if (chosenEmailNotificationsFrequency == null)
+                chosenEmailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
 
-            // Get the current email notifications frequency for the user
+            // Get the email notifications frequency currently in the database
             User.EmailNotificationsFrequency currentFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
 
-            // Unsubscribe and resubscribe to the SNS topic if the frequency has changed
-            if (currentFrequency != User.EmailNotificationsFrequency.NONE && currentFrequency != emailNotificationsFrequency) {
+            if (currentFrequency != User.EmailNotificationsFrequency.NONE && currentFrequency != chosenEmailNotificationsFrequency) {
                 emailNotificationService.unsubscribe(userEmail, currentFrequency, userService.getCurrentBusinessId());
             }
-            if (emailNotificationsFrequency != User.EmailNotificationsFrequency.NONE) {
-                emailNotificationService.subscribe(userEmail, emailNotificationsFrequency, userService.getCurrentBusinessId());
-                userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency);
+
+            if (chosenEmailNotificationsFrequency != User.EmailNotificationsFrequency.NONE) {
+                emailNotificationService.subscribe(userEmail, chosenEmailNotificationsFrequency, userService.getCurrentBusinessId());
+                userService.setCurrentEmailNotificationsFrequency(userId, chosenEmailNotificationsFrequency);
             }
 
             redirectAttributes.addFlashAttribute("successMessage", "Changes Saved"); // Add success message
