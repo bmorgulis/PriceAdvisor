@@ -142,7 +142,7 @@ public class Controllers {
 
     @GetMapping("/compare-prices")
     public String comparePrices() {
-        // DataFetchingService dataFetchingService = new DataFetchingService(items);
+        // DataFetchingService dataFetchingService = new DataFetchingService();
         // dataFetchingService.fetchData();
         return "compare-prices";
     }

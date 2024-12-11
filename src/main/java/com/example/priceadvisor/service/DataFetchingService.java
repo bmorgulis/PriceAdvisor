@@ -11,10 +11,10 @@ import java.util.Map;
 @Service
 public class DataFetchingService {
     DataFetchingManager dataFetchingManager;
-    List<Item> items;
 
-    public DataFetchingService(List<Item> items) {
-        dataFetchingManager = new DataFetchingManager(items);
+    public DataFetchingService() {
+        //List<Item> items = getAllItems
+        //dataFetchingManager = new DataFetchingManager(items);
     }
 
     public List<Map.Entry<Item, FetchedData>> fetchData() {
