@@ -7,3 +7,15 @@
 	margin: 30px 250px;
 	line-height: 2;
 }
+.about-btn {
+	background-color: white ;
+	color:#761EE8;
+	border-color: white;
+	box-shadow: rgba(0, 0, 0, 0.56) 0 0 40px;
+	align-self: flex-start;
+}
+.about-btn:hover {
+	background-color: #761EE8;
+	color:white;
+	border-color: #761EE8;
+}

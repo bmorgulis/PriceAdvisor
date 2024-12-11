@@ -1,18 +1,16 @@
 package com.example.priceadvisor.service;
 
-import com.example.priceadvisor.entity.Business;
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.repository.BusinessRepository;
 import com.example.priceadvisor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
-    @Value("${aws.sns.base.arn}") // Inject the base ARN from the application.properties file.
-    private String baseArn;
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -49,23 +47,23 @@ public class UserService {
         return user.getEmailNotificationsFrequency();
     }
 
-    public String setCurrentEmailNotificationsFrequency(Integer userId, User.EmailNotificationsFrequency emailFrequency, BusinessRepository businessRepository) {
+    public void setCurrentEmailNotificationsFrequency(Integer userId, User.EmailNotificationsFrequency emailFrequency) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         user.setEmailNotificationsFrequency(emailFrequency);
         userRepository.save(user);
-
-        int businessId = user.getBusinessId();
-
-        String businessName = BusinessRepository.findById(businessId)
-                .orElseThrow(() -> new IllegalArgumentException("Business not found"))
-                .getName();
-
-        String frequency = user.getEmailNotificationsFrequency().name();
-        return String.format("%s%s_%s", baseArn, businessName, frequency);
     }
 
     public Integer getCurrentBusinessId() {
         return securityContextService.getCurrentBusinessId();
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAllOrderByEmail();
+    }
+
+    public void deleteUsersByEmails(List<String> emails) {
+        List<User> usersToDelete = userRepository.findByEmailIn(emails);
+        userRepository.deleteAll(usersToDelete);
     }
 }

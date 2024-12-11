@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 @Controller
 public class Controllers {
 
     private final UserService userService;
     private final EmailNotificationService emailNotificationService;
+    Logger logger = Logger.getLogger(Controllers.class.getName());
 
     @Autowired
     public Controllers(UserService userService, EmailNotificationService emailNotificationService) {
@@ -29,7 +33,14 @@ public class Controllers {
     }
 
     @GetMapping("/manage-accounts")
-    public String manageAccounts() {
+    public String manageAccounts(Model model, RedirectAttributes redirectAttributes) {
+        try {
+            List<User> users = userService.getAllUsers();
+            model.addAttribute("users", users);  // Add users to the model
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
+            e.printStackTrace();
+        }
         return "manage-accounts";
     }
 
@@ -39,12 +50,13 @@ public class Controllers {
     }
 
     @GetMapping("/settings")
-    public String settings(Model model) {
+    public String settings(Model model, RedirectAttributes redirectAttributes) {
         try {
             Integer userId = userService.getCurrentUserId();  // Use the service method to get the user ID
             User.EmailNotificationsFrequency emailNotificationsFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
             model.addAttribute("emailNotificationsFrequency", emailNotificationsFrequency);
         } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
             e.printStackTrace();
         }
         return "settings";
@@ -60,7 +72,7 @@ public class Controllers {
             Integer managerBusinessId = userService.getCurrentBusinessId(); // Get the manager's business ID using the service
             userService.addUser(email, password, role, managerBusinessId);
 
-            redirectAttributes.addFlashAttribute("userAddSuccess", true);
+            redirectAttributes.addFlashAttribute("successMessage", "User added");
             return "redirect:/manage-accounts";
         } catch (Exception e) {
             String message = e.getMessage().toLowerCase();
@@ -72,13 +84,28 @@ public class Controllers {
                 errorMessage = "An unexpected error occurred. Please try again.";
             }
 
-            redirectAttributes.addFlashAttribute("userAddErrorMessage", errorMessage);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
             return "redirect:/manage-accounts";
         }
     }
 
-    @PostMapping("/set-email-notifications-frequency")
-    public String setEmailNotificationsFrequency(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency emailNotificationsFrequency, RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete-users")
+    public String deleteUsers(@RequestParam List<String> emails, RedirectAttributes redirectAttributes) {
+        try {
+            // Delete the users using the UserService
+            userService.deleteUsersByEmails(emails);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Account(s) Deleted");
+            return "redirect:/manage-accounts";  // Redirect back to manage accounts page
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
+            return "redirect:/manage-accounts";  // Redirect back in case of error
+        }
+    }
+
+    @PostMapping("/save-settings")
+    public String saveSettings(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency emailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
             Integer userId = userService.getCurrentUserId();
             String userEmail = userService.getCurrentEmail();
@@ -91,19 +118,19 @@ public class Controllers {
             User.EmailNotificationsFrequency currentFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
 
             // Unsubscribe and resubscribe to the SNS topic if the frequency has changed
-            if (currentFrequency != emailNotificationsFrequency) {
+            if (currentFrequency != User.EmailNotificationsFrequency.NONE && currentFrequency != emailNotificationsFrequency) {
                 emailNotificationService.unsubscribe(userEmail, currentFrequency, userService.getCurrentBusinessId());
-                if (currentFrequency != User.EmailNotificationsFrequency.NONE) {
-                    emailNotificationService.subscribe(userEmail, emailNotificationsFrequency, userService.getCurrentBusinessId());
-                }
-                userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency, userService.BusinessRepository);
+            }
+            if (emailNotificationsFrequency != User.EmailNotificationsFrequency.NONE) {
+                emailNotificationService.subscribe(userEmail, emailNotificationsFrequency, userService.getCurrentBusinessId());
+                userService.setCurrentEmailNotificationsFrequency(userId, emailNotificationsFrequency);
             }
 
-            redirectAttributes.addFlashAttribute("saveSettingsSuccess", true); // Add success message
+            redirectAttributes.addFlashAttribute("successMessage", "Changes Saved"); // Add success message
             return "redirect:/settings";  // Redirect back to settings page
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("saveSettingsErrorMessage", "An unexpected error occurred. Please try again.");
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
             return "redirect:/settings";
         }
     }

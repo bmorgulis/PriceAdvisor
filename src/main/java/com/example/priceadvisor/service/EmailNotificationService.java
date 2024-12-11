@@ -2,10 +2,12 @@ package com.example.priceadvisor.service;
 
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.repository.BusinessRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
+
 
 @Service
 public class EmailNotificationService {
@@ -14,9 +16,8 @@ public class EmailNotificationService {
 
     @Value("${aws.sns.base.arn}") // Inject the topic ARN from the application.properties file.
     private String baseArn;
-    private String topicArn;
 
-
+    @Autowired
     public EmailNotificationService(SnsClient snsClient, BusinessRepository businessRepository) {
         this.snsClient = snsClient;
         this.businessRepository = businessRepository;
@@ -33,17 +34,13 @@ public class EmailNotificationService {
             SubscribeRequest request = SubscribeRequest.builder()
                     .protocol("email")
                     .endpoint(userEmail)
-                    .returnSubscriptionArn(true) // Return the ARN, even if the subscription is not yet confirmed
                     .topicArn(topicArn)
                     .build();
 
             snsClient.subscribe(request);
-            publishNotification("You have successfully subscribed to Price Advisor Notifications great work", userEmail, emailNotificationsFrequency, businessId); //for testing purposes to make sure that publish method works
-
         } catch (SnsException e) {
             System.err.println("Error Subscribing: " + e.getMessage());
         }
-
     }
 
     private String buildTopicArn(User.EmailNotificationsFrequency emailNotificationsFrequency, String businessName) {
@@ -58,51 +55,56 @@ public class EmailNotificationService {
             String businessName = businessRepository.findById(businessId)
                     .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();
 
-
+            // Assuming buildTopicArn returns a single topic ARN
             String topicArn = buildTopicArn(emailNotificationsFrequency, businessName);
 
-
-            // List all subscriptions for the topic and find the subscription to unsubscribe from
-            ListSubscriptionsByTopicRequest listRequest = ListSubscriptionsByTopicRequest.builder()
-                    .topicArn(topicArn)
+            // Create the ListSubscriptionsRequest with the topic ARN
+            ListSubscriptionsByTopicRequest listSubscriptionsByTopicRequest = ListSubscriptionsByTopicRequest.builder()
+                    .topicArn(topicArn)  // Set the topic ARN directly
                     .build();
 
-            // Get the list of subscriptions
-            ListSubscriptionsByTopicResponse listResponse = snsClient.listSubscriptionsByTopic(listRequest);
+            // Call SNS to list subscriptions for the topic
+            ListSubscriptionsByTopicResponse response = snsClient.listSubscriptionsByTopic(listSubscriptionsByTopicRequest);
 
-            // Unsubscribe from the topic
-            for (Subscription subscription : listResponse.subscriptions()) { // Iterate through the list of subscriptions to find the one to unsubscribe from
+            // Iterate through subscriptions to find the matching subscription by email
+            for (Subscription subscription : response.subscriptions()) {
                 if (subscription.endpoint().equals(userEmail)) {
                     UnsubscribeRequest unsubscribeRequest = UnsubscribeRequest.builder()
-                            .subscriptionArn(subscription.subscriptionArn()) // Use the subscription ARN to unsubscribe
+                            .subscriptionArn(subscription.subscriptionArn())  // Get the Subscription ARN
                             .build();
+
                     snsClient.unsubscribe(unsubscribeRequest);
-                    break;
+                    System.out.println("Unsubscribed successfully from topic: " + topicArn);
+                    break;  // Successfully unsubscribed, exit the method
                 }
             }
+
+            // If no subscription was found for the given email
+            System.err.println("No subscription found for email: " + userEmail);
+
         } catch (SnsException e) {
             System.err.println("Error Unsubscribing: " + e.getMessage());
         }
-
     }
 
-    public void publishNotification(String message, String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
-        try {
-            String businessName = businessRepository.findById(businessId)
-                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();
 
-
-            String topicArn = buildTopicArn(emailNotificationsFrequency, businessName);
-
-
-            PublishRequest request = PublishRequest.builder()
-                    .message(message)
-                    .topicArn(topicArn)
-                    .subject("Price Advisor Notification")
-                    .build();
-            snsClient.publish(request);
-        } catch (SnsException e) {
-            System.err.println("Error Sending Notification: " + e.getMessage());
-        }
-    }
+//    public void publishNotification(String message, String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
+//        try {
+//            String businessName = businessRepository.findById(businessId)
+//                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();@
+//
+//
+//            String topicArn = buildTopicArn(emailNotificationsFrequency, businessName);
+//
+//
+//            PublishRequest request = PublishRequest.builder()
+//                    .message(message)
+//                    .topicArn(topicArn)
+//                    .subject("Price Advisor Notification")
+//                    .build();
+//            snsClient.publish(request);
+//        } catch (SnsException e) {
+//            System.err.println("Error Sending Notification: " + e.getMessage());
+//        }
+//    }
 }

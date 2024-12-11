@@ -12,33 +12,30 @@ body{
 	text-align: center;
 	font-size: 35px;
 }
-.btn {
-	background-color: white ;
-	color:#761EE8;
-	border-color: white;
-	box-shadow: rgba(0, 0, 0, 0.56) 0 0 40px;
-	border-radius: 25px;
-	font-size: 18px;
-	align-self: flex-start;
-}
-.btn:hover {
-	background-color: #761EE8;
-	color:white;
-	border-color: #761EE8;
-	border-radius: 25px;
-	font-size: 18px;
-}
 .button {
 	background-color: #761EE8;
 	color:white !important;
 	border-color: #761EE8;
 	box-shadow: none;
 	font-size: 18px;
+	border-radius: 25px;
 }
 .button:hover {
 	background-color: white;
 	color:#761EE8 !important;
 	border-color: white;
+	border-radius: 25px;
+	font-size: 18px;
+}
+.btn {
+	align-self: flex-start;
+	border-radius: 25px;
+	font-size: 18px;
+}
+.btn:hover {
+	align-self: flex-start;
+	border-radius: 25px;
+	font-size: 18px;
 }
 #site-title {
 	font-size: 110px;
