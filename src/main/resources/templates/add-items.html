@@ -50,6 +50,45 @@
 </nav>
 <!-- end of header -->
 
+<!-- Add Item Button -->
+    <button id="add-item-modal-button" class="btn button btn-lg" style="margin-top: 27px; margin-left: 115px">Add Item
+    </button>
+
+<!-- Add Item Form Modal -->
+<div class="modal fade" id="add-item-modal" tabindex="-1" aria-labelledby="add-item-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-light p-5 rounded shadow mx-auto">
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h1 class="modal-title flex-grow-1 text-center" id="add-item-modal-label">Add Item</h1>
+            </div>
+            <div class="modal-body">
+                <!-- Add Item Form -->
+                <form id="addItemForm" method="POST" action="/add-item" class="w-100">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name:</label>
+                        <input type="text" id="name" name="name" class="form-control form-control-lg" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="UPC" class="form-label">UPC:</label>
+                        <input type="number" id="UPC" name="UPC" class="form-control form-control-lg" required>
+                    </div>
+                    <div class="mb-5">
+                        <label for="SKU" class="form-label">SKU:</label>
+                        <input type="number" id="SKU" name="SKU" class="form-control form-control-lg" required>
+                    </div>
+                    <div class="text-center">
+                        <input class="btn button btn-lg" type="submit" value="Add Item">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 <!-- Modal for Successful Login -->
 <div class="modal fade" id="login-success-modal" tabindex="-1" aria-labelledby="login-success-modal-label" aria-hidden="true">
     <div class="modal-dialog">
@@ -61,7 +100,7 @@
     </div>
 </div>
 
-<script>
+<script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('login') && urlParams.get('login') === 'true') {
@@ -72,6 +111,14 @@
                 loginSuccessModal.hide();
             }, 1000);
         }
+
+        // Modal for adding an item
+        const addItemModal = new bootstrap.Modal(document.getElementById('add-item-modal'));
+        const addItemModalButton = document.getElementById('add-item-modal-button');
+
+        addItemModalButton.addEventListener('click', function () {
+            addItemModal.show();
+        });
     });
 </script>
 
