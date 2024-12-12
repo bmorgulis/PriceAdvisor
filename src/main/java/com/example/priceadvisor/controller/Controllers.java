@@ -32,8 +32,8 @@ public class Controllers {
         return "sign-in";
     }
 
-    @GetMapping("/manage-accounts")
-    public String manageAccounts(Model model, RedirectAttributes redirectAttributes) {
+    @GetMapping("/manage-users")
+    public String manageUsers(Model model, RedirectAttributes redirectAttributes) {
         try {
             List<User> users = userService.getAllUsers();
             model.addAttribute("users", users);  // Add users to the model
@@ -41,7 +41,7 @@ public class Controllers {
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
             e.printStackTrace();
         }
-        return "manage-accounts";
+        return "manage-users";
     }
 
     @GetMapping("/terms-of-use")
@@ -73,19 +73,19 @@ public class Controllers {
             userService.addUser(email, password, role, managerBusinessId);
 
             redirectAttributes.addFlashAttribute("successMessage", "User added");
-            return "redirect:/manage-accounts";
+            return "redirect:/manage-users";
         } catch (Exception e) {
             String message = e.getMessage().toLowerCase();
             String errorMessage;
 
             if (message.contains("duplicate")) {
-                errorMessage = "The email address you entered is already associated with an account.";
+                errorMessage = "The email address you entered is already associated with an user.";
             } else {
                 errorMessage = "An unexpected error occurred. Please try again.";
             }
 
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
-            return "redirect:/manage-accounts";
+            return "redirect:/manage-users";
         }
     }
 
@@ -95,12 +95,12 @@ public class Controllers {
             // Delete the users using the UserService
             userService.deleteUsersById(userIds);
 
-            redirectAttributes.addFlashAttribute("successMessage", "Account(s) Deleted");
-            return "redirect:/manage-accounts";  // Redirect back to manage accounts page
+            redirectAttributes.addFlashAttribute("successMessage", "User(s) Deleted");
+            return "redirect:/manage-users";  // Redirect back to manage users page
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
-            return "redirect:/manage-accounts";  // Redirect back in case of error
+            return "redirect:/manage-users";  // Redirect back in case of error
         }
     }
 
