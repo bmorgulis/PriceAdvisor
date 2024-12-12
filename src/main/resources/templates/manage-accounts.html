@@ -115,7 +115,7 @@
         </div>
         <div>
             <!-- Save Changes Button with id using kebab-case -->
-            <a id="save-changes-btn" class="btn button" style="width: 170px;">Save Changes</a>
+            <a id="save-changes-button" class="btn button" style="width: 170px;">Save Changes</a>
         </div>
     </div>
 </div>
@@ -216,8 +216,42 @@
             addUserModal.show();
         });
 
-        // Modal for confirming save changes
-        const saveChangesButton = document.getElementById('save-changes-btn');
+        const deleteButton = document.getElementById('delete-button');
+
+        deleteButton.addEventListener('click', function () {
+            deleteConfirmationModal.show(); // Show the modal
+        });
+
+        const deleteConfirmationModal = new bootstrap.Modal(document.getElementById('delete-confirmation-modal'));
+        const confirmDeleteButton = document.getElementById('confirm-delete-button');  // Reference the confirm delete button
+
+        confirmDeleteButton.addEventListener('click', function () {
+            const selectedUserIds = [];
+            const checkboxes = document.querySelectorAll('.gridjs-table input[type="checkbox"]:checked'); // Get all checked checkboxes
+            checkboxes.forEach(checkbox => {
+                const row = checkbox.closest('.gridjs-tr'); // Get the row that contains the checkbox
+                const userId = row ? row.getAttribute('user-id') : null; // Get the data-id from the row
+                if (userId) {
+                    selectedUserIds.push(userId);
+                }
+            });
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/delete-users';
+
+            const userIdsInput = document.createElement('input');
+            userIdsInput.type = 'hidden';
+            userIdsInput.name = 'userIds';
+            userIdsInput.value = selectedUserIds.join(',');
+            form.appendChild(userIdsInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        });
+
+
+        const saveChangesButton = document.getElementById('save-changes-button');
         const saveChangesConfirmationModal = new bootstrap.Modal(document.getElementById('save-changes-confirmation-modal'));
         const confirmSaveChangesButton = document.getElementById('confirm-save-changes');
 
@@ -226,7 +260,7 @@
         });
 
         confirmSaveChangesButton.addEventListener('click', function () {
-            saveChangesConfirmationModal.hide();
+
         });
 
         // Grid setup for user data display
@@ -304,7 +338,7 @@
                 const user = userData[rowIndex - 1]; // Access the user object at the given index
                 const userId = user.userId; // Get the userId from the object
 
-                row.setAttribute('data-id', userId); // Set the 'data-id' attribute on the row
+                row.setAttribute('user-id', userId); // Set the 'data-id' attribute on the row
             });
 
             const deleteButton = document.getElementById('delete-button');
@@ -325,38 +359,6 @@
                 checkbox.addEventListener('change', toggleDeleteButton);
             });
 
-            deleteButton.addEventListener('click', function () {
-                deleteConfirmationModal.show(); // Show the modal
-            });
-
-            // Modal for delete confirmation
-            const deleteConfirmationModal = new bootstrap.Modal(document.getElementById('delete-confirmation-modal'));
-            const confirmDeleteButton = document.getElementById('confirm-delete-button');  // Reference the confirm delete button
-
-            confirmDeleteButton.addEventListener('click', function () {
-                    const selectedIds = [];
-                    const checkboxes = document.querySelectorAll('.gridjs-table input[type="checkbox"]:checked'); // Get all checked checkboxes
-                    checkboxes.forEach(checkbox => {
-                        const row = checkbox.closest('.gridjs-tr'); // Get the row that contains the checkbox
-                        const dataId = row ? row.getAttribute('data-id') : null; // Get the data-id from the row
-                        if (dataId) {
-                            selectedIds.push(dataId);
-                        }
-                    });
-
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/delete-users';
-
-                const userIdsInput = document.createElement('input');
-                userIdsInput.type = 'hidden';
-                userIdsInput.name = 'userIds';
-                userIdsInput.value = selectedIds.join(',');
-                form.appendChild(userIdsInput);
-
-                document.body.appendChild(form);
-                form.submit();
-            });
         }, 500);
     });
 </script>
