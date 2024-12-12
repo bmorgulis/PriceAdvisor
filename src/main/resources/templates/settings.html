@@ -120,11 +120,11 @@
 </div>
 
 <!-- Modal for Successfully Saved Settings -->
-<div class="modal fade" id="save-settings-success-modal" tabindex="-1" aria-labelledby="save-settings-success-modal-label" aria-hidden="true">
+<div class="modal fade" id="success-modal" tabindex="-1" aria-labelledby="success-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="background-color: #39DB14; color: white;">
             <div class="modal-body text-center">
-                <h5 class="modal-title" id="save-settings-success-modal-label">Changes Saved</h5>
+                <h5 class="modal-title" id="success-modal-label" th:text="${successMessage}"></h5>
             </div>
         </div>
     </div>
@@ -144,13 +144,13 @@
         }
 
         // Create and display the settings success modal
-        const saveSettingsSuccess = /*[[${saveSettingsSuccess}]]*/ false;  // success or failure
-        const saveSettingsSuccessModal = new bootstrap.Modal(document.getElementById('save-settings-success-modal'));
+        const successMessage = /*[[${successMessage}]]*/ '';  // success or failure
+        const successModal = new bootstrap.Modal(document.getElementById('success-modal'));
 
-        if (saveSettingsSuccess) {
-            saveSettingsSuccessModal.show();
+        if (successMessage) {
+            successModal.show();
             setTimeout(function() {
-                saveSettingsSuccessModal.hide();
+                successMessage.hide();
             }, 1000);
         }
 

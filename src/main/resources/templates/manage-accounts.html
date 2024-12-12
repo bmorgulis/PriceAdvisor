@@ -201,7 +201,6 @@
         // Display success message modal if successMessage exists
         const successMessage = /*[[${successMessage}]]*/ '';
         const successModal = new bootstrap.Modal(document.getElementById('success-modal'));
-        console.log(successMessage);
         if (successMessage) {
             successModal.show();
             setTimeout(function () {
@@ -330,22 +329,17 @@
 
                 checkboxes.forEach(function (checkbox) {
                     // Find the parent row of the checkbox
-                    console.log(checkbox);
                     const row = checkbox.closest('tr');
-                    console.log(row);
                     if (row) {
                         const emailCell = row.querySelector('td:nth-child(2)');
-                        console.log(emailCell);
                         if (emailCell) {
                             const emailInput = emailCell.querySelector('input');
                             if (emailInput) {
-                                console.log('Email found:', emailInput.value.trim());  // Debugging log
                                 selectedEmails.push(emailInput.value.trim());  // Add the email to the list
                             }
                         }
                     }
                 });
-                console.log(selectedEmails);
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '/delete-users';

@@ -105,7 +105,7 @@ public class Controllers {
     }
 
     @PostMapping("/save-settings")
-    public String saveSettings(@RequestParam(name = "chosenEmailNotificationsFrequency", required = false) User.EmailNotificationsFrequency chosenEmailNotificationsFrequency, RedirectAttributes redirectAttributes) {
+    public String saveSettings(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency chosenEmailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
             Integer userId = userService.getCurrentUserId();
             String userEmail = userService.getCurrentEmail();
