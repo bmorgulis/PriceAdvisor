@@ -244,14 +244,14 @@
                 {
                     name: 'Email',
                     formatter: (_, row) => {
-                        const currentEmail = row.cells[1].data; // Extract the current email
+                        const currentEmail = row.cells[1].data; // Adjust index to reflect the new column
                         return gridjs.html('<input type="email" class="form-control form-control-lg" value="' + currentEmail + '" />');
                     }
                 },
                 {
                     name: 'Password',
                     type: 'password',
-                    formatter: (_, row) => {
+                    formatter: (_) => {
                         // Create a blank password input field (no pre-filled value)
                         return gridjs.html('<input type="password" class="form-control form-control-lg" value="">');
                     },
@@ -259,7 +259,7 @@
                 {
                     name: 'Role',
                     formatter: (_, row) => {
-                        const currentRole = row.cells[3].data; // Extract the current role
+                        const currentRole = row.cells[3].data; // Adjust index to reflect the new column
                         const roles = ['Analyst', 'Manager']; // List of roles
                         const options = roles
                             .map(role => {
@@ -268,10 +268,10 @@
                             })
                             .join('');
                         return gridjs.html(`
-                            <select class="user-dropdown">
-                                ${options}
-                            </select>
-                        `);
+                    <select class="user-dropdown">
+                        ${options}
+                    </select>
+                `);
                     },
                 }
             ],
@@ -297,8 +297,18 @@
             const buttonsContainer = document.getElementById('buttons-container');
             buttonsContainer.style.display = 'block';
 
+             const rows = document.querySelectorAll('.gridjs-tr');
+
+            rows.forEach((row, rowIndex) => {
+                if (rowIndex === 0) return;
+                const user = userData[rowIndex - 1]; // Access the user object at the given index
+                const userId = user.userId; // Get the userId from the object
+
+                row.setAttribute('data-id', userId); // Set the 'data-id' attribute on the row
+            });
+
             const deleteButton = document.getElementById('delete-button');
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkboxes = document.querySelectorAll('.gridjs-table input[type="checkbox"]');
 
             function toggleDeleteButton() {
                 const atLeastOneChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
@@ -324,32 +334,30 @@
             const confirmDeleteButton = document.getElementById('confirm-delete-button');  // Reference the confirm delete button
 
             confirmDeleteButton.addEventListener('click', function () {
-                let selectedEmails = [];
-                const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-
-                checkboxes.forEach(function (checkbox) {
-                    // Find the parent row of the checkbox
-                    const row = checkbox.closest('tr');
-                    if (row) {
-                        const emailCell = row.querySelector('td:nth-child(2)');
-                        if (emailCell) {
-                            const emailInput = emailCell.querySelector('input');
-                            if (emailInput) {
-                                selectedEmails.push(emailInput.value.trim());  // Add the email to the list
-                            }
+                    const selectedIds = [];
+                    const checkboxes = document.querySelectorAll('.gridjs-table input[type="checkbox"]:checked'); // Get all checked checkboxes
+                    checkboxes.forEach(checkbox => {
+                        const row = checkbox.closest('.gridjs-tr'); // Get the row that contains the checkbox
+                        const dataId = row ? row.getAttribute('data-id') : null; // Get the data-id from the row
+                        if (dataId) {
+                            selectedIds.push(dataId);
                         }
-                    }
-                });
+                    });
+
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '/delete-users';
 
-                form.innerHTML = `<input type="hidden" name="emails" value="${selectedEmails.join(',')}">`;
+                const userIdsInput = document.createElement('input');
+                userIdsInput.type = 'hidden';
+                userIdsInput.name = 'userIds';
+                userIdsInput.value = selectedIds.join(',');
+                form.appendChild(userIdsInput);
 
                 document.body.appendChild(form);
                 form.submit();
             });
-        }, 1000);
+        }, 500);
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

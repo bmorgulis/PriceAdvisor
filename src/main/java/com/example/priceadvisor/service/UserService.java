@@ -66,4 +66,9 @@ public class UserService {
         List<User> usersToDelete = userRepository.findByEmailIn(emails);
         userRepository.deleteAll(usersToDelete);
     }
+
+    public void deleteUsersById(List<Integer> userIds) {
+        List<User> usersToDelete = userRepository.findByUserIdIn(userIds);
+        userRepository.deleteAll(usersToDelete);
+    }
 }

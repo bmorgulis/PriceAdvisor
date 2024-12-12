@@ -90,10 +90,10 @@ public class Controllers {
     }
 
     @PostMapping("/delete-users")
-    public String deleteUsers(@RequestParam List<String> emails, RedirectAttributes redirectAttributes) {
+    public String deleteUsers(@RequestParam List<Integer> userIds, RedirectAttributes redirectAttributes) {
         try {
             // Delete the users using the UserService
-            userService.deleteUsersByEmails(emails);
+            userService.deleteUsersById(userIds);
 
             redirectAttributes.addFlashAttribute("successMessage", "Account(s) Deleted");
             return "redirect:/manage-accounts";  // Redirect back to manage accounts page
