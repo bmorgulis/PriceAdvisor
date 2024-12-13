@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -159,7 +160,7 @@ public class Controllers {
                           @RequestParam Long UPC,
                           @RequestParam Long SKU,
                           @RequestParam String description,
-                          @RequestParam Double price,
+                          @RequestParam BigDecimal price,
                           @RequestParam(required = false) String additionalInfo,
                           RedirectAttributes redirectAttributes) {
         try {
