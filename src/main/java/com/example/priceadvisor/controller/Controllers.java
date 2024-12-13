@@ -3,6 +3,7 @@ package com.example.priceadvisor.controller;
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.service.EmailNotificationService;
 import com.example.priceadvisor.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -104,6 +105,27 @@ public class Controllers {
         }
     }
 
+    @PostMapping("/edit-users")
+    public String saveUserChanges(@RequestParam("editedUsers") String editedUsersJson, RedirectAttributes redirectAttributes) {
+        try {
+            // Convert the JSON string to a List of User objects
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<User> changedUsers = objectMapper.readValue(editedUsersJson, objectMapper.getTypeFactory().constructCollectionType(List.class, User.class));
+
+            userService.saveChangedUsers(changedUsers);
+
+            // Add a success message to be shown after saving
+            redirectAttributes.addFlashAttribute("message", "Changes Saved");
+
+            // Redirect to another page or return a response
+            return "redirect:/manage-users";  // Adjust the redirection as needed
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
+            return "redirect:/manage-users";   // Handle error appropriately
+        }
+    }
+
     @PostMapping("/save-settings")
     public String saveSettings(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency chosenEmailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
@@ -151,4 +173,5 @@ public class Controllers {
     public String watchlist() {
         return "watchlist";
     }
+
 }

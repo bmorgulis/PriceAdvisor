@@ -71,4 +71,29 @@ public class UserService {
         List<User> usersToDelete = userRepository.findByUserIdIn(userIds);
         userRepository.deleteAll(usersToDelete);
     }
+
+    public void saveChangedUsers(List<User> changedUsers) {
+        for (User changedUser : changedUsers) {
+
+            User existingUser = userRepository.findById(changedUser.getUserId()).orElse(null);
+
+            if (existingUser == null) {
+                throw new IllegalArgumentException("No user found with ID: " + changedUser.getUserId());
+            }
+
+            if (changedUser.getEmail() != null) {
+                existingUser.setEmail(changedUser.getEmail());
+            }
+
+            if (changedUser.getRole() != null) {
+                existingUser.setRole(changedUser.getRole());
+            }
+
+            if (changedUser.getPassword() != null) {
+                existingUser.setPassword(passwordEncoder.encode(changedUser.getPassword()));  // Ensure this is hashed
+            }
+
+            userRepository.save(existingUser);
+        }
+    }
 }

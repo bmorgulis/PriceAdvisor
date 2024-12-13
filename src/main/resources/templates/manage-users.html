@@ -58,7 +58,8 @@
     <span th:text="${errorMessage}"></span>
 </div>
 
-<button id="add-user-modal-button" class="btn button btn-lg" style="margin-top: 27px; margin-left: 115px">Add User</button>
+<button id="add-user-modal-button" class="btn button btn-lg" style="margin-top: 27px; margin-left: 115px">Add User
+</button>
 <hr>
 
 <!-- Add User Form Modal -->
@@ -73,8 +74,11 @@
                 <!-- Add User Form -->
                 <form id="addUserForm" method="POST" action="/add-user" class="w-100">
                     <div class="mb-3">
-                        <label for="email" class="form-label">E-mail:</label>
-                        <input type="email" id="email" name="email" class="form-control form-control-lg" required>
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" id="email" name="email" class="form-control form-control-lg"
+                               required pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"
+                               oninvalid="this.setCustomValidity('Please enter a valid email address.')"
+                               oninput="this.setCustomValidity('')">
                     </div>
                     <div class="mb-4">
                         <label for="password" class="form-label">Password:</label>
@@ -102,6 +106,8 @@
     </div>
 </div>
 
+
+<form id="edit-users-form">
 <!-- Grid.js Table for Managing Users -->
 <div class="container my-2">
     <div id="user-table"></div>
@@ -114,10 +120,11 @@
         </div>
         <div>
             <!-- Save Changes Button with id using kebab-case -->
-            <a id="save-changes-button" class="btn button" style="width: 170px;">Save Changes</a>
+            <button type="submit" class="btn button" id="save-changes-button" style="width: 170px;">Save Changes</button>
         </div>
     </div>
 </div>
+</form>
 <br>
 
 <!-- Delete Confirmation Modal -->
@@ -185,8 +192,7 @@
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {
-
-        // Modal for login success
+        // Handle login success modal display
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('login') && urlParams.get('login') === 'true') {
             const loginSuccessModal = new bootstrap.Modal(document.getElementById('login-success-modal'));
@@ -197,7 +203,7 @@
             }, 1000);
         }
 
-        // Display success message modal if successMessage exists
+        // Handle success message modal display
         const successMessage = /*[[${successMessage}]]*/ '';
         const successModal = new bootstrap.Modal(document.getElementById('success-modal'));
         if (successMessage) {
@@ -207,29 +213,22 @@
             }, 1000);
         }
 
-        // Modal for adding a new user
+        // Add user modal
         const addUserModal = new bootstrap.Modal(document.getElementById('add-user-modal'));
         const addUserModalButton = document.getElementById('add-user-modal-button');
-
         addUserModalButton.addEventListener('click', function () {
             addUserModal.show();
         });
 
-        const deleteButton = document.getElementById('delete-button');
-
-        deleteButton.addEventListener('click', function () {
-            deleteConfirmationModal.show(); // Show the modal
-        });
-
+        // Delete confirmation modal
         const deleteConfirmationModal = new bootstrap.Modal(document.getElementById('delete-confirmation-modal'));
-        const confirmDeleteButton = document.getElementById('confirm-delete-button');  // Reference the confirm delete button
-
+        const confirmDeleteButton = document.getElementById('confirm-delete-button');
         confirmDeleteButton.addEventListener('click', function () {
             const selectedUserIds = [];
-            const checkboxes = document.querySelectorAll('.gridjs-table input[type="checkbox"]:checked'); // Get all checked checkboxes
+            const checkboxes = document.querySelectorAll('.gridjs-table input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-                const row = checkbox.closest('.gridjs-tr'); // Get the row that contains the checkbox
-                const userId = row ? row.getAttribute('user-id') : null; // Get the data-id from the row
+                const row = checkbox.closest('.gridjs-tr');
+                const userId = row ? row.getAttribute('user-id') : null;
                 if (userId) {
                     selectedUserIds.push(userId);
                 }
@@ -249,20 +248,26 @@
             form.submit();
         });
 
-
-        const saveChangesButton = document.getElementById('save-changes-button');
+        // Handle saving changes to users
+        const editedUsers = [];
         const saveChangesConfirmationModal = new bootstrap.Modal(document.getElementById('save-changes-confirmation-modal'));
         const confirmSaveChangesButton = document.getElementById('confirm-save-changes');
-
-        saveChangesButton.addEventListener('click', function () {
-            saveChangesConfirmationModal.show();
-        });
-
         confirmSaveChangesButton.addEventListener('click', function () {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/edit-users';
 
+            const editedUsersInput = document.createElement('input');
+            editedUsersInput.type = 'hidden';
+            editedUsersInput.name = 'editedUsers';
+            editedUsersInput.value = JSON.stringify(editedUsers);
+            form.appendChild(editedUsersInput);
+
+            document.body.appendChild(form);
+            form.submit();
         });
 
-        // Grid setup for user data display
+        // Set up grid with user data
         const userData = /*[[${users}]]*/ [];
         const grid = new gridjs.Grid({
             columns: [
@@ -277,23 +282,22 @@
                 {
                     name: 'Email',
                     formatter: (_, row) => {
-                        const currentEmail = row.cells[1].data; // Adjust index to reflect the new column
-                        return gridjs.html('<input type="email" class="form-control form-control-lg" value="' + currentEmail + '" />');
+                        const currentEmail = row.cells[1].data;
+                        return gridjs.html('<input type="email" name="email" class="form-control form-control-lg" value="' + currentEmail + '" required pattern="^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$" oninvalid="this.setCustomValidity(\'Please enter a valid email address.\')" oninput="this.setCustomValidity(\'\')">');
                     }
                 },
                 {
                     name: 'Password',
                     type: 'password',
                     formatter: (_) => {
-                        // Create a blank password input field (no pre-filled value)
-                        return gridjs.html('<input type="password" class="form-control form-control-lg" value="">');
+                        return gridjs.html('<input type="password" class="form-control form-control-lg" value="" minlength="6" pattern=".*\\d.*" oninvalid="this.setCustomValidity(\'Your password must be at least 6 characters long and contain at least one number.\')" oninput="this.setCustomValidity(\'\')">');
                     },
                 },
                 {
                     name: 'Role',
                     formatter: (_, row) => {
-                        const currentRole = row.cells[3].data; // Adjust index to reflect the new column
-                        const roles = ['Analyst', 'Manager']; // List of roles
+                        const currentRole = row.cells[3].data;
+                        const roles = ['Analyst', 'Manager'];
                         const options = roles
                             .map(role => {
                                 const isSelected = role.toLowerCase() === currentRole.trim().toLowerCase() ? 'selected' : '';
@@ -301,10 +305,10 @@
                             })
                             .join('');
                         return gridjs.html(`
-                    <select class="user-dropdown">
-                        ${options}
-                    </select>
-                `);
+                            <select class="user-dropdown">
+                                ${options}
+                            </select>
+                        `);
                     },
                 }
             ],
@@ -325,30 +329,33 @@
             },
         }).render(document.getElementById('user-table'));
 
-        // Handle showing delete button based on checkboxes
+        // Handle user actions on the grid (e.g., delete, save changes)
         setTimeout(function () {
             const buttonsContainer = document.getElementById('buttons-container');
             buttonsContainer.style.display = 'block';
 
-             const rows = document.querySelectorAll('.gridjs-tr');
+            const rows = document.querySelectorAll('.gridjs-tr');
 
             rows.forEach((row, rowIndex) => {
                 if (rowIndex === 0) return;
-                const user = userData[rowIndex - 1]; // Access the user object at the given index
-                const userId = user.userId; // Get the userId from the object
+                const user = userData[rowIndex - 1];
+                const userId = user.userId;
 
-                row.setAttribute('user-id', userId); // Set the 'data-id' attribute on the row
+                row.setAttribute('user-id', userId);
             });
 
+            // Handle delete button display logic
             const deleteButton = document.getElementById('delete-button');
+            deleteButton.addEventListener('click', function () {
+                deleteConfirmationModal.show();
+            });
             const checkboxes = document.querySelectorAll('.gridjs-table input[type="checkbox"]');
-
             function toggleDeleteButton() {
                 const atLeastOneChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
                 if (atLeastOneChecked) {
-                    deleteButton.classList.remove('disabled'); // Enable button
+                    deleteButton.classList.remove('disabled');
                 } else {
-                    deleteButton.classList.add('disabled'); // Disable button
+                    deleteButton.classList.add('disabled');
                 }
             }
 
@@ -356,6 +363,70 @@
 
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', toggleDeleteButton);
+            });
+
+            // Handle save changes button click
+            const saveChangesButton = document.getElementById('save-changes-button');
+            saveChangesButton.addEventListener('click', function (event) {
+                const form = document.getElementById('edit-users-form');
+                event.preventDefault();
+
+                if (form.reportValidity()) {
+                    saveChangesConfirmationModal.show();
+                }
+            });
+
+            // Track user changes (email, password, role)
+            userData.forEach(user => {
+                const row = document.querySelector(`.gridjs-tr[user-id="${user.userId}"]`);
+                if (!row) return;
+
+                const emailInput = row.querySelector('input[type="email"]');
+                const passwordInput = row.querySelector('input[type="password"]');
+                const roleSelect = row.querySelector('select.user-dropdown');
+
+                const originalEmail = user.email;
+                const originalRole = user.role;
+
+                const editedUser = { userId: user.userId };
+
+                let emailEdited = false;
+                let passwordEdited = false;
+                let roleEdited = false;
+
+                emailInput.addEventListener('input', function () {
+                    emailEdited = emailInput.value.trim() !== originalEmail;
+                });
+
+                passwordInput.addEventListener('input', function () {
+                    passwordEdited = passwordInput.value.trim() !== '';
+                });
+
+                roleSelect.addEventListener('change', function () {
+                    roleEdited = roleSelect.value.trim() !== originalRole;
+                });
+
+                const saveUserIfEdited = () => {
+                    if (emailEdited) {
+                        editedUser.email = emailInput.value.trim();
+                    }
+                    if (passwordEdited) {
+                        editedUser.password = passwordInput.value.trim();
+                    }
+                    if (roleEdited) {
+                        editedUser.role = roleSelect.value.trim().toUpperCase();
+                    }
+
+                    if (emailEdited || passwordEdited || roleEdited) {
+                        editedUsers.push(editedUser);
+                    }
+                };
+
+                // Save changes button click logic
+                const saveChangesButton = document.getElementById('save-changes-button');
+                saveChangesButton.addEventListener('click', function () {
+                    saveUserIfEdited();
+                });
             });
 
         }, 500);
