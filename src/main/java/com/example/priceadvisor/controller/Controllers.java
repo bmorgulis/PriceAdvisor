@@ -166,7 +166,7 @@ public class Controllers {
         try {
             Integer businessId = userService.getCurrentBusinessId(); // Get the inventory ID using the service
             // Make item through the user service add items
-            userService.addItem(name, UPC, SKU, description, price, additionalInfo, businessId);
+//            userService.addItem(name, UPC, SKU, description, price, additionalInfo, businessId);
 
             // Add success message
             redirectAttributes.addFlashAttribute("successMessage", "Item added");

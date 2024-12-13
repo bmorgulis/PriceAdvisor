@@ -18,7 +18,7 @@ public class ItemService {
 
     public void addItem(String name, Long UPC, Long SKU, String description, BigDecimal price, String additionalInfo, int businessId) {
         //TODO Should we include businessId? and take out starred and inventoryId
-        Item newItem = new Item(name, UPC, SKU, description, additionalInfo, price, starred, inventoryId);
-        itemRepository.save(newItem); //save is part of the JpaRepository interface which ItemRepository extends
+//        Item newItem = new Item(name, UPC, SKU, description, additionalInfo, price, starred, inventoryId);
+//        itemRepository.save(newItem); //save is part of the JpaRepository interface which ItemRepository extends
     }
 }
