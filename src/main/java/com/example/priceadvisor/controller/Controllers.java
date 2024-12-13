@@ -151,4 +151,29 @@ public class Controllers {
     public String watchlist() {
         return "watchlist";
     }
+
+    //TODO still need to have some validation to make sure that the item is not already in the database
+
+    @PostMapping("/add-item")
+    public String addItem(@RequestParam String name,
+                          @RequestParam Long UPC,
+                          @RequestParam Long SKU,
+                          @RequestParam String description,
+                          @RequestParam Double price,
+                          @RequestParam(required = false) String additionalInfo,
+                          RedirectAttributes redirectAttributes) {
+        try {
+            Integer businessId = userService.getCurrentBusinessId(); // Get the inventory ID using the service
+            // Make item through the user service add items
+            userService.addItem(name, UPC, SKU, description, price, additionalInfo, businessId);
+
+            // Add success message
+            redirectAttributes.addFlashAttribute("successMessage", "Item added");
+            return "redirect:/add-items";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
+            return "redirect:/add-items";
+        }
+    }
 }
