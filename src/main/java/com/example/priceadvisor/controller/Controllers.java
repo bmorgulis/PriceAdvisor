@@ -2,6 +2,7 @@ package com.example.priceadvisor.controller;
 
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.service.EmailNotificationService;
+import com.example.priceadvisor.service.SettingsService;
 import com.example.priceadvisor.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,13 @@ import java.util.logging.Logger;
 public class Controllers {
 
     private final UserService userService;
-    private final EmailNotificationService emailNotificationService;
+    private final SettingsService settingsService;
     Logger logger = Logger.getLogger(Controllers.class.getName());
 
     @Autowired
-    public Controllers(UserService userService, EmailNotificationService emailNotificationService) {
+    public Controllers(UserService userService, SettingsService settingsService, EmailNotificationService emailNotificationService) {
         this.userService = userService;
-        this.emailNotificationService = emailNotificationService;
+        this.settingsService = settingsService;
     }
 
     @GetMapping("/sign-in")
@@ -37,7 +38,7 @@ public class Controllers {
     public String manageUsers(Model model, RedirectAttributes redirectAttributes) {
         try {
             List<User> users = userService.getAllUsers();
-            model.addAttribute("users", users);  // Add users to the model
+            model.addAttribute("users", users);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
             e.printStackTrace();
@@ -53,7 +54,7 @@ public class Controllers {
     @GetMapping("/settings")
     public String settings(Model model, RedirectAttributes redirectAttributes) {
         try {
-            Integer userId = userService.getCurrentUserId();  // Use the service method to get the user ID
+            Integer userId = userService.getCurrentUserId();
             User.EmailNotificationsFrequency emailNotificationsFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
             model.addAttribute("emailNotificationsFrequency", emailNotificationsFrequency);
         } catch (Exception e) {
@@ -69,8 +70,7 @@ public class Controllers {
                           @RequestParam User.Role role,
                           RedirectAttributes redirectAttributes) {
         try {
-            // Add the new user by passing the businessId from the security context
-            Integer managerBusinessId = userService.getCurrentBusinessId(); // Get the manager's business ID using the service
+            Integer managerBusinessId = userService.getCurrentBusinessId();
             userService.addUser(email, password, role, managerBusinessId);
 
             redirectAttributes.addFlashAttribute("successMessage", "User added");
@@ -93,63 +93,42 @@ public class Controllers {
     @PostMapping("/delete-users")
     public String deleteUsers(@RequestParam List<Integer> userIds, RedirectAttributes redirectAttributes) {
         try {
-            // Delete the users using the UserService
             userService.deleteUsersById(userIds);
 
             redirectAttributes.addFlashAttribute("successMessage", "User(s) Deleted");
-            return "redirect:/manage-users";  // Redirect back to manage users page
+            return "redirect:/manage-users";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
-            return "redirect:/manage-users";  // Redirect back in case of error
+            return "redirect:/manage-users";
         }
     }
 
     @PostMapping("/edit-users")
     public String saveUserChanges(@RequestParam("editedUsers") String editedUsersJson, RedirectAttributes redirectAttributes) {
         try {
-            // Convert the JSON string to a List of User objects
             ObjectMapper objectMapper = new ObjectMapper();
-            List<User> changedUsers = objectMapper.readValue(editedUsersJson, objectMapper.getTypeFactory().constructCollectionType(List.class, User.class));
+            List<User> editedUsers = objectMapper.readValue(editedUsersJson, objectMapper.getTypeFactory().constructCollectionType(List.class, User.class));
 
-            userService.saveChangedUsers(changedUsers);
+            userService.saveChangedUsers(editedUsers);
 
-            // Add a success message to be shown after saving
-            redirectAttributes.addFlashAttribute("message", "Changes Saved");
+            redirectAttributes.addFlashAttribute("successMessage", "Changes Saved");
 
-            // Redirect to another page or return a response
-            return "redirect:/manage-users";  // Adjust the redirection as needed
+            return "redirect:/manage-users";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
-            return "redirect:/manage-users";   // Handle error appropriately
+            return "redirect:/manage-users";
         }
     }
 
     @PostMapping("/save-settings")
     public String saveSettings(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency chosenEmailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
-            Integer userId = userService.getCurrentUserId();
-            String userEmail = userService.getCurrentEmail();
+            settingsService.saveEmailNotificationFrequency(chosenEmailNotificationsFrequency);
 
-            // Set the email notifications frequency to NONE if it is null
-            if (chosenEmailNotificationsFrequency == null)
-                chosenEmailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
-
-            // Get the email notifications frequency currently in the database
-            User.EmailNotificationsFrequency currentFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
-
-            if (currentFrequency != User.EmailNotificationsFrequency.NONE && currentFrequency != chosenEmailNotificationsFrequency) {
-                emailNotificationService.unsubscribe(userEmail, currentFrequency, userService.getCurrentBusinessId());
-            }
-
-            if (chosenEmailNotificationsFrequency != User.EmailNotificationsFrequency.NONE) {
-                emailNotificationService.subscribe(userEmail, chosenEmailNotificationsFrequency, userService.getCurrentBusinessId());
-                userService.setCurrentEmailNotificationsFrequency(userId, chosenEmailNotificationsFrequency);
-            }
-
-            redirectAttributes.addFlashAttribute("successMessage", "Changes Saved"); // Add success message
-            return "redirect:/settings";  // Redirect back to settings page
+            redirectAttributes.addFlashAttribute("successMessage", "Changes Saved");
+            return "redirect:/settings";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
