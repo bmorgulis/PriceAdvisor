@@ -1,7 +1,6 @@
 package com.example.priceadvisor.controller;
 
 import com.example.priceadvisor.entity.User;
-import com.example.priceadvisor.service.EmailNotificationService;
 import com.example.priceadvisor.service.SettingsService;
 import com.example.priceadvisor.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +23,7 @@ public class Controllers {
     Logger logger = Logger.getLogger(Controllers.class.getName());
 
     @Autowired
-    public Controllers(UserService userService, SettingsService settingsService, EmailNotificationService emailNotificationService) {
+    public Controllers(UserService userService, SettingsService settingsService) {
         this.userService = userService;
         this.settingsService = settingsService;
     }
