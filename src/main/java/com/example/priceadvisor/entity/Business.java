@@ -18,10 +18,6 @@ public class Business {
     public Business() {
     }
 
-    public Business(String name) {
-        this.name = name;
-    }
-
     public Integer getBusinessId() {
         return businessId;
     }

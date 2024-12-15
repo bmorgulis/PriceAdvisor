@@ -25,8 +25,7 @@ label {
 #login-page {
     background-color: rgba(255, 255, 255, 0.9); /* White with some transparency */
 }
-
 footer {
     position: relative;
-    z-index: 1050; /* Ensure footer is in front of the overlay */
+    z-index: 1050;
 }

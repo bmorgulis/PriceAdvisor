@@ -5,6 +5,7 @@ import com.example.priceadvisor.service.SettingsService;
 import com.example.priceadvisor.service.EmailNotificationService;
 import com.example.priceadvisor.service.InventoryService;
 import com.example.priceadvisor.service.ItemService;
+
 import com.example.priceadvisor.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,6 @@ public class Controllers {
         this.settingsService = settingsService;
         this.inventoryService = inventoryService;
         this.itemService = itemService;
-
     }
 
     @GetMapping("/sign-in")
