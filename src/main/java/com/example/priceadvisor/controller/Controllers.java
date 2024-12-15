@@ -1,10 +1,12 @@
 package com.example.priceadvisor.controller;
 
 import com.example.priceadvisor.entity.User;
+import com.example.priceadvisor.service.SettingsService;
 import com.example.priceadvisor.service.EmailNotificationService;
 import com.example.priceadvisor.service.InventoryService;
 import com.example.priceadvisor.service.ItemService;
 import com.example.priceadvisor.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,18 +23,20 @@ import java.util.logging.Logger;
 public class Controllers {
 
     private final UserService userService;
-    private final EmailNotificationService emailNotificationService;
-    private final ItemService itemService;
+    private final SettingsService settingsService;
     Logger logger = Logger.getLogger(Controllers.class.getName());
     private final InventoryService inventoryService;
+    private final ItemService itemService;
+
 
 
     @Autowired
-    public Controllers(UserService userService, EmailNotificationService emailNotificationService, ItemService itemService, InventoryService inventoryService) {
+    public Controllers(UserService userService, SettingsService settingsService, InventoryService inventoryService, ItemService itemService) {
         this.userService = userService;
-        this.emailNotificationService = emailNotificationService;
-        this.itemService = itemService;
+        this.settingsService = settingsService;
         this.inventoryService = inventoryService;
+        this.itemService = itemService;
+
     }
 
     @GetMapping("/sign-in")
@@ -40,16 +44,16 @@ public class Controllers {
         return "sign-in";
     }
 
-    @GetMapping("/manage-accounts")
-    public String manageAccounts(Model model, RedirectAttributes redirectAttributes) {
+    @GetMapping("/manage-users")
+    public String manageUsers(Model model, RedirectAttributes redirectAttributes) {
         try {
             List<User> users = userService.getAllUsers();
-            model.addAttribute("users", users);  // Add users to the model
+            model.addAttribute("users", users);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
             e.printStackTrace();
         }
-        return "manage-accounts";
+        return "manage-users";
     }
 
     @GetMapping("/terms-of-use")
@@ -60,7 +64,7 @@ public class Controllers {
     @GetMapping("/settings")
     public String settings(Model model, RedirectAttributes redirectAttributes) {
         try {
-            Integer userId = userService.getCurrentUserId();  // Use the service method to get the user ID
+            Integer userId = userService.getCurrentUserId();
             User.EmailNotificationsFrequency emailNotificationsFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
             model.addAttribute("emailNotificationsFrequency", emailNotificationsFrequency);
         } catch (Exception e) {
@@ -76,66 +80,65 @@ public class Controllers {
                           @RequestParam User.Role role,
                           RedirectAttributes redirectAttributes) {
         try {
-            // Add the new user by passing the businessId from the security context
-            Integer managerBusinessId = userService.getCurrentBusinessId(); // Get the manager's business ID using the service
+            Integer managerBusinessId = userService.getCurrentBusinessId();
             userService.addUser(email, password, role, managerBusinessId);
 
             redirectAttributes.addFlashAttribute("successMessage", "User added");
-            return "redirect:/manage-accounts";
+            return "redirect:/manage-users";
         } catch (Exception e) {
             String message = e.getMessage().toLowerCase();
             String errorMessage;
 
             if (message.contains("duplicate")) {
-                errorMessage = "The email address you entered is already associated with an account.";
+                errorMessage = "The email address you entered is already associated with an user.";
             } else {
                 errorMessage = "An unexpected error occurred. Please try again.";
             }
 
             redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
-            return "redirect:/manage-accounts";
+            return "redirect:/manage-users";
         }
     }
 
     @PostMapping("/delete-users")
-    public String deleteUsers(@RequestParam List<String> emails, RedirectAttributes redirectAttributes) {
+    public String deleteUsers(@RequestParam List<Integer> userIds, RedirectAttributes redirectAttributes) {
         try {
-            // Delete the users using the UserService
-            userService.deleteUsersByEmails(emails);
+            userService.deleteUsersById(userIds);
 
-            redirectAttributes.addFlashAttribute("successMessage", "Account(s) Deleted");
-            return "redirect:/manage-accounts";  // Redirect back to manage accounts page
+            redirectAttributes.addFlashAttribute("successMessage", "User(s) Deleted");
+            return "redirect:/manage-users";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
-            return "redirect:/manage-accounts";  // Redirect back in case of error
+            return "redirect:/manage-users";
+        }
+    }
+
+    @PostMapping("/edit-users")
+    public String saveUserChanges(@RequestParam("editedUsers") String editedUsersJson, RedirectAttributes redirectAttributes) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<User> editedUsers = objectMapper.readValue(editedUsersJson, objectMapper.getTypeFactory().constructCollectionType(List.class, User.class));
+
+            userService.saveChangedUsers(editedUsers);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Changes Saved");
+
+            return "redirect:/manage-users";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
+            return "redirect:/manage-users";
         }
     }
 
     @PostMapping("/save-settings")
     public String saveSettings(@RequestParam(name = "emailNotificationsFrequency", required = false) User.EmailNotificationsFrequency chosenEmailNotificationsFrequency, RedirectAttributes redirectAttributes) {
         try {
-            Integer userId = userService.getCurrentUserId();
-            String userEmail = userService.getCurrentEmail();
+            settingsService.saveEmailNotificationFrequency(chosenEmailNotificationsFrequency);
 
-            // Set the email notifications frequency to NONE if it is null
-            if (chosenEmailNotificationsFrequency == null)
-                chosenEmailNotificationsFrequency = User.EmailNotificationsFrequency.NONE;
-
-            // Get the email notifications frequency currently in the database
-            User.EmailNotificationsFrequency currentFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
-
-            if (currentFrequency != User.EmailNotificationsFrequency.NONE && currentFrequency != chosenEmailNotificationsFrequency) {
-                emailNotificationService.unsubscribe(userEmail, currentFrequency, userService.getCurrentBusinessId());
-            }
-
-            if (chosenEmailNotificationsFrequency != User.EmailNotificationsFrequency.NONE) {
-                emailNotificationService.subscribe(userEmail, chosenEmailNotificationsFrequency, userService.getCurrentBusinessId());
-                userService.setCurrentEmailNotificationsFrequency(userId, chosenEmailNotificationsFrequency);
-            }
-
-            redirectAttributes.addFlashAttribute("successMessage", "Changes Saved"); // Add success message
-            return "redirect:/settings";  // Redirect back to settings page
+            redirectAttributes.addFlashAttribute("successMessage", "Changes Saved");
+            return "redirect:/settings";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
@@ -143,10 +146,12 @@ public class Controllers {
         }
     }
 
+
     @GetMapping("/add-items")
     public String addItems() {
         return "add-items";
     }
+
 
     @GetMapping("/compare-prices")
     public String comparePrices() {

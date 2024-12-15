@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Home | Price Advisor</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link th:href="@{/css/style.css}" rel="stylesheet"/>
     <link th:href="@{/css/index.css}" rel="stylesheet"/>
 </head>
@@ -16,7 +17,8 @@
         <a class="navbar-brand" href="/">
             <span class="btn button logo">Price Advisor</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -37,7 +39,7 @@
                     <a class="nav-link" href="/watchlist">Watchlist</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/manage-accounts">Manage Accounts</a>
+                    <a class="nav-link" href="/manage-users">Manage Users</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/settings">Settings</a>
@@ -52,7 +54,8 @@
 </nav>
 <!-- end of header -->
 
-<div class="card text-white text-center d-flex flex-column justify-content-center align-items-center" style="background-color: #161927; border-radius: 0; position: relative;">
+<div class="card text-white text-center d-flex flex-column justify-content-center align-items-center"
+     style="background-color: #161927; border-radius: 0; position: relative;">
     <img src="/images/logo.jpg" class="card-img" style="height: 100vh; width: auto;" alt="logo">
     <div class="card-img-overlay d-flex flex-column justify-content-between">
         <!-- Header section -->
@@ -71,18 +74,30 @@
     <h2 class="header">About Price Advisor</h2>
     <br>
     <p class="about-points">
-         Price Advisor is an advanced pricing management application designed to help businesses stay competitive in today’s dynamic market. By integrating inventory data, competitor pricing, and intelligent algorithms, Price Advisor generates actionable price suggestions to maximize sales and profitability.
+        Price Advisor is an advanced pricing management application designed to help businesses stay competitive in
+        today’s dynamic market. By integrating inventory data, competitor pricing, and intelligent algorithms, Price
+        Advisor generates actionable price suggestions to maximize sales and profitability.
     </p>
     <p class="about-points">Key features include:</p>
     <ul class="about-points">
-        <li><strong>Inventory and Price Management:</strong> View and manage inventory data alongside competitor pricing in an intuitive interface.</li>
-        <li><strong>Competitor Analysis:</strong> Automatically gather pricing information from major retailers to inform your pricing strategies.</li>
-        <li><strong>Smart Price Suggestions:</strong> Generate optimized price recommendations based on competitor data.</li>
-        <li><strong>User-Friendly Reports:</strong> Access detailed reports and insights to support informed decision-making.</li>
-        <li><strong>Email Notifications:</strong> Stay informed with automated email alerts, ensuring you never miss critical updates on pricing and inventory changes.</li>
+        <li><strong>Inventory and Price Management:</strong> View and manage inventory data alongside competitor pricing
+            in an intuitive interface.
+        </li>
+        <li><strong>Competitor Analysis:</strong> Automatically gather pricing information from major retailers to
+            inform your pricing strategies.
+        </li>
+        <li><strong>Smart Price Suggestions:</strong> Generate optimized price recommendations based on competitor data.
+        </li>
+        <li><strong>User-Friendly Reports:</strong> Access detailed reports and insights to support informed
+            decision-making.
+        </li>
+        <li><strong>Email Notifications:</strong> Stay informed with automated email alerts, ensuring you never miss
+            critical updates on pricing and inventory changes.
+        </li>
     </ul>
     <p class="about-points">
-        Price Advisor streamlines the pricing process, empowering small businesses to drive growth, enhance profitability, and maintain a competitive edge.
+        Price Advisor streamlines the pricing process, empowering small businesses to drive growth, enhance
+        profitability, and maintain a competitive edge.
     </p>
     <br>
     <div class="d-flex justify-content-center w-100">
@@ -96,7 +111,8 @@
 </div>
 
 <!-- Modal for Successful Login -->
-<div class="modal fade" id="loginSuccessModal" tabindex="-1" aria-labelledby="loginSuccessModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginSuccessModal" tabindex="-1" aria-labelledby="loginSuccessModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="background-color: #39DB14; color: white;">
             <div class="modal-body text-center">
@@ -107,20 +123,22 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('login') && urlParams.get('login') === 'true') {
             const loginSuccessModal = new bootstrap.Modal(document.getElementById('loginSuccessModal'));
             loginSuccessModal.show();
             history.replaceState(null, null, window.location.pathname);
-            setTimeout(function() {
+            setTimeout(function () {
                 loginSuccessModal.hide();
             }, 1000);
         }
     });
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
 <!-- beginning of footer -->
 <footer>

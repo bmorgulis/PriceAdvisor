@@ -1,5 +1,6 @@
 package com.example.priceadvisor.service;
 
+import com.example.priceadvisor.entity.Business;
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.repository.BusinessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +9,14 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
 
-
 @Service
 public class EmailNotificationService {
-    private final SnsClient snsClient;
-    private final BusinessRepository businessRepository;
 
     @Value("${aws.sns.base.arn}") // Inject the topic ARN from the application.properties file.
     private String baseArn;
+    private final SnsClient snsClient;
+    private final BusinessRepository businessRepository;
+
 
     @Autowired
     public EmailNotificationService(SnsClient snsClient, BusinessRepository businessRepository) {
@@ -23,14 +24,11 @@ public class EmailNotificationService {
         this.businessRepository = businessRepository;
     }
 
-    public void subscribe(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
+    public void subscribeUserToTopic(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
         try {
-            String businessName = businessRepository.findById(businessId)
-                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();
+            String businessName = getBusinessName(businessId);
+            String topicArn = buildTopicArn(businessName, emailNotificationsFrequency);
 
-            String topicArn = buildTopicArn(emailNotificationsFrequency, businessName);
-
-            // Subscribe to the topic
             SubscribeRequest request = SubscribeRequest.builder()
                     .protocol("email")
                     .endpoint(userEmail)
@@ -39,56 +37,51 @@ public class EmailNotificationService {
 
             snsClient.subscribe(request);
         } catch (SnsException e) {
-            System.err.println("Error Subscribing: " + e.getMessage());
-        }
+            e.printStackTrace();        }
     }
 
-    private String buildTopicArn(User.EmailNotificationsFrequency emailNotificationsFrequency, String businessName) {
-        String formattedBusinessName = businessName.replaceAll("\\s+", "_");
-        String topicName = formattedBusinessName + "_" + emailNotificationsFrequency.name();
-        String topicArn = baseArn + topicName;
-        return topicArn;
-    }
-
-    public void unsubscribe(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
+    public void unsubscribeUserFromTopic(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
         try {
-            String businessName = businessRepository.findById(businessId)
-                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();
+            String businessName = getBusinessName(businessId);
+            String topicArn = buildTopicArn(businessName, emailNotificationsFrequency);
 
-            // Assuming buildTopicArn returns a single topic ARN
-            String topicArn = buildTopicArn(emailNotificationsFrequency, businessName);
-
-            // Create the ListSubscriptionsRequest with the topic ARN
+            // Create a request to list all subscriptions for the given topic ARN
             ListSubscriptionsByTopicRequest listSubscriptionsByTopicRequest = ListSubscriptionsByTopicRequest.builder()
-                    .topicArn(topicArn)  // Set the topic ARN directly
+                    .topicArn(topicArn)
                     .build();
 
-            // Call SNS to list subscriptions for the topic
+            // Call SNS to retrieve the list of subscriptions for the specified topic
             ListSubscriptionsByTopicResponse response = snsClient.listSubscriptionsByTopic(listSubscriptionsByTopicRequest);
 
-            // Iterate through subscriptions to find the matching subscription by email
+            // Iterate over all subscriptions and check if the userEmail matches any subscription endpoint
             for (Subscription subscription : response.subscriptions()) {
-                if (subscription.endpoint().equals(userEmail)) {
+                if (subscription.endpoint().equals(userEmail)) {  // If a match is found, unsubscribe the user
                     UnsubscribeRequest unsubscribeRequest = UnsubscribeRequest.builder()
-                            .subscriptionArn(subscription.subscriptionArn())  // Get the Subscription ARN
+                            .subscriptionArn(subscription.subscriptionArn())  // Set the Subscription ARN for the unsubscribe request
                             .build();
 
                     snsClient.unsubscribe(unsubscribeRequest);
-                    System.out.println("Unsubscribed successfully from topic: " + topicArn);
-                    break;  // Successfully unsubscribed, exit the method
+                    break;
                 }
             }
 
-            // If no subscription was found for the given email
-            System.err.println("No subscription found for email: " + userEmail);
-
         } catch (SnsException e) {
-            System.err.println("Error Unsubscribing: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    private String getBusinessName(int businessId) {
+        return businessRepository.findById(businessId)
+                .map(Business::getName)
+                .orElseThrow(() -> new IllegalArgumentException("Business not found."));
+    }
 
-//    public void publishNotification(String message, String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
+    private String buildTopicArn(String businessName, User.EmailNotificationsFrequency emailNotificationsFrequency) {
+        String formattedBusinessName = businessName.replaceAll("\\s+", "_");
+        String topicName = formattedBusinessName + "_" + emailNotificationsFrequency.name();
+        return baseArn + topicName;
+    }
+    //    public void publishNotification(String message, String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
 //        try {
 //            String businessName = businessRepository.findById(businessId)
 //                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();@
