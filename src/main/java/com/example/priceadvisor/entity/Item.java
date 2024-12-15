@@ -42,15 +42,16 @@ public class Item {
     }
 
     public Item(String name, Long UPC, Long SKU, String description, String additionalInfo,
-                BigDecimal price, Boolean starred, Integer inventoryId) {
+                BigDecimal price, Integer inventoryId, Boolean starred) {
         this.name = name;
         this.UPC = UPC;
         this.SKU = SKU;
         this.description = description;
         this.additionalInfo = additionalInfo;
         this.price = price;
-        this.starred = starred;
         this.inventoryId = inventoryId;
+        this.starred = starred;
+
     }
 
     public Integer getItemId() {

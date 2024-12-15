@@ -2,6 +2,8 @@ package com.example.priceadvisor.controller;
 
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.service.EmailNotificationService;
+import com.example.priceadvisor.service.InventoryService;
+import com.example.priceadvisor.service.ItemService;
 import com.example.priceadvisor.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,12 +22,17 @@ public class Controllers {
 
     private final UserService userService;
     private final EmailNotificationService emailNotificationService;
+    private final ItemService itemService;
     Logger logger = Logger.getLogger(Controllers.class.getName());
+    private final InventoryService inventoryService;
+
 
     @Autowired
-    public Controllers(UserService userService, EmailNotificationService emailNotificationService) {
+    public Controllers(UserService userService, EmailNotificationService emailNotificationService, ItemService itemService, InventoryService inventoryService) {
         this.userService = userService;
         this.emailNotificationService = emailNotificationService;
+        this.itemService = itemService;
+        this.inventoryService = inventoryService;
     }
 
     @GetMapping("/sign-in")
@@ -164,9 +171,17 @@ public class Controllers {
                           @RequestParam(required = false) String additionalInfo,
                           RedirectAttributes redirectAttributes) {
         try {
-            Integer businessId = userService.getCurrentBusinessId(); // Get the inventory ID using the service
+            Integer businessId = userService.getCurrentBusinessId();
+            Integer inventoryId = inventoryService.getInventoryIdByBusinessId(businessId);
+
+            // Check if the item already exists in the inventory
+            if (itemService.itemExists(UPC, SKU)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "The item already exists in the inventory.");
+                return "redirect:/add-items";
+            }
+
             // Make item through the user service add items
-//            userService.addItem(name, UPC, SKU, description, price, additionalInfo, businessId);
+            itemService.addItem(name, UPC, SKU, description, additionalInfo, price, inventoryId);
 
             // Add success message
             redirectAttributes.addFlashAttribute("successMessage", "Item added");
