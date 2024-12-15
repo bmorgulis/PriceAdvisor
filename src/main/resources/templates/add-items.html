@@ -95,7 +95,7 @@
                     </div>
                     <div class="mb-5">
                         <label for="price" class="form-label">Price:</label>
-                        <input type="number" id="price" name="price" class="form-control form-control-lg" required
+                        <input type="number" id="price" name="price" class="form-control form-control-lg" step="0.01" required
                                min="0" minlength="1">
                     </div>
                     <div class="mb-5">
@@ -137,6 +137,19 @@
     </div>
 </div>
 
+<!-- modal for error message -->
+<div class="modal fade" id="error-modal" tabindex="-1" aria-labelledby="error-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #FF0000; color: white;">
+            <div class="modal-body text-center">
+                <h5 class="modal-title" id="error-modal-label"></h5>
+                <p id="error-message">Error. The item already exists in the inventory.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", function () {
             const urlParams = new URLSearchParams(window.location.search);
@@ -157,6 +170,16 @@
                 setTimeout(function () {
                     successModal.hide();
                 }, 1000);
+            }
+
+            // Check if there is an error message and show it if there is one
+            const errorMessage = /*[[${errorMessage}]]*/ null;
+            if (errorMessage) {
+                const errorModal = new bootstrap.Modal(document.getElementById('error-modal'));
+                errorModal.show();
+                setTimeout(function () {
+                    errorModal.hide();
+                }, 1500);
             }
 
 
