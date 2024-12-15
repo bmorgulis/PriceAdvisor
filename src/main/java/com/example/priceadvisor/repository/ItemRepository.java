@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    boolean existsByUPCOrSKU(Long UPC, Long SKU);   //this is built in to jpa. it checks if exists by UPC or SKU
+    boolean existsByUPCOrSKUAndInventoryId(Long UPC, Long SKU, Integer inventoryId);   //this is built in to jpa. it checks if exists by UPC or SKU
 }

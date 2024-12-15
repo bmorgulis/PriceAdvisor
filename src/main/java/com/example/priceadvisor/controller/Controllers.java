@@ -160,8 +160,6 @@ public class Controllers {
         return "watchlist";
     }
 
-    //TODO still need to have some validation to make sure that the item is not already in the database
-
     @PostMapping("/add-item")
     public String addItem(@RequestParam String name,
                           @RequestParam Long UPC,
@@ -175,7 +173,7 @@ public class Controllers {
             Integer inventoryId = inventoryService.getInventoryIdByBusinessId(businessId);
 
             // Check if the item already exists in the inventory
-            if (itemService.itemExists(UPC, SKU)) {
+            if (itemService.itemExists(UPC, SKU, inventoryId)) {
                 redirectAttributes.addFlashAttribute("errorMessage", "The item already exists in the inventory.");
                 return "redirect:/add-items";
             }

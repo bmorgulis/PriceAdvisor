@@ -24,7 +24,7 @@ public class ItemService {
         itemRepository.save(newItem);
     }
 
-    public boolean itemExists(Long UPC, Long SKU) {
-        return itemRepository.existsByUPCOrSKU(UPC, SKU);
+    public boolean itemExists(Long UPC, Long SKU, Integer inventoryId) {
+        return itemRepository.existsByUPCOrSKUAndInventoryId(UPC, SKU, inventoryId);
     }
 }
