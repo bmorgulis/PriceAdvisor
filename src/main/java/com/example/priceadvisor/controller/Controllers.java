@@ -169,7 +169,7 @@ public class Controllers {
     public String addItem(@RequestParam String name,
                           @RequestParam Long UPC,
                           @RequestParam Long SKU,
-                          @RequestParam String description,
+                          @RequestParam(required = false) String description,
                           @RequestParam BigDecimal price,
                           @RequestParam(required = false) String additionalInfo,
                           RedirectAttributes redirectAttributes) {
