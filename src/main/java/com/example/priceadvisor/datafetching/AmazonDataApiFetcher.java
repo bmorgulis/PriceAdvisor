@@ -6,15 +6,15 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 @Component
-public class AmazonApiDataFetcher extends ApiDataFetcher {
+public class AmazonDataApiFetcher extends CompetitorWebsiteDataApiFetcher {
 
     @Override
-    public BigDecimal fetchPriceFromApi(Item item) {
+    public BigDecimal fetchCompetitorPriceFromApi(Item item) {
         return null;
     }
 
     @Override
-    public void setPrice(BigDecimal price, FetchedData fetchedData) {
-        fetchedData.setAmazonPrice(price);
+    public void saveCompetitorPrice(Item item, BigDecimal price) {
+        item.setAmazonPrice(price);
     }
 }

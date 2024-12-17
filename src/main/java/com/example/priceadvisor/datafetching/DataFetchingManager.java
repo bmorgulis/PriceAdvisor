@@ -10,36 +10,25 @@ import java.util.concurrent.*;
 public class DataFetchingManager {
 
     private static final ExecutorService executorService = Executors.newFixedThreadPool(500);
-    private static final List<DataFetcher> FETCHERS = List.of(
-            new AmazonApiDataFetcher(),
-            new WalmartScrapingFetcher(),
-            new EbayScrapingFetcher()
+    private static final List<CompetitorWebsiteDataFetcher> FETCHERS = List.of(
+            new AmazonDataApiFetcher(),
+            new WalmartDataScraper(),
+            new EbayDataScraper()
     );
-    private final List<Item> items;
-    private final Map<Item, FetchedData> fetchedDataMap = new ConcurrentHashMap<>();
+
     private CountDownLatch latch;
 
-    public DataFetchingManager(List<Item> items) {
-        this.items = items;
-        initializeFetchedDataMap();
-        fetchAllData();
-    }
 
-    private void initializeFetchedDataMap() {
-        for (Item item : items) {
-            fetchedDataMap.put(item, new FetchedData());
-        }
-    }
-
-    public void fetchAllData() {
+    public List<Item> fetchAllData(List<Item> items) {
+        List<Item> threadSafeItems = Collections.synchronizedList(items);
         // Initialize latch dynamically based on the number of tasks
         latch = new CountDownLatch(items.size() * FETCHERS.size());  // Total tasks = items × fetchers
 
-        for (Item item : items) {
-            for (DataFetcher fetcher : FETCHERS) {
+        for (Item item : threadSafeItems) {
+            for (CompetitorWebsiteDataFetcher fetcher : FETCHERS) {
                 executorService.submit(() -> {
                     try {
-                        fetcher.fetchAndSaveData(item, fetchedDataMap.get(item));
+                        fetcher.fetchAndSaveCompetitorData(item);
                     } catch (Exception e) {
                         System.err.println("Error fetching data for item: " + item + ". " + e.getMessage());
                     } finally {
@@ -48,6 +37,7 @@ public class DataFetchingManager {
                 });
             }
         }
+        return threadSafeItems;
     }
 
     private void waitForFetchingToComplete() {
@@ -63,15 +53,11 @@ public class DataFetchingManager {
         }
     }
 
-    public List<Map.Entry<Item, FetchedData>> getFetchedData() {
+    public List<Item> getFetchedData(List<Item> items) {
+        List<Item> itemsWithFetchedData = fetchAllData(items);
 
         waitForFetchingToComplete();
-        // Convert the map entries to a list and sort them by the Item's name
-        List<Map.Entry<Item, FetchedData>> sortedEntries = new ArrayList<>(fetchedDataMap.entrySet());
 
-        // Sort the entries based on the Item's name
-        sortedEntries.sort(Comparator.comparing(entry -> entry.getKey().getName()));
-
-        return sortedEntries;
+        return itemsWithFetchedData;
     }
 }

@@ -6,19 +6,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SettingsService {
+    private final SecurityContextService securityContextService;
     private final UserService userService;
     private final EmailNotificationService emailNotificationService;
 
     @Autowired
-    public SettingsService(UserService userService, EmailNotificationService emailNotificationService) {
+    public SettingsService(SecurityContextService securityContextService, UserService userService, EmailNotificationService emailNotificationService) {
+        this.securityContextService = securityContextService;
         this.userService = userService;
         this.emailNotificationService = emailNotificationService;
     }
 
     public void saveEmailNotificationFrequency(User.EmailNotificationsFrequency chosenEmailNotificationsFrequency) {
-        Integer userId = userService.getCurrentUserId();
+        Integer userId = securityContextService.getCurrentUserId();
         String userEmail = userService.getCurrentEmail();
-        Integer businessId = userService.getCurrentBusinessId();
+        Integer businessId = securityContextService.getCurrentBusinessId();
 
         // Set the email notifications frequency to NONE if it is null
         if (chosenEmailNotificationsFrequency == null) {
