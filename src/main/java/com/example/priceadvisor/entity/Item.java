@@ -48,17 +48,13 @@ public class Item {
     }
 
     public Item(String name, Long UPC, Long SKU, String description, String additionalInfo,
-                BigDecimal smallBusinessPrice, BigDecimal amazonPrice, BigDecimal walmartPrice,
-                BigDecimal ebayPrice, Boolean starred, Integer inventoryId) {
+                BigDecimal smallBusinessPrice, Integer inventoryId) {
         this.name = name;
         this.UPC = UPC;
         this.SKU = SKU;
         this.description = description;
         this.additionalInfo = additionalInfo;
         this.smallBusinessPrice = smallBusinessPrice;
-        this.amazonPrice = amazonPrice;
-        this.walmartPrice = walmartPrice;
-        this.ebayPrice = ebayPrice;
         this.inventoryId = inventoryId;
     }
 

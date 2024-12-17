@@ -4,6 +4,7 @@ import com.example.priceadvisor.entity.Item;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Service
 public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
@@ -20,7 +21,11 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
     }
 
     @Override
-    public void saveCompetitorPrice(Item item, BigDecimal price) {
-        item.setWalmartPrice(price);
+    public boolean saveCompetitorPriceIfChanged(Item item, BigDecimal price) {
+        if (!Objects.equals(price, item.getWalmartPrice())) {
+            item.setWalmartPrice(price);
+            return true;
+        }
+        return false;
     }
 }

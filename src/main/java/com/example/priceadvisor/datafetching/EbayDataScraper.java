@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,9 +25,9 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
             if (itemUrl != null) {
                 String itemPageContent = getPageContent(webClient, itemUrl);
                 String price = scrapePriceFromItemPage(itemPageContent);
+                System.out.println("Price:" + price);
                 return new BigDecimal(price);
             }
-
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -35,7 +36,7 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
     }
 
     private String scrapePriceFromItemPage(String itemPageContent) {
-        return "";
+        return "5.00";
     }
 
     private String buildSearchUrl(Item item) {
@@ -52,8 +53,12 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
 
 
     @Override
-    public void saveCompetitorPrice(Item item, BigDecimal price) {
-        item.setEbayPrice(price);
+    public boolean saveCompetitorPriceIfChanged(Item item, BigDecimal price) {
+        if (!Objects.equals(price, item.getEbayPrice())) {
+            item.setEbayPrice(price);
+            return true;
+        }
+        return false;
     }
 
     public String scrapeItemUrlFromSearchPage(String pageContent) {

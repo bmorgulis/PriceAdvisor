@@ -7,14 +7,14 @@ import org.htmlunit.html.HtmlPage;
 import java.math.BigDecimal;
 
 public abstract class CompetitorWebsiteDataFetcher {
-    public void fetchAndSaveCompetitorData(Item item) {
+    public boolean fetchAndSaveCompetitorData(Item item) {
         BigDecimal price = fetchCompetitorPrice(item);
-        saveCompetitorPrice(item, price);
+        return saveCompetitorPriceIfChanged(item, price);
     }
 
     public abstract BigDecimal fetchCompetitorPrice(Item item);
 
-    public abstract void saveCompetitorPrice(Item item, BigDecimal price);
+    public abstract boolean saveCompetitorPriceIfChanged(Item item, BigDecimal price);
 
     /**
      * Retrieves the HTML content of a page given its URL.

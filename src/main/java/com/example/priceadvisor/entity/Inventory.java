@@ -14,15 +14,8 @@ public class Inventory {
     @Column(name = "businessId", nullable = false)
     private Integer businessId;
 
-    // Default constructor
     public Inventory() {
     }
-
-    public Inventory(Integer businessId) {
-        this.businessId = businessId;
-    }
-
-    // Getters and Setters
 
     public Integer getInventoryId() {
         return inventoryId;

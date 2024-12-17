@@ -4,7 +4,6 @@ import com.example.priceadvisor.entity.Business;
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.repository.BusinessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
@@ -12,8 +11,7 @@ import software.amazon.awssdk.services.sns.model.*;
 @Service
 public class EmailNotificationService {
 
-    @Value("${aws.sns.base.arn}") // Inject the topic ARN from the application.properties file.
-    private String baseArn;
+    private final String baseArn = "arn:aws:sns:us-east-1:471112717872:";
     private final SnsClient snsClient;
     private final BusinessRepository businessRepository;
 
