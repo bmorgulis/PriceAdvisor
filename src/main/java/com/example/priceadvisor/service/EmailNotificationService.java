@@ -4,6 +4,7 @@ import com.example.priceadvisor.entity.Business;
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.repository.BusinessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
@@ -11,7 +12,8 @@ import software.amazon.awssdk.services.sns.model.*;
 @Service
 public class EmailNotificationService {
 
-    private final String baseArn = "arn:aws:sns:us-east-1:471112717872:";
+    @Value("${aws.sns.base.arn}") // Inject the topic ARN from the application.properties file.
+    private String baseArn;
     private final SnsClient snsClient;
     private final BusinessRepository businessRepository;
 
@@ -79,4 +81,23 @@ public class EmailNotificationService {
         String topicName = formattedBusinessName + "_" + emailNotificationsFrequency.name();
         return baseArn + topicName;
     }
+    //    public void publishNotification(String message, String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
+//        try {
+//            String businessName = businessRepository.findById(businessId)
+//                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();@
+//
+//
+//            String topicArn = buildTopicArn(emailNotificationsFrequency, businessName);
+//
+//
+//            PublishRequest request = PublishRequest.builder()
+//                    .message(message)
+//                    .topicArn(topicArn)
+//                    .subject("Price Advisor Notification")
+//                    .build();
+//            snsClient.publish(request);
+//        } catch (SnsException e) {
+//            System.err.println("Error Sending Notification: " + e.getMessage());
+//        }
+//    }
 }
