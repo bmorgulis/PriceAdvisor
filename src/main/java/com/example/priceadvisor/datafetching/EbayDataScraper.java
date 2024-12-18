@@ -17,7 +17,9 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
-        try (WebClient webClient = createWebClient()) {String searchUrl = buildSearchUrl(item);
+        try (WebClient webClient = createWebClient()) {
+            String searchUrl = buildSearchUrl(item);
+            logger.info("Search URL: {}", searchUrl);
             String searchPageContent = getPageContentAsString(webClient, searchUrl);
             logger.info("Search page content: {}", searchPageContent);
             String itemUrl = scrapeItemUrlFromSearchPage(searchPageContent);

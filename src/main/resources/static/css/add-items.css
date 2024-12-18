@@ -1,0 +1,11 @@
+/* Remove number input arrows in Chrome, Edge, and Safari */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove number input arrows in Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
