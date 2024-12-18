@@ -16,8 +16,18 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
     }
 
     @Override
+    public String scrapePriceFromItemPage(String itemPageContent) {
+        return "";
+    }
+
+    @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
         return null;
+    }
+
+    @Override
+    public String buildSearchUrl(Item item) {
+        return "";
     }
 
     @Override

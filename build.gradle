@@ -53,3 +53,7 @@ jar {
 test {
     useJUnitPlatform()
 }
+
+configurations.implementation {
+    exclude group: 'commons-logging', module: 'commons-logging'
+}

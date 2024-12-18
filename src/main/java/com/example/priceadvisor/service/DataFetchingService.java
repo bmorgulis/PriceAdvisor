@@ -1,7 +1,6 @@
 package com.example.priceadvisor.service;
 
 import com.example.priceadvisor.datafetching.DataFetchingManager;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,10 +15,10 @@ public class DataFetchingService {
         this.dataFetchingManager = dataFetchingManager;
     }
 
-    @PostConstruct
-    public void init() {
-        fetchData();
-    }
+//    @PostConstruct
+//    public void init() {
+//        fetchData();
+//    }
 
     // Fetch data for all businesses
     public void fetchData() {

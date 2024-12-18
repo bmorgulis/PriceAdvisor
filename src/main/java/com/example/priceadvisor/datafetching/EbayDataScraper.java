@@ -17,40 +17,57 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
-        try (WebClient webClient = createWebClient()) {
-            String searchUrl = buildSearchUrl(item);
-            String searchPageContent = getPageContent(webClient, searchUrl);
+        try (WebClient webClient = createWebClient()) {String searchUrl = buildSearchUrl(item);
+            String searchPageContent = getPageContentAsString(webClient, searchUrl);
+            logger.info("Search page content: {}", searchPageContent);
             String itemUrl = scrapeItemUrlFromSearchPage(searchPageContent);
+            logger.info("Item URL: {}", itemUrl);
 
             if (itemUrl != null) {
-                String itemPageContent = getPageContent(webClient, itemUrl);
+                String itemPageContent = getPageContentAsString(webClient, itemUrl);
+                logger.info("Item page content: {}", itemPageContent);
                 String price = scrapePriceFromItemPage(itemPageContent);
-                System.out.println("Price:" + price);
-                return new BigDecimal(price);
+                logger.info("Price: {}", price);
+                if (price != null) {
+                    return new BigDecimal(price);
+                }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private String scrapePriceFromItemPage(String itemPageContent) {
-        return "5.00";
-    }
-
-    private String buildSearchUrl(Item item) {
+    @Override
+    public String buildSearchUrl(Item item) {
         String searchUrl = "https://www.ebay.com/sch/i.html?_nkw=";
-
-        searchUrl += item.getName().replace(" ", "+") + "+" +
-                (item.getUPC() != null ? item.getUPC() : "") + "+" +
-                (item.getSKU() != null ? item.getSKU() : "") + "+" +
-                (item.getDescription() != null ? item.getDescription() : "") + "+" +
-                (item.getAdditionalInfo() != null ? item.getAdditionalInfo() : "");
-
+        searchUrl += buildSearchQuery(item);  // Use the abstracted query builder
         return searchUrl;
     }
 
+    @Override
+    public String scrapeItemUrlFromSearchPage(String pageContent) {
+        Pattern itemPattern = Pattern.compile("href=\"(https://www\\.ebay\\.com/itm/\\d{12})");
+        Matcher itemMatcher = itemPattern.matcher(pageContent);
+
+        if (itemMatcher.find()) {
+            return itemMatcher.group(1);
+        }
+        logger.warn("No item URL found in search page content");
+        return null;
+    }
+
+    @Override
+    public String scrapePriceFromItemPage(String itemPageContent) {
+        Pattern pricePattern = Pattern.compile("class=\"ux-textspans\">\\s+US \\$(\\d+\\.\\d{2})\\s+</span>");
+        Matcher priceMatcher = pricePattern.matcher(itemPageContent);
+
+        if (priceMatcher.find()) {
+            return priceMatcher.group(1);
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public boolean saveCompetitorPriceIfChanged(Item item, BigDecimal price) {
@@ -59,19 +76,6 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
             return true;
         }
         return false;
-    }
-
-    public String scrapeItemUrlFromSearchPage(String pageContent) {
-        Pattern itemPattern = Pattern.compile("href=\"(https://www\\.ebay\\.com/itm/\\d{12})");
-        Matcher itemMatcher = itemPattern.matcher(pageContent);
-
-        if (itemMatcher.find()) {
-            String itemUrl = itemMatcher.group(1);
-            logger.info("Extracted item URL: {}", itemUrl);
-            return itemUrl;
-        }
-        logger.warn("No item URL found in search page content");
-        return null;
     }
 }
 

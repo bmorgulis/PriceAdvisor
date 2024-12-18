@@ -1,23 +1,58 @@
 package com.example.priceadvisor.datafetching;
 
 import com.example.priceadvisor.entity.Item;
+import org.htmlunit.WebClient;
+import org.htmlunit.html.HtmlPage;
 
 import java.math.BigDecimal;
 
 public abstract class CompetitorWebsiteDataScraper extends CompetitorWebsiteDataFetcher {
+
+    public abstract BigDecimal scrapeCompetitorPrice(Item item);
+    public abstract String buildSearchUrl(Item item);
+    public abstract String scrapeItemUrlFromSearchPage(String pageContent);
+    public abstract String scrapePriceFromItemPage(String itemPageContent);
 
     @Override
     public BigDecimal fetchCompetitorPrice(Item item) {
         return scrapeCompetitorPrice(item);
     }
 
-    /**
-     * Extracts the URL of the first item from the search results page content.
-     *
-     * @param pageContent the HTML content of the search results page
-     * @return the URL of the first item found or null if no item URL is found
-     */
-    public abstract String scrapeItemUrlFromSearchPage(String pageContent);
+    public WebClient createWebClient() {
+        WebClient webClient = new WebClient();
+        webClient.getOptions().setThrowExceptionOnScriptError(false);
+        webClient.getOptions().setJavaScriptEnabled(false);
+        webClient.getOptions().setCssEnabled(false);
+        return webClient;
+    }
 
-    public abstract BigDecimal scrapeCompetitorPrice(Item item);
+    public String buildSearchQuery(Item item) {
+        StringBuilder query = new StringBuilder();
+
+        appendField(query, item.getName());
+        appendField(query, String.valueOf(item.getUPC()));
+        appendField(query, String.valueOf(item.getSKU()));
+        appendField(query, item.getDescription());
+        appendField(query, item.getAdditionalInfo());
+
+        return query.toString();
+    }
+
+    private void appendField(StringBuilder query, String field) {
+        if (field != null && !field.trim().isEmpty()) {
+            if (!query.isEmpty()) {
+                query.append("+");
+            }
+            query.append(field.replace(" ", "+"));
+        }
+    }
+
+    public String getPageContentAsString(WebClient webClient, String itemUrl) {
+        try {
+            HtmlPage page = webClient.getPage(itemUrl);
+            return page.asXml();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

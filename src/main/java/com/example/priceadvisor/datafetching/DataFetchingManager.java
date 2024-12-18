@@ -4,7 +4,10 @@ import com.example.priceadvisor.entity.Item;
 import com.example.priceadvisor.service.ItemService;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,7 +61,10 @@ public class DataFetchingManager {
 
     private void processBatch(List<Item> batch) {
         // Wrap a HashSet with Collections.synchronizedSet to make it thread-safe
-        Set<Item> itemsToSave = Collections.synchronizedSet(new HashSet<>());
+        Set<Item> itemsToSave = new CopyOnWriteArraySet<>();
+
+        // Reset latch for the current batch
+        latch = new CountDownLatch(batch.size() * FETCHERS.size());
 
         // Process each item in the batch asynchronously
         for (Item item : batch) {
