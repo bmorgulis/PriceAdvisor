@@ -164,8 +164,6 @@ public class Controllers {
             redirectAttributes.addFlashAttribute("successMessage", "Item added");
             return "redirect:/add-items";
         } catch (Exception e) {
-            logger.severe("Error occurred while adding user: " + e.getMessage());
-
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
             return "redirect:/add-items";

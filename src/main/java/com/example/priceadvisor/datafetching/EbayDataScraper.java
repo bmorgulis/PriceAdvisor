@@ -18,18 +18,19 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
         try (WebClient webClient = createWebClient()) {
+            logger.info("Scraping Ebay price for {}", item.getName());
             String searchUrl = buildSearchUrl(item);
-            logger.info("Search URL: {}", searchUrl);
+            logger.info("Search URL for {}, URL: {}", item.getName(), searchUrl);
             String searchPageContent = getPageContentAsString(webClient, searchUrl);
-            logger.info("Search page content: {}", searchPageContent);
+            logger.info("Search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
             String itemUrl = scrapeItemUrlFromSearchPage(searchPageContent);
-            logger.info("Item URL: {}", itemUrl);
+            logger.info("Item URL for {}, URL: {}", item.getName(), itemUrl);
 
             if (itemUrl != null) {
                 String itemPageContent = getPageContentAsString(webClient, itemUrl);
-                logger.info("Item page content: {}", itemPageContent);
+                logger.info("Item page content for {}, Item page content: {}", item.getName(), itemPageContent);
                 String price = scrapePriceFromItemPage(itemPageContent);
-                logger.info("Price: {}", price);
+                logger.info("Price for {}, Price: {}", item.getName(), price);
                 if (price != null) {
                     return new BigDecimal(price);
                 }
@@ -61,11 +62,11 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public String scrapePriceFromItemPage(String itemPageContent) {
-        Pattern pricePattern = Pattern.compile("class=\"ux-textspans\">\\s+US \\$(\\d+\\.\\d{2})\\s+</span>");
+        Pattern pricePattern = Pattern.compile("class=\"ux-textspans\">\\s+US \\$((\\d{1,3},)*\\d{1,3}\\.\\d{2})(/ea)?\\s+</span>");
         Matcher priceMatcher = pricePattern.matcher(itemPageContent);
 
         if (priceMatcher.find()) {
-            return priceMatcher.group(1);
+            return priceMatcher.group(1).replace(",", "");
         } else {
             return null;
         }
