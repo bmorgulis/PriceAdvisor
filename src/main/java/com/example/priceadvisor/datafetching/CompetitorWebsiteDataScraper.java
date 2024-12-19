@@ -33,7 +33,6 @@ public abstract class CompetitorWebsiteDataScraper extends CompetitorWebsiteData
         appendField(query, String.valueOf(item.getUPC()));
         appendField(query, String.valueOf(item.getSKU()));
         appendField(query, item.getDescription());
-        appendField(query, item.getAdditionalInfo());
 
         return query.toString();
     }

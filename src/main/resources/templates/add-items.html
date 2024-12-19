@@ -17,7 +17,8 @@
         <a class="navbar-brand" href="/">
             <span class="btn button logo">Price Advisor</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-supported-content"
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbar-supported-content"
                 aria-controls="navbar-supported-content" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -57,50 +58,66 @@
 <br><br>
 <h1 class="text-center">Add Item</h1>
 <br>
+<div id="add-item-modal" tabindex="-1" aria-labelledby="add-item-modal-label">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-light p-5 rounded shadow mx-auto">
+            <div class="modal-body">
+                <form id="addItemForm" method="POST" action="/add-item" class="w-100">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <!-- First Column -->
+                            <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-right: 15px;">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name<span
+                                            class="text-danger"> *</span></label>
+                                    <textarea id="name" name="name" class="form-control" rows="5" required
+                                              oninvalid="this.setCustomValidity('The item name is required.')"
+                                              oninput="this.setCustomValidity('')"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Price</label>
+                                    <input type="number" id="price" name="price" class="form-control" step="0.01"
+                                           min="0">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="UPC" class="form-label">UPC</label>
+                                    <input type="number" id="UPC" name="UPC" class="form-control" minlength="12"
+                                           maxlength="12"
+                                           pattern="\d{12}"
+                                           title="UPC must be exactly 12 digits.">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="SKU" class="form-label">SKU</label>
+                                    <input type="text" id="SKU" name="SKU" class="form-control" min="0">
+                                </div>
+                            </div>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <!-- First Column -->
-        <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-right: 15px;">
-            <div class="mb-3">
-                <label for="item-name" class="form-label">Name<span class="text-danger"> *</span></label>
-                <textarea id="item-name" name="item-name" class="form-control" rows="5" required
-                          oninvalid="this.setCustomValidity('The item name is required.')" oninput="this.setCustomValidity('')"></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="price" class="form-label">Price</label>
-                <input type="number" id="price" name="price" class="form-control" step="0.01" min="0">
-            </div>
-            <div class="mb-3">
-                <label for="upc" class="form-label">UPC</label>
-                <input type="number" id="upc" name="upc" class="form-control" minlength="12" maxlength="12" pattern="\d{12}"
-                       title="UPC must be exactly 12 digits.">
-            </div>
-            <div class="mb-3">
-                <label for="sku" class="form-label">SKU</label>
-                <input type="number" id="sku" name="sku" class="form-control" min="0">
+                            <!-- Second Column -->
+                            <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-left: 15px;">
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea id="description" name="description" class="form-control"
+                                              rows="16"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Item Button -->
+                        <div class="text-center mt-4">
+                            <input class="button btn btn-primary btn-lg px-5" type="submit" value="Add Item">
+                        </div>
+
+                        <!-- Required Field Note -->
+                        <div class="mt-2">
+                            <p><span class="text-danger">*</span> indicates required field.</p>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-
-        <!-- Second Column -->
-        <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-left: 15px;">
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea id="description" name="description" class="form-control" rows="16"></textarea>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Item Button -->
-    <div class="text-center mt-4">
-        <input class="button btn btn-primary btn-lg px-5" type="submit" value="Add Item">
-    </div>
-
-    <!-- Required Field Note -->
-    <div class="mt-2">
-        <p><span class="text-danger">*</span> indicates required field.</p>
     </div>
 </div>
+
 
 <br><br>
 
@@ -128,6 +145,7 @@
     </div>
 </div>
 
+
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
@@ -143,12 +161,13 @@
         // Check if there is an add item success message and show it if there is one
         const successMessage = /*[[${successMessage}]]*/ null;
         if (successMessage) {
-            const successModal = new bootstrap.Modal(document.getElementById('add-item-success-modal'));
+            const successModal = new bootstrap.Modal(document.getElementById('success-modal'));
             successModal.show();
             setTimeout(function () {
                 successModal.hide();
             }, 1000);
         }
+
 
         // Modal for adding an item
         const addItemModal = new bootstrap.Modal(document.getElementById('add-item-modal'));

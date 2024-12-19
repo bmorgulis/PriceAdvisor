@@ -159,11 +159,11 @@ public class Controllers {
             Integer businessId = securityContextService.getCurrentBusinessId();
             Integer inventoryId = inventoryService.getInventoryIdByBusinessId(businessId);
 
-            // Check if the item already exists in the inventory
-            if (itemService.itemExists(UPC, SKU, inventoryId)) {
-                redirectAttributes.addFlashAttribute("errorMessage", "The item already exists in the inventory.");
-                return "redirect:/add-items";
-            }
+//            // Check if the item already exists in the inventory
+//            if (itemService.itemExists(UPC, SKU, inventoryId)) {
+//                redirectAttributes.addFlashAttribute("errorMessage", "The item already exists in the inventory.");
+//                return "redirect:/add-items";
+//            }
 
             // Make item through the user service add items
             itemService.addItem(name, UPC, SKU, description, price, inventoryId);
