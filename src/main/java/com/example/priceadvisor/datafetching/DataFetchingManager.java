@@ -54,8 +54,6 @@ public class DataFetchingManager {
             } finally {
                 isFetchingInProgress.set(false); // Ensure flag is reset even if an exception occurs
             }
-        } else {
-            System.out.println("Data fetching is already in progress. Please wait...");
         }
     }
 
@@ -78,7 +76,7 @@ public class DataFetchingManager {
                             itemsToSave.add(item); // No need for explicit synchronization
                         }
                     } catch (Exception e) {
-                        System.err.println("Error fetching data for item: " + item + ". " + e.getMessage());
+                        e.printStackTrace();
                     } finally {
                         latch.countDown(); // Decrement the latch count when a task completes
                     }
@@ -91,7 +89,7 @@ public class DataFetchingManager {
             latch.await(); // Wait until all tasks in the batch are completed
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt(); // Restore interrupted status
-            System.err.println("Batch processing interrupted: " + e.getMessage());
+            e.printStackTrace();
         }
 
         // Save the updated items after all tasks in the batch are completed

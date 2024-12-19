@@ -17,11 +17,11 @@
         <a class="navbar-brand" href="/">
             <span class="btn button logo">Price Advisor</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-supported-content"
+                aria-controls="navbar-supported-content" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse" id="navbar-supported-content">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-fill w-100">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
@@ -50,63 +50,59 @@
 </nav>
 <!-- end of header -->
 
-<!-- Add Item Button -->
-<button id="add-item-modal-button" class="btn button btn-lg" style="margin-top: 27px; margin-left: 115px"
-        data-bs-toggle="modal" data-bs-target="#add-item-modal">Add Item
-</button>
+<div id="error-message" style="top: 10px;" class="alert alert-danger text-center" th:if="${errorMessage != null}"
+     role="alert">
+    <span th:text="${errorMessage}"></span>
+</div>
+<br><br>
+<h1 class="text-center">Add Item</h1>
+<br>
 
-<!-- Add Item Form Modal -->
-<div class="modal fade" id="add-item-modal" tabindex="-1" aria-labelledby="add-item-modal-label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-light p-5 rounded shadow mx-auto">
-            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="modal-header d-flex justify-content-between align-items-center">
-                <h1 class="modal-title flex-grow-1 text-center" id="add-item-modal-label">Add Item</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <!-- First Column -->
+        <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-right: 15px;">
+            <div class="mb-3">
+                <label for="item-name" class="form-label">Name<span class="text-danger"> *</span></label>
+                <textarea id="item-name" name="item-name" class="form-control" rows="5" required
+                          oninvalid="this.setCustomValidity('The item name is required.')" oninput="this.setCustomValidity('')"></textarea>
             </div>
-            <div class="modal-body">
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" id="price" name="price" class="form-control" step="0.01" min="0">
+            </div>
+            <div class="mb-3">
+                <label for="upc" class="form-label">UPC</label>
+                <input type="number" id="upc" name="upc" class="form-control" minlength="12" maxlength="12" pattern="\d{12}"
+                       title="UPC must be exactly 12 digits.">
+            </div>
+            <div class="mb-3">
+                <label for="sku" class="form-label">SKU</label>
+                <input type="number" id="sku" name="sku" class="form-control" min="0">
+            </div>
+        </div>
 
-                <!-- Add Item Form -->
-                <form id="addItemForm" method="POST" action="/add-item" class="w-100">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name:</label>
-                        <input type="text" id="name" name="name" class="form-control form-control-lg"
-                               required
-                               minlength="4"
-                               oninvalid="this.setCustomValidity('Please fill out this field. Your name must be at least 4 characters long.')"
-                               oninput="this.setCustomValidity('')">
-                    </div>
-                    <div class="mb-4">
-                        <label for="UPC" class="form-label">UPC:</label>
-                        <input type="number" id="UPC" name="UPC" class="form-control form-control-lg" min="0">
-                    </div>
-                    <div class="mb-5">
-                        <label for="SKU" class="form-label">SKU:</label>
-                        <input type="number" id="SKU" name="SKU" class="form-control form-control-lg" min="0">
-                    </div>
-                    <div class="mb-5">
-                        <label for="description" class="form-label">Description:</label>
-                        <input type="text" id="description" name="description" class="form-control form-control-lg"
-                               oninvalid="this.setCustomValidity('Description must be at least 4 characters long.')"
-                               oninput="this.setCustomValidity('')">
-                    </div>
-                    <div class="mb-5">
-                        <label for="price" class="form-label">Price:</label>
-                        <input type="number" id="price" name="price" class="form-control form-control-lg" step="0.01"
-                               min="0" minlength="1">
-                    </div>
-                    <div class="mb-5">
-                        <label for="additionalInfo" class="form-label text-center">Additional Information:</label>
-                        <textarea id="additionalInfo" name="additionalInfo" class="form-control form-control-lg"
-                                  rows="5"></textarea>
-                    </div>
-                    <div class="text-center">
-                        <input class="btn button btn-lg" type="submit" value="Add Item">
-                    </div>
-                </form>
+        <!-- Second Column -->
+        <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-left: 15px;">
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea id="description" name="description" class="form-control" rows="16"></textarea>
             </div>
         </div>
     </div>
+
+    <!-- Add Item Button -->
+    <div class="text-center mt-4">
+        <input class="button btn btn-primary btn-lg px-5" type="submit" value="Add Item">
+    </div>
+
+    <!-- Required Field Note -->
+    <div class="mt-2">
+        <p><span class="text-danger">*</span> indicates required field.</p>
+    </div>
 </div>
+
+<br><br>
 
 <!-- Modal for Successful Login -->
 <div class="modal fade" id="login-success-modal" tabindex="-1" aria-labelledby="login-success-modal-label"
@@ -121,29 +117,16 @@
 </div>
 
 <!-- Modal for Successful Item Addition -->
-<div class="modal fade" id="add-item-success-modal" tabindex="-1" aria-labelledby="add-item-success-modal-label"
+<div class="modal fade" id="success-modal" tabindex="-1" aria-labelledby="success-modal-label"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="background-color: #39DB14; color: white;">
             <div class="modal-body text-center">
-                <h5 class="modal-title" id="add-item-success-modal-label">Item Added</h5>
+                <h5 class="modal-title" id="success-modal-label">Item Added</h5>
             </div>
         </div>
     </div>
 </div>
-
-<!-- modal for error message -->
-<div class="modal fade" id="error-modal" tabindex="-1" aria-labelledby="error-modal-label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content" style="background-color: #FF0000; color: white;">
-            <div class="modal-body text-center">
-                <h5 class="modal-title" id="error-modal-label"></h5>
-                <p id="error-message">Error. The item already exists in the inventory.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
@@ -166,17 +149,6 @@
                 successModal.hide();
             }, 1000);
         }
-
-        // Check if there is an error message and show it if there is one
-        const errorMessage = /*[[${errorMessage}]]*/ null;
-        if (errorMessage) {
-            const errorModal = new bootstrap.Modal(document.getElementById('error-modal'));
-            errorModal.show();
-            setTimeout(function () {
-                errorModal.hide();
-            }, 1500);
-        }
-
 
         // Modal for adding an item
         const addItemModal = new bootstrap.Modal(document.getElementById('add-item-modal'));

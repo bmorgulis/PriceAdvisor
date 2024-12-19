@@ -16,11 +16,11 @@
         <a class="navbar-brand" href="/">
             <span class="btn button logo">Price Advisor</span>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-supported-content"
+                aria-controls="navbar-supported-content" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse" id="navbar-supported-content">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-fill w-100">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
@@ -146,7 +146,7 @@
             }, 1000);
         }
 
-        const successMessage = /*[[${successMessage}]]*/ null  // success or failure
+        const successMessage = /*[[${successMessage}]]*/ null;
         const successModal = new bootstrap.Modal(document.getElementById('success-modal'));
 
         if (successMessage) {

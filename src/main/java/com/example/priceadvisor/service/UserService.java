@@ -26,7 +26,7 @@ public class UserService {
     // Add a new user with hashed password
     public void addUser(String email, String password, User.Role role, Integer businessId) {
         String hashedPassword = passwordEncoder.encode(password);
-        User newUser = new User(email, hashedPassword, role, businessId); // Include businessId
+        User newUser = new User(email, hashedPassword, role, businessId);
         userRepository.save(newUser);
     }
 

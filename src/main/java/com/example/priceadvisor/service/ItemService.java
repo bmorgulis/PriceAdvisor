@@ -26,8 +26,8 @@ public class ItemService {
         return itemRepository.findByInventoryIdOrderByNameAsc(inventoryId);
     }
 
-    public void addItem(String name, Long UPC, Long SKU, String description, String additionalInfo, BigDecimal price, int inventoryId) {
-        Item newItem = new Item(name, UPC, SKU, description, additionalInfo, price, inventoryId);
+    public void addItem(String name, Long UPC, Long SKU, String description, BigDecimal price, int inventoryId) {
+        Item newItem = new Item(name, UPC, SKU, description, price, inventoryId);
         itemRepository.save(newItem);
     }
 

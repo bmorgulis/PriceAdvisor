@@ -47,13 +47,12 @@ public class Item {
     public Item() {
     }
 
-    public Item(String name, Long UPC, Long SKU, String description, String additionalInfo,
+    public Item(String name, Long UPC, Long SKU, String description,
                 BigDecimal smallBusinessPrice, Integer inventoryId) {
         this.name = name;
         this.UPC = UPC;
         this.SKU = SKU;
         this.description = description;
-        this.additionalInfo = additionalInfo;
         this.smallBusinessPrice = smallBusinessPrice;
         this.inventoryId = inventoryId;
     }

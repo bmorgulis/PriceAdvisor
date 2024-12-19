@@ -155,7 +155,6 @@ public class Controllers {
                           @RequestParam(required = false) Long SKU,
                           @RequestParam(required = false) String description,
                           @RequestParam(required = false) BigDecimal price,
-                          @RequestParam(required = false) String additionalInfo,
                           RedirectAttributes redirectAttributes) {
         try {
             Integer businessId = securityContextService.getCurrentBusinessId();
@@ -168,7 +167,7 @@ public class Controllers {
             }
 
             // Make item through the user service add items
-            itemService.addItem(name, UPC, SKU, description, additionalInfo, price, inventoryId);
+            itemService.addItem(name, UPC, SKU, description, price, inventoryId);
 
             // Add success message
             redirectAttributes.addFlashAttribute("successMessage", "Item added");
