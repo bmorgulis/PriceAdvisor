@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 public class SettingsService {
     private final SecurityContextService securityContextService;
     private final UserService userService;
-    private final EmailNotificationService emailNotificationService;
+    private final EmailNotificationsService emailNotificationsService;
 
     @Autowired
-    public SettingsService(SecurityContextService securityContextService, UserService userService, EmailNotificationService emailNotificationService) {
+    public SettingsService(SecurityContextService securityContextService, UserService userService, EmailNotificationsService emailNotificationsService) {
         this.securityContextService = securityContextService;
         this.userService = userService;
-        this.emailNotificationService = emailNotificationService;
+        this.emailNotificationsService = emailNotificationsService;
     }
 
     public void saveEmailNotificationFrequency(User.EmailNotificationsFrequency chosenEmailNotificationsFrequency) {
@@ -30,12 +30,13 @@ public class SettingsService {
         User.EmailNotificationsFrequency currentFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
 
         if (currentFrequency != User.EmailNotificationsFrequency.NONE && currentFrequency != chosenEmailNotificationsFrequency) {
-            emailNotificationService.unsubscribeUserFromTopic(userEmail, currentFrequency, businessId);
+            emailNotificationsService.unsubscribeUserFromTopic(userEmail, currentFrequency, businessId);
         }
 
         if (chosenEmailNotificationsFrequency != User.EmailNotificationsFrequency.NONE) {
-            emailNotificationService.subscribeUserToTopic(userEmail, chosenEmailNotificationsFrequency, businessId);
-            userService.setCurrentEmailNotificationsFrequency(userId, chosenEmailNotificationsFrequency);
+            emailNotificationsService.subscribeUserToTopic(userEmail, chosenEmailNotificationsFrequency, businessId);
         }
+
+        userService.setCurrentEmailNotificationsFrequency(userId, chosenEmailNotificationsFrequency);
     }
 }

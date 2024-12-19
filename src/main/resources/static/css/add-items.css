@@ -1,15 +1,17 @@
-/* Remove number input arrows in Chrome, Edge, and Safari */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-/* Remove number input arrows in Firefox */
-input[type=number] {
-    -moz-appearance: textfield;
-}
-
 textarea {
     resize: none;
+}
+
+.form-control {
+    border: 1px solid black;
+}
+
+.input-group-text {
+    border: 1px solid black;
+    border-right: 0;
+    background-color: transparent;
+}
+
+.input-group .form-control {
+    border-left: 0;
 }

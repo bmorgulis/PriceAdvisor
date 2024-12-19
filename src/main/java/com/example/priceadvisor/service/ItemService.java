@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -27,15 +28,14 @@ public class ItemService {
     }
 
     public void addItem(String name, Long UPC, Long SKU, String description, BigDecimal price, int inventoryId) {
+        if (price != null) {
+            price = price.setScale(2, RoundingMode.HALF_UP); // Round price to 2 decimal places if it's not null
+        }
         Item newItem = new Item(name, UPC, SKU, description, price, inventoryId);
         itemRepository.save(newItem);
     }
 
     public void saveItems(List<Item> items) {
         itemRepository.saveAll(items);  // Save the updated items
-    }
-
-    public boolean itemExists(Long UPC, Long SKU, Integer inventoryId) {
-        return itemRepository.existsByUPCOrSKUAndInventoryId(UPC, SKU, inventoryId);
     }
 }

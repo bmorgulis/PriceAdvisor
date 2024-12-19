@@ -10,6 +10,4 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     List<Item> findByInventoryIdOrderByNameAsc(Integer inventoryId);
-
-    boolean existsByUPCOrSKUAndInventoryId(Long UPC, Long SKU, Integer inventoryId);
 }

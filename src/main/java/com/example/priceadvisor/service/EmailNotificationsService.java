@@ -9,7 +9,7 @@ import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
 
 @Service
-public class EmailNotificationService {
+public class EmailNotificationsService {
 
     private final String baseArn = "arn:aws:sns:us-east-1:471112717872:";
     private final SnsClient snsClient;
@@ -17,7 +17,7 @@ public class EmailNotificationService {
 
 
     @Autowired
-    public EmailNotificationService(SnsClient snsClient, BusinessRepository businessRepository) {
+    public EmailNotificationsService(SnsClient snsClient, BusinessRepository businessRepository) {
         this.snsClient = snsClient;
         this.businessRepository = businessRepository;
     }

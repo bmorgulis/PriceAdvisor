@@ -25,9 +25,6 @@ public class Item {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "additionalInfo")
-    private String additionalInfo;
-
     @Column(name = "smallBusinessPrice", precision = 10, scale = 2)
     private BigDecimal smallBusinessPrice;
 
@@ -96,14 +93,6 @@ public class Item {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getAdditionalInfo() {
-        return additionalInfo;
-    }
-
-    public void setAdditionalInfo(String additionalInfo) {
-        this.additionalInfo = additionalInfo;
     }
 
     public BigDecimal getSmallBusinessPrice() {

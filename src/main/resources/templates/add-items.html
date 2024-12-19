@@ -59,47 +59,63 @@
 <br>
 
 <div class="container">
-    <div class="row justify-content-center">
-        <!-- First Column -->
-        <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-right: 15px;">
-            <div class="mb-3">
-                <label for="item-name" class="form-label">Name<span class="text-danger"> *</span></label>
-                <textarea id="item-name" name="item-name" class="form-control" rows="5" required
-                          oninvalid="this.setCustomValidity('The item name is required.')" oninput="this.setCustomValidity('')"></textarea>
+    <p>
+        Only the item name is required. However, providing more details will help us ensure more accurate
+        matches on competitor websites.
+    </p>
+    <hr>
+    <form action="/add-item" method="POST">
+        <div class="row justify-content-center">
+            <!-- First Column -->
+            <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-right: 15px;">
+                <div class="mb-3">
+                    <label for="item-name" class="form-label">Name<span class="text-danger"> *</span></label>
+                    <textarea id="item-name" name="name" class="form-control" rows="5" required
+                              aria-required="true"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" id="price" name="price" class="form-control" step="0.01" min="0"
+                               oninvalid="this.setCustomValidity('Invalid price.')"
+                               oninput="this.setCustomValidity('')">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="upc" class="form-label">UPC</label>
+                    <input type="text" id="upc" name="upc" class="form-control"
+                           pattern="^\d{12}$"
+                           title="UPC must be 12 digits."
+                           oninvalid="this.setCustomValidity('UPC must be 12 digits.')"
+                           oninput="this.setCustomValidity('')">
+                </div>
+
+                <div class="mb-3">
+                    <label for="sku" class="form-label">SKU</label>
+                    <input type="text" id="sku" name="sku" class="form-control">
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="price" class="form-label">Price</label>
-                <input type="number" id="price" name="price" class="form-control" step="0.01" min="0">
-            </div>
-            <div class="mb-3">
-                <label for="upc" class="form-label">UPC</label>
-                <input type="number" id="upc" name="upc" class="form-control" minlength="12" maxlength="12" pattern="\d{12}"
-                       title="UPC must be exactly 12 digits.">
-            </div>
-            <div class="mb-3">
-                <label for="sku" class="form-label">SKU</label>
-                <input type="number" id="sku" name="sku" class="form-control" min="0">
+
+            <!-- Second Column -->
+            <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-left: 15px;">
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea id="description" name="description" class="form-control" rows="16"></textarea>
+                </div>
             </div>
         </div>
 
-        <!-- Second Column -->
-        <div class="col-md-6 d-flex flex-column align-items-stretch" style="padding-left: 15px;">
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea id="description" name="description" class="form-control" rows="16"></textarea>
-            </div>
+        <!-- Add Item Button -->
+        <div class="text-center mt-4">
+            <input class="button btn btn-primary btn-lg px-5" type="submit" value="Add Item">
         </div>
-    </div>
 
-    <!-- Add Item Button -->
-    <div class="text-center mt-4">
-        <input class="button btn btn-primary btn-lg px-5" type="submit" value="Add Item">
-    </div>
-
-    <!-- Required Field Note -->
-    <div class="mt-2">
-        <p><span class="text-danger">*</span> indicates required field.</p>
-    </div>
+        <!-- Required Field Note -->
+        <div class="mt-2">
+            <p><span class="text-danger">*</span> indicates required field.</p>
+        </div>
+    </form>
 </div>
 
 <br><br>
@@ -116,13 +132,12 @@
     </div>
 </div>
 
-<!-- Modal for Successful Item Addition -->
-<div class="modal fade" id="success-modal" tabindex="-1" aria-labelledby="success-modal-label"
-     aria-hidden="true">
+<!-- Success Modal -->
+<div class="modal fade" id="success-modal" tabindex="-1" aria-labelledby="success-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="background-color: #39DB14; color: white;">
             <div class="modal-body text-center">
-                <h5 class="modal-title" id="success-modal-label">Item Added</h5>
+                <h5 class="modal-title" id="success-modal-label" th:text="${successMessage}"></h5>
             </div>
         </div>
     </div>
@@ -140,10 +155,10 @@
             }, 1000);
         }
 
-        // Check if there is an add item success message and show it if there is one
+        // Handle success message modal display
         const successMessage = /*[[${successMessage}]]*/ null;
+        const successModal = new bootstrap.Modal(document.getElementById('success-modal'));
         if (successMessage) {
-            const successModal = new bootstrap.Modal(document.getElementById('add-item-success-modal'));
             successModal.show();
             setTimeout(function () {
                 successModal.hide();

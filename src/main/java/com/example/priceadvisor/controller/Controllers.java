@@ -21,10 +21,10 @@ public class Controllers {
     private final UserService userService;
     private final SettingsService settingsService;
     private final SecurityContextService securityContextService;
-    Logger logger = Logger.getLogger(Controllers.class.getName());
     private final InventoryService inventoryService;
     private final ItemService itemService;
 
+    Logger logger = Logger.getLogger(Controllers.class.getName());
 
     @Autowired
     public Controllers(UserService userService, SettingsService settingsService, InventoryService inventoryService, ItemService itemService, SecurityContextService securityContextService) {
@@ -159,19 +159,13 @@ public class Controllers {
             Integer businessId = securityContextService.getCurrentBusinessId();
             Integer inventoryId = inventoryService.getInventoryIdByBusinessId(businessId);
 
-            // Check if the item already exists in the inventory
-            if (itemService.itemExists(UPC, SKU, inventoryId)) {
-                redirectAttributes.addFlashAttribute("errorMessage", "The item already exists in the inventory.");
-                return "redirect:/add-items";
-            }
-
-            // Make item through the user service add items
             itemService.addItem(name, UPC, SKU, description, price, inventoryId);
 
-            // Add success message
             redirectAttributes.addFlashAttribute("successMessage", "Item added");
             return "redirect:/add-items";
         } catch (Exception e) {
+            logger.severe("Error occurred while adding user: " + e.getMessage());
+
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
             return "redirect:/add-items";
