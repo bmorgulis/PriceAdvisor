@@ -56,7 +56,7 @@ public class Application {
             return true; // Port is in use
         }
     }
-
+//
 //    //This is from chatgpt
 ////Will open the application in the default browser when the application starts.
 //    @EventListener(ContextRefreshedEvent.class)
