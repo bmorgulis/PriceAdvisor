@@ -4,15 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Locale;
 
 /**
  * Entry point for the Spring Boot application.
@@ -20,6 +15,7 @@ import java.util.Locale;
  * configuration setup for the application context.
  */
 @SpringBootApplication
+@EnableScheduling
 public class Application {
 
     // Logger for this class
@@ -40,7 +36,7 @@ public class Application {
         try {
             logger.info("Starting the Spring Boot application.");
             SpringApplication.run(Application.class, args);
-            logger.info("At http://localhost:{}, Spring Boot application started successfully.", PORT);
+            System.out.printf("At http://localhost:%d, Spring Boot application started successfully.\n", PORT);
         } catch (Exception e) {
             logger.error("An error occurred while starting the Spring Boot application.", e);
             System.exit(1); // Exit with a non-zero status to indicate failure

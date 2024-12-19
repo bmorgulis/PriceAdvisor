@@ -1,12 +1,7 @@
 package com.example.priceadvisor.controller;
 
 import com.example.priceadvisor.entity.User;
-import com.example.priceadvisor.service.SettingsService;
-import com.example.priceadvisor.service.EmailNotificationService;
-import com.example.priceadvisor.service.InventoryService;
-import com.example.priceadvisor.service.ItemService;
-
-import com.example.priceadvisor.service.UserService;
+import com.example.priceadvisor.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,17 +20,19 @@ public class Controllers {
 
     private final UserService userService;
     private final SettingsService settingsService;
+    private final SecurityContextService securityContextService;
     Logger logger = Logger.getLogger(Controllers.class.getName());
     private final InventoryService inventoryService;
     private final ItemService itemService;
 
 
     @Autowired
-    public Controllers(UserService userService, SettingsService settingsService, InventoryService inventoryService, ItemService itemService) {
+    public Controllers(UserService userService, SettingsService settingsService, InventoryService inventoryService, ItemService itemService, SecurityContextService securityContextService) {
         this.userService = userService;
         this.settingsService = settingsService;
         this.inventoryService = inventoryService;
         this.itemService = itemService;
+        this.securityContextService = securityContextService;
     }
 
     @GetMapping("/sign-in")
@@ -145,35 +142,22 @@ public class Controllers {
         }
     }
 
-
     @GetMapping("/add-items")
     public String addItems() {
         return "add-items";
     }
 
 
-    @GetMapping("/compare-prices")
-    public String comparePrices() {
-        // DataFetchingService dataFetchingService = new DataFetchingService();
-        // dataFetchingService.fetchData();
-        return "compare-prices";
-    }
-
-    @GetMapping("/watchlist")
-    public String watchlist() {
-        return "watchlist";
-    }
-
     @PostMapping("/add-item")
     public String addItem(@RequestParam String name,
-                          @RequestParam Long UPC,
-                          @RequestParam Long SKU,
+                          @RequestParam(required = false) Long UPC,
+                          @RequestParam(required = false) Long SKU,
                           @RequestParam(required = false) String description,
-                          @RequestParam BigDecimal price,
+                          @RequestParam(required = false) BigDecimal price,
                           @RequestParam(required = false) String additionalInfo,
                           RedirectAttributes redirectAttributes) {
         try {
-            Integer businessId = userService.getCurrentBusinessId();
+            Integer businessId = securityContextService.getCurrentBusinessId();
             Integer inventoryId = inventoryService.getInventoryIdByBusinessId(businessId);
 
             // Check if the item already exists in the inventory
@@ -193,5 +177,10 @@ public class Controllers {
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
             return "redirect:/add-items";
         }
+    }
+
+    @GetMapping("/compare-prices")
+    public String comparePrices() {
+        return "compare-prices";
     }
 }

@@ -8,26 +8,28 @@ public class Inventory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int inventoryId;
+    @Column(name = "inventoryId")
+    private Integer inventoryId;
 
-    @Column(nullable = false)
-    private int businessId;
+    @Column(name = "businessId", nullable = false)
+    private Integer businessId;
 
-    // Getters and setters
-    public int getInventoryId() {
+    public Inventory() {
+    }
+
+    public Integer getInventoryId() {
         return inventoryId;
     }
 
-    public void setInventoryId(int inventoryId) {
+    public void setInventoryId(Integer inventoryId) {
         this.inventoryId = inventoryId;
     }
 
-    public int getBusinessId() {
+    public Integer getBusinessId() {
         return businessId;
     }
 
-    public void setBusinessId(int businessId) {
+    public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
     }
 }
-

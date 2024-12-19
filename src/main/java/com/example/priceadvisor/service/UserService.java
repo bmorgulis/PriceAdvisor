@@ -1,7 +1,6 @@
 package com.example.priceadvisor.service;
 
 import com.example.priceadvisor.entity.User;
-import com.example.priceadvisor.repository.BusinessRepository;
 import com.example.priceadvisor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,15 +14,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final SecurityContextService securityContextService; // Injected service
-    public final BusinessRepository BusinessRepository;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, SecurityContextService securityContextService, BusinessRepository BusinessRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, SecurityContextService securityContextService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.securityContextService = securityContextService;
-        this.BusinessRepository = BusinessRepository;
     }
 
     // Add a new user with hashed password

@@ -28,11 +28,17 @@ public class Item {
     @Column(name = "additionalInfo")
     private String additionalInfo;
 
-    @Column(name = "price", precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(name = "smallBusinessPrice", precision = 10, scale = 2)
+    private BigDecimal smallBusinessPrice;
 
-    @Column(name = "starred", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
-    private Boolean starred;
+    @Column(name = "amazonPrice", precision = 10, scale = 2)
+    private BigDecimal amazonPrice;
+
+    @Column(name = "walmartPrice", precision = 10, scale = 2)
+    private BigDecimal walmartPrice;
+
+    @Column(name = "ebayPrice", precision = 10, scale = 2)
+    private BigDecimal ebayPrice;
 
     @Column(name = "inventoryId", nullable = false)
     private Integer inventoryId;
@@ -42,18 +48,17 @@ public class Item {
     }
 
     public Item(String name, Long UPC, Long SKU, String description, String additionalInfo,
-                BigDecimal price, Integer inventoryId, Boolean starred) {
+                BigDecimal smallBusinessPrice, Integer inventoryId) {
         this.name = name;
         this.UPC = UPC;
         this.SKU = SKU;
         this.description = description;
         this.additionalInfo = additionalInfo;
-        this.price = price;
+        this.smallBusinessPrice = smallBusinessPrice;
         this.inventoryId = inventoryId;
-        this.starred = starred;
-
     }
 
+    // Getters and Setters
     public Integer getItemId() {
         return itemId;
     }
@@ -102,20 +107,36 @@ public class Item {
         this.additionalInfo = additionalInfo;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getSmallBusinessPrice() {
+        return smallBusinessPrice;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setSmallBusinessPrice(BigDecimal smallBusinessPrice) {
+        this.smallBusinessPrice = smallBusinessPrice;
     }
 
-    public Boolean getStarred() {
-        return starred;
+    public BigDecimal getAmazonPrice() {
+        return amazonPrice;
     }
 
-    public void setStarred(Boolean starred) {
-        this.starred = starred;
+    public void setAmazonPrice(BigDecimal amazonPrice) {
+        this.amazonPrice = amazonPrice;
+    }
+
+    public BigDecimal getWalmartPrice() {
+        return walmartPrice;
+    }
+
+    public void setWalmartPrice(BigDecimal walmartPrice) {
+        this.walmartPrice = walmartPrice;
+    }
+
+    public BigDecimal getEbayPrice() {
+        return ebayPrice;
+    }
+
+    public void setEbayPrice(BigDecimal ebayPrice) {
+        this.ebayPrice = ebayPrice;
     }
 
     public Integer getInventoryId() {
