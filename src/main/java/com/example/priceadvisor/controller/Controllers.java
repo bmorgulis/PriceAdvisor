@@ -26,7 +26,6 @@ public class Controllers {
     private final ItemService itemService;
 
 
-
     @Autowired
     public Controllers(UserService userService, SettingsService settingsService, InventoryService inventoryService, ItemService itemService, SecurityContextService securityContextService) {
         this.userService = userService;

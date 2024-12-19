@@ -35,7 +35,8 @@ public class EmailNotificationService {
 
             snsClient.subscribe(request);
         } catch (SnsException e) {
-            e.printStackTrace();        }
+            e.printStackTrace();
+        }
     }
 
     public void unsubscribeUserFromTopic(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
