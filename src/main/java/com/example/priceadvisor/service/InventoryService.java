@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.priceadvisor.repository.InventoryRepository;
 import com.example.priceadvisor.entity.Inventory;
+
 import java.util.Optional;
 
 

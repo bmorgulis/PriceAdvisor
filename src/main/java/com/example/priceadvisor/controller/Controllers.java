@@ -30,7 +30,6 @@ public class Controllers {
     private final ItemService itemService;
 
 
-
     @Autowired
     public Controllers(UserService userService, SettingsService settingsService, InventoryService inventoryService, ItemService itemService) {
         this.userService = userService;

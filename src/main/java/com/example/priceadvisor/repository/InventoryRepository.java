@@ -1,4 +1,5 @@
 package com.example.priceadvisor.repository;
+
 import com.example.priceadvisor.entity.Inventory;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
