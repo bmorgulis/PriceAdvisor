@@ -37,6 +37,9 @@ public class Item {
     @Column(name = "ebayPrice", precision = 10, scale = 2)
     private BigDecimal ebayPrice;
 
+    @Column(name = "priceSuggestion")
+    private String priceSuggestion;
+
     @Column(name = "inventoryId", nullable = false)
     private Integer inventoryId;
 
@@ -126,33 +129,19 @@ public class Item {
         this.ebayPrice = ebayPrice;
     }
 
+    public String getPriceSuggestion() {
+        return priceSuggestion;
+    }
+
+    public void setPriceSuggestion(String priceSuggestion) {
+        this.priceSuggestion = priceSuggestion;
+    }
+
     public Integer getInventoryId() {
         return inventoryId;
     }
 
     public void setInventoryId(Integer inventoryId) {
         this.inventoryId = inventoryId;
-    }
-
-    public String itemDetailsToString() {
-        StringBuilder details = new StringBuilder("Item ");
-
-        if (name != null) {
-            details.append("\"").append(name).append("\" ");
-        }
-        if (upc != null || sku != null || description != null) {
-            details.append("with ");
-        }
-        if (upc != null) {
-            details.append("UPC: \"").append(upc).append("\", ");
-        }
-        if (sku != null) {
-            details.append("SKU: \"").append(sku).append("\", ");
-        }
-        if (description != null) {
-            details.append("Description: \"").append(description).append("\", ");
-        }
-
-        return details.toString();
     }
 }

@@ -154,7 +154,6 @@ public class Controllers {
                           @RequestParam(required = false) String description,
                           @RequestParam(required = false) String priceAsString,
                           RedirectAttributes redirectAttributes) {
-        System.out.println("price: " + priceAsString);
         try {
             Integer businessId = securityContextService.getCurrentBusinessId();
             Integer inventoryId = inventoryService.getInventoryIdByBusinessId(businessId);

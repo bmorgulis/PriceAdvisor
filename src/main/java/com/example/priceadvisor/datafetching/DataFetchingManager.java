@@ -2,11 +2,11 @@ package com.example.priceadvisor.datafetching;
 
 import com.example.priceadvisor.entity.Item;
 import com.example.priceadvisor.service.ItemService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -18,29 +18,29 @@ public class DataFetchingManager {
 
     private static final int MAX_THREADS = 50;  // Adjust based on your system's resources
     private static final ExecutorService executorService = Executors.newFixedThreadPool(MAX_THREADS);
-    private static final List<CompetitorWebsiteDataFetcher> FETCHERS = List.of(
-            new AmazonDataApiFetcher(),
-            new WalmartDataScraper(),
-            new EbayDataScraper()
-    );
     private static final int BATCH_SIZE = 50;
 
     private final AtomicBoolean isFetchingInProgress = new AtomicBoolean(false);
     private final ItemService itemService;  // Only inject ItemService
+    private final List<CompetitorWebsiteDataFetcher> fetchers;
 
     private CountDownLatch latch;
 
     // Constructor to inject ItemService
-    public DataFetchingManager(ItemService itemService) {
+    @Autowired
+    public DataFetchingManager(ItemService itemService,
+                               AmazonDataApiFetcher amazonDataApiFetcher,
+                               WalmartDataScraper walmartDataScraper,
+                               EbayDataScraper ebayDataScraper) {
         this.itemService = itemService;
+        this.fetchers = List.of(amazonDataApiFetcher, walmartDataScraper, ebayDataScraper);
     }
-
     public void fetchAllData() {
         if (isFetchingInProgress.compareAndSet(false, true)) {
             // Fetch data only if it's not already in progress
             try {
                 List<Item> items = itemService.getAllItems();
-                latch = new CountDownLatch(items.size() * FETCHERS.size());
+                latch = new CountDownLatch(items.size() * fetchers.size());
 
                 // Split items into batches to prevent memory overload
                 List<List<Item>> batches = createBatches(items, BATCH_SIZE);
@@ -62,11 +62,11 @@ public class DataFetchingManager {
         Set<Item> itemsToSave = new CopyOnWriteArraySet<>();
 
         // Reset latch for the current batch
-        latch = new CountDownLatch(batch.size() * FETCHERS.size());
+        latch = new CountDownLatch(batch.size() * fetchers.size());
 
         // Process each item in the batch asynchronously
         for (Item item : batch) {
-            for (CompetitorWebsiteDataFetcher fetcher : FETCHERS) {
+            for (CompetitorWebsiteDataFetcher fetcher : fetchers) {
                 executorService.submit(() -> {
                     try {
                         // Fetch and check if any update happened
@@ -92,11 +92,40 @@ public class DataFetchingManager {
             e.printStackTrace();
         }
 
-        // Save the updated items after all tasks in the batch are completed
+        List<Item> itemsToSaveList = new ArrayList<>(itemsToSave);
+
         if (!itemsToSave.isEmpty()) {
-            itemService.saveItems(new ArrayList<>(itemsToSave));  // Convert Set to List and save only the updated items
+            generatePriceSuggestions(itemsToSaveList);
+            itemService.saveItems(itemsToSaveList);
         }
     }
+
+    private void generatePriceSuggestions(List<Item> items) {
+        for (Item item : items) {
+            BigDecimal smallBusinessPrice = item.getSmallBusinessPrice();
+            BigDecimal amazonPrice = item.getAmazonPrice();
+            BigDecimal walmartPrice = item.getWalmartPrice();
+            BigDecimal ebayPrice = item.getEbayPrice();
+
+            // If smallBusinessPrice is not null and at least one of the other prices is not null
+            if (smallBusinessPrice != null) {
+                // List of prices to compare against
+                List<BigDecimal> prices = Arrays.asList(amazonPrice, walmartPrice, ebayPrice);
+
+                // Filter out null values and check if smallBusinessPrice is lower or higher than all others
+                boolean isLower = prices.stream().filter(Objects::nonNull).allMatch(price -> smallBusinessPrice.compareTo(price) < 0);
+                boolean isHigher = prices.stream().filter(Objects::nonNull).allMatch(price -> smallBusinessPrice.compareTo(price) > 0);
+
+                // Set the price suggestion based on the comparisons
+                if (isLower) {
+                    itemService.setPriceSuggestion(item, "RAISE");
+                } else if (isHigher) {
+                    itemService.setPriceSuggestion(item, "LOWER");
+                }
+            }
+        }
+    }
+
 
 
     private List<List<Item>> createBatches(List<Item> items, int batchSize) {

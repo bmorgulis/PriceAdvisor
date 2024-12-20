@@ -1,9 +1,11 @@
 package com.example.priceadvisor.datafetching;
 
 import com.example.priceadvisor.entity.Item;
+import com.example.priceadvisor.service.ItemService;
 import org.htmlunit.WebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,6 +16,12 @@ import java.util.regex.Pattern;
 @Service
 public class EbayDataScraper extends CompetitorWebsiteDataScraper {
     private static final Logger logger = LoggerFactory.getLogger(EbayDataScraper.class);
+    private final ItemService itemService;
+
+    @Autowired
+    public EbayDataScraper(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
@@ -75,7 +83,7 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public boolean saveCompetitorPriceIfChanged(Item item, BigDecimal price) {
         if (!Objects.equals(price, item.getEbayPrice())) {
-            item.setEbayPrice(price);
+            itemService.setEbayPrice(item, price);
             return true;
         }
         return false;

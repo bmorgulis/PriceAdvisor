@@ -1,6 +1,8 @@
 package com.example.priceadvisor.datafetching;
 
 import com.example.priceadvisor.entity.Item;
+import com.example.priceadvisor.service.ItemService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -9,6 +11,13 @@ import java.util.Objects;
 @Service
 public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
+
+    private final ItemService itemService;
+
+    @Autowired
+    public WalmartDataScraper(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     @Override
     public String scrapeItemUrlFromSearchPage(String pageContent) {
@@ -33,7 +42,7 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public boolean saveCompetitorPriceIfChanged(Item item, BigDecimal price) {
         if (!Objects.equals(price, item.getWalmartPrice())) {
-            item.setWalmartPrice(price);
+            itemService.setWalmartPrice(item, price);
             return true;
         }
         return false;
