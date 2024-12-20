@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -150,18 +149,24 @@ public class Controllers {
 
     @PostMapping("/add-item")
     public String addItem(@RequestParam String name,
-                          @RequestParam(required = false) Long UPC,
-                          @RequestParam(required = false) Long SKU,
+                          @RequestParam(required = false) String upcAsString,
+                          @RequestParam(required = false) String sku,
                           @RequestParam(required = false) String description,
-                          @RequestParam(required = false) BigDecimal price,
+                          @RequestParam(required = false) String priceAsString,
                           RedirectAttributes redirectAttributes) {
+        System.out.println("price: " + priceAsString);
         try {
             Integer businessId = securityContextService.getCurrentBusinessId();
             Integer inventoryId = inventoryService.getInventoryIdByBusinessId(businessId);
 
-            itemService.addItem(name, UPC, SKU, description, price, inventoryId);
+            String errorMessage = itemService.addItem(name, upcAsString, sku, description, priceAsString, inventoryId);
 
-            redirectAttributes.addFlashAttribute("successMessage", "Item added");
+            if (errorMessage == null) {
+                redirectAttributes.addFlashAttribute("successMessage", "Item Added");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            }
+
             return "redirect:/add-items";
         } catch (Exception e) {
             e.printStackTrace();

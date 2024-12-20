@@ -52,9 +52,11 @@
 
 <div id="error-message" style="top: 10px;" class="alert alert-danger text-center" th:if="${errorMessage != null}"
      role="alert">
-    <span th:text="${errorMessage}"></span>
+    <span th:utext="${errorMessage}"></span>
 </div>
+
 <br><br>
+
 <h1 class="text-center">Add Item</h1>
 <br>
 
@@ -77,23 +79,23 @@
                     <label for="price" class="form-label">Price</label>
                     <div class="input-group">
                         <span class="input-group-text">$</span>
-                        <input type="number" id="price" name="price" class="form-control" step="0.01" min="0"
+                        <input type="text" id="price" name="priceAsString" class="form-control"
+                               pattern="^\d{1,3}(?:,\d{3})*(?:\.\d{2})?$"
                                oninvalid="this.setCustomValidity('Invalid price.')"
                                oninput="this.setCustomValidity('')">
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="upc" class="form-label">UPC</label>
-                    <input type="text" id="upc" name="upc" class="form-control"
+                    <input type="text" id="upc" name="upcAsString" class="form-control"
                            pattern="^\d{12}$"
-                           title="UPC must be 12 digits."
                            oninvalid="this.setCustomValidity('UPC must be 12 digits.')"
                            oninput="this.setCustomValidity('')">
                 </div>
-
                 <div class="mb-3">
                     <label for="sku" class="form-label">SKU</label>
-                    <input type="text" id="sku" name="sku" class="form-control">
+                    <input type="text" id="sku" name="sku" class="form-control"
+                           pattern="\S+">
                 </div>
             </div>
 

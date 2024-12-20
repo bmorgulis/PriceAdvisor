@@ -15,11 +15,6 @@ public class DataFetchingService {
         this.dataFetchingManager = dataFetchingManager;
     }
 
-//    @PostConstruct
-//    public void init() {
-//        fetchData();
-//    }
-
     // Fetch data for all businesses
     public void fetchData() {
         dataFetchingManager.fetchAllData();
@@ -28,7 +23,14 @@ public class DataFetchingService {
     // Schedule the fetch to run every hour
     @Scheduled(fixedRate = 3600000)
     public void fetchDataEveryHour() {
-        fetchData(); // Check if the fetch is in progress before triggering another fetch
+        try
+        {
+            fetchData();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }
 

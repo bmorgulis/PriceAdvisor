@@ -30,8 +30,8 @@ public abstract class CompetitorWebsiteDataScraper extends CompetitorWebsiteData
         StringBuilder query = new StringBuilder();
 
         appendField(query, item.getName());
-        appendField(query, String.valueOf(item.getUPC()));
-        appendField(query, String.valueOf(item.getSKU()));
+        appendField(query, String.valueOf(item.getUpc()));
+        appendField(query, String.valueOf(item.getSku()));
         appendField(query, item.getDescription());
 
         return query.toString();
@@ -46,9 +46,9 @@ public abstract class CompetitorWebsiteDataScraper extends CompetitorWebsiteData
         }
     }
 
-    public String getPageContentAsString(WebClient webClient, String itemUrl) {
+    public String getPageContentAsString(WebClient webClient, String url) {
         try {
-            HtmlPage page = webClient.getPage(itemUrl);
+            HtmlPage page = webClient.getPage(url);
             return page.asXml();
         } catch (Exception e) {
             return null;

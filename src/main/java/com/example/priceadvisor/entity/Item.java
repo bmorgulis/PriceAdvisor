@@ -16,11 +16,11 @@ public class Item {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "UPC")
-    private Long UPC;
+    @Column(name = "upc")
+    private Long upc;
 
-    @Column(name = "SKU")
-    private Long SKU;
+    @Column(name = "sku")
+    private String sku;
 
     @Column(name = "description")
     private String description;
@@ -44,11 +44,10 @@ public class Item {
     public Item() {
     }
 
-    public Item(String name, Long UPC, Long SKU, String description,
-                BigDecimal smallBusinessPrice, Integer inventoryId) {
+    public Item(String name, Long upc, String sku, String description, BigDecimal smallBusinessPrice, Integer inventoryId) {
         this.name = name;
-        this.UPC = UPC;
-        this.SKU = SKU;
+        this.upc = upc;
+        this.sku = sku;
         this.description = description;
         this.smallBusinessPrice = smallBusinessPrice;
         this.inventoryId = inventoryId;
@@ -71,20 +70,20 @@ public class Item {
         this.name = name;
     }
 
-    public Long getUPC() {
-        return UPC;
+    public Long getUpc() {
+        return upc;
     }
 
-    public void setUPC(Long UPC) {
-        this.UPC = UPC;
+    public void setUpc(Long upc) {
+        this.upc = upc;
     }
 
-    public Long getSKU() {
-        return SKU;
+    public String getSku() {
+        return sku;
     }
 
-    public void setSKU(Long SKU) {
-        this.SKU = SKU;
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public String getDescription() {
@@ -133,5 +132,27 @@ public class Item {
 
     public void setInventoryId(Integer inventoryId) {
         this.inventoryId = inventoryId;
+    }
+
+    public String itemDetailsToString() {
+        StringBuilder details = new StringBuilder("Item ");
+
+        if (name != null) {
+            details.append("\"").append(name).append("\" ");
+        }
+        if (upc != null || sku != null || description != null) {
+            details.append("with ");
+        }
+        if (upc != null) {
+            details.append("UPC: \"").append(upc).append("\", ");
+        }
+        if (sku != null) {
+            details.append("SKU: \"").append(sku).append("\", ");
+        }
+        if (description != null) {
+            details.append("Description: \"").append(description).append("\", ");
+        }
+
+        return details.toString();
     }
 }
