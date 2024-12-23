@@ -132,7 +132,7 @@ public class ItemService {
         item.setEbayPrice(ebayPrice);
     }
 
-    public void setPriceSuggestion(Item item, String priceSuggestion) {
+    public void setPriceSuggestion(Item item, Item.PriceSuggestion priceSuggestion) {
         item.setPriceSuggestion(priceSuggestion);
     }
 }

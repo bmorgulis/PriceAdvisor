@@ -118,15 +118,13 @@ public class DataFetchingManager {
 
                 // Set the price suggestion based on the comparisons
                 if (isLower) {
-                    itemService.setPriceSuggestion(item, "RAISE");
+                    itemService.setPriceSuggestion(item, Item.PriceSuggestion.RAISE);
                 } else if (isHigher) {
-                    itemService.setPriceSuggestion(item, "LOWER");
+                    itemService.setPriceSuggestion(item, Item.PriceSuggestion.LOWER);
                 }
             }
         }
     }
-
-
 
     private List<List<Item>> createBatches(List<Item> items, int batchSize) {
         List<List<Item>> batches = new ArrayList<>();

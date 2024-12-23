@@ -37,8 +37,9 @@ public class Item {
     @Column(name = "ebayPrice", precision = 10, scale = 2)
     private BigDecimal ebayPrice;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "priceSuggestion")
-    private String priceSuggestion;
+    private PriceSuggestion priceSuggestion;
 
     @Column(name = "inventoryId", nullable = false)
     private Integer inventoryId;
@@ -129,11 +130,11 @@ public class Item {
         this.ebayPrice = ebayPrice;
     }
 
-    public String getPriceSuggestion() {
+    public PriceSuggestion getPriceSuggestion() {
         return priceSuggestion;
     }
 
-    public void setPriceSuggestion(String priceSuggestion) {
+    public void setPriceSuggestion(PriceSuggestion priceSuggestion) {
         this.priceSuggestion = priceSuggestion;
     }
 
@@ -143,5 +144,10 @@ public class Item {
 
     public void setInventoryId(Integer inventoryId) {
         this.inventoryId = inventoryId;
+    }
+
+    public enum PriceSuggestion {
+        RAISE,
+        LOWER
     }
 }
