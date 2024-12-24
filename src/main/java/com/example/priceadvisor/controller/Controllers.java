@@ -179,6 +179,7 @@ public class Controllers {
     public String comparePrices(Model model, RedirectAttributes redirectAttributes) {
         try {
             List<Item> items = itemService.findItemsByInventoryId(inventoryService.getInventoryIdByBusinessId(securityContextService.getCurrentBusinessId()));
+
             model.addAttribute("items", items);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
@@ -190,7 +191,9 @@ public class Controllers {
     public String deleteItems(@RequestParam List<Integer> itemIds, RedirectAttributes redirectAttributes) {
         try {
             itemService.deleteItemsById(itemIds);
+
             redirectAttributes.addFlashAttribute("successMessage", "Item(s) Deleted");
+
             return "redirect:/compare-prices";
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,7 +205,6 @@ public class Controllers {
     @PostMapping("/edit-items")
     public String saveItemChanges(@RequestParam("editedItems") String editedItemsJson, RedirectAttributes redirectAttributes) {
         try {
-            System.out.println(editedItemsJson);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Item> editedItems = objectMapper.readValue(editedItemsJson, objectMapper.getTypeFactory().constructCollectionType(List.class, Item.class));
 

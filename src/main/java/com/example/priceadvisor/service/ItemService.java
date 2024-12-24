@@ -149,7 +149,6 @@ public class ItemService {
 
     public void saveChangedItems(List<Item> changedItems) {
         for (Item changedItem : changedItems) {
-            System.out.println(changedItem.getSmallBusinessPrice());
 
             Item existingItem = itemRepository.findById(changedItem.getItemId()).orElse(null);
 
