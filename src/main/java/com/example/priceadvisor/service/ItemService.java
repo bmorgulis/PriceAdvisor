@@ -123,8 +123,6 @@ public class ItemService {
         return details.toString();
     }
 
-
-
     public void setAmazonPrice(Item item, BigDecimal amazonPrice) {
         item.setAmazonPrice(amazonPrice);
     }
@@ -148,6 +146,39 @@ public class ItemService {
     public void deleteItemsById(List<Integer> itemIds) {
         List<Item> itemsToDelete = itemRepository.findByItemIdIn(itemIds);
         itemRepository.deleteAll(itemsToDelete);
+    }
+
+    public void saveChangedItems(List<Item> changedItems) {
+        for (Item changedItem : changedItems) {
+            System.out.println(changedItem.getSmallBusinessPrice());
+
+            Item existingItem = itemRepository.findById(changedItem.getItemId()).orElse(null);
+
+            if (existingItem == null) {
+                throw new IllegalArgumentException("No user found with ID: " + changedItem.getItemId());
+            }
+
+            if (changedItem.getName() != null) {
+                existingItem.setName(changedItem.getName());
+            }
+
+            existingItem.setUpc(changedItem.getUpc());
+
+            if (changedItem.getSku() != null) {
+                existingItem.setSku(changedItem.getSku());
+            }
+            if (changedItem.getName() != null) {
+                existingItem.setName(changedItem.getName());
+            }
+
+            if (changedItem.getDescription() != null) {
+                existingItem.setDescription(changedItem.getDescription());
+            }
+
+            existingItem.setSmallBusinessPrice(changedItem.getSmallBusinessPrice());
+
+            itemRepository.save(existingItem);
+        }
     }
 }
 

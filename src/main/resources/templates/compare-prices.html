@@ -211,7 +211,6 @@
         // Set up grid with item data
         const itemData = /*[[${items}]]*/ null;
         const isManager = /*[[${#authorization.expression('hasRole("ROLE_MANAGER")')}]]*/ false; // This checks if the user has the role
-        console.log(isManager);
         const grid = new gridjs.Grid({
             columns: [
                 {
@@ -281,7 +280,9 @@
                     name: 'Price',
                     minWidth: '70px',
                     formatter: (cell) => {
-                        const formattedCell = cell != null ? new Intl.NumberFormat().format(cell) : '';
+                        const formattedCell = cell != null
+                            ? new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(cell)
+                            : '';
 
                         if (isManager) {
                             return gridjs.html(`<span>$</span><div style="display: inline" contenteditable="true">${formattedCell}</div>`);
@@ -295,10 +296,12 @@
                     name: 'Amazon',
                     minWidth: '70px',
                     formatter: (cell) => {
-                        const formattedCell = cell != null ? new Intl.NumberFormat().format(cell) : '';
+                        const formattedCell = cell != null
+                            ? new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(cell)
+                            : '';
 
                         if (isManager) {
-                            return gridjs.html(`<span>$</span><div style="display: inline" contenteditable="true">${formattedCell}</div>`);
+                            return gridjs.html(`<span>$</span><div style="display: inline">${formattedCell}</div>`);
                         } else {
                             return `$${formattedCell}`;
                         }
@@ -309,10 +312,12 @@
                     name: 'Walmart',
                     minWidth: '70px',
                     formatter: (cell) => {
-                        const formattedCell = cell != null ? new Intl.NumberFormat().format(cell) : '';
+                        const formattedCell = cell != null
+                            ? new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(cell)
+                            : '';
 
                         if (isManager) {
-                            return gridjs.html(`<span>$</span><div style="display: inline" contenteditable="true">${formattedCell}</div>`);
+                            return gridjs.html(`<span>$</span><div style="display: inline">${formattedCell}</div>`);
                         } else {
                             return `$${formattedCell}`;
                         }
@@ -323,10 +328,12 @@
                     name: 'Ebay',
                     minWidth: '70px',
                     formatter: (cell) => {
-                        const formattedCell = cell != null ? new Intl.NumberFormat().format(cell) : '';
+                        const formattedCell = cell != null
+                            ? new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(cell)
+                            : '';
 
                         if (isManager) {
-                            return gridjs.html(`<span>$</span><div style="display: inline" contenteditable="true">${formattedCell}</div>`);
+                            return gridjs.html(`<span>$</span><div style="display: inline">${formattedCell}</div>`);
                         } else {
                             return `$${formattedCell}`;
                         }
@@ -421,48 +428,70 @@
                 }
             });
 
-            // Track item changes (email, password, role)
             itemData.forEach(item => {
                 const row = document.querySelector(`.gridjs-tr[item-id="${item.itemId}"]`);
                 if (!row) return;
 
-                const emailInput = row.querySelector('input[type="email"]');
-                const passwordInput = row.querySelector('input[type="password"]');
-                const roleSelect = row.querySelector('select.item-dropdown');
+                // Select the editable fields in the row
+                const nameInput = row.querySelector('[data-column-id="name"] div[contenteditable="true"]');
+                const upcInput = row.querySelector('[data-column-id="upc"] div[contenteditable="true"]');
+                const skuInput = row.querySelector('[data-column-id="sku"] div[contenteditable="true"]');
+                const descriptionInput = row.querySelector('[data-column-id="description"] div[contenteditable="true"]');
+                const priceInput = row.querySelector('[data-column-id="smallBusinessPrice"] div[contenteditable="true"]');
 
-                const originalEmail = item.email;
-                const originalRole = item.role;
+                // Track original values to compare later
+                const originalName = item.name;
+                const originalUpc = item.upc;
+                const originalSku = item.sku;
+                const originalDescription = item.description;
+                const originalPrice = item.smallBusinessPrice;
 
                 const editedItem = {itemId: item.itemId};
 
-                let emailEdited = false;
-                let passwordEdited = false;
-                let roleEdited = false;
+                let nameEdited = false;
+                let upcEdited = false;
+                let skuEdited = false;
+                let descriptionEdited = false;
+                let priceEdited = false;
 
-                emailInput.addEventListener('input', function () {
-                    emailEdited = emailInput.value.trim() !== originalEmail;
+                nameInput.addEventListener('input', function () {
+                    nameEdited = nameInput.textContent.trim() !== originalName;
                 });
 
-                passwordInput.addEventListener('input', function () {
-                    passwordEdited = passwordInput.value.trim() !== '';
+                upcInput.addEventListener('input', function () {
+                    upcEdited = upcInput.textContent.trim() !== originalUpc;
                 });
 
-                roleSelect.addEventListener('change', function () {
-                    roleEdited = roleSelect.value.trim() !== originalRole;
+                skuInput.addEventListener('input', function () {
+                    skuEdited = skuInput.textContent.trim() !== originalSku;
+                });
+
+                descriptionInput.addEventListener('input', function () {
+                    descriptionEdited = descriptionInput.textContent.trim() !== originalDescription;
+                });
+
+                priceInput.addEventListener('input', function () {
+                    priceEdited = priceInput.textContent.trim() !== originalPrice;
                 });
 
                 const saveItemIfEdited = () => {
-                    if (emailEdited) {
-                        editedItem.email = emailInput.value.trim();
+                    if (nameEdited) {
+                        editedItem.name = nameInput.textContent.trim();
                     }
-                    if (passwordEdited) {
-                        editedItem.password = passwordInput.value.trim();
+                    if (upcEdited) {
+                        editedItem.upc = upcInput.textContent.trim();
                     }
-                    if (roleEdited) {
-                        editedItem.role = roleSelect.value.trim().toUpperCase();
+                    if (skuEdited) {
+                        editedItem.sku = skuInput.textContent.trim();
+                    }
+                    if (descriptionEdited) {
+                        editedItem.description = descriptionInput.textContent.trim();
+                    }
+                    if (priceEdited) {
+                        editedItem.smallBusinessPrice = priceInput.textContent.trim();
                     }
 
-                    if (emailEdited || passwordEdited || roleEdited) {
+                    if (nameEdited || upcEdited || skuEdited || descriptionEdited || priceEdited) {
                         editedItems.push(editedItem);
                     }
                 };

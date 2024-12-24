@@ -57,7 +57,6 @@ public class Item {
         this.inventoryId = inventoryId;
     }
 
-    // Getters and Setters
     public Integer getItemId() {
         return itemId;
     }

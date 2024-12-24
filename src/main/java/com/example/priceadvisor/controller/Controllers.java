@@ -200,4 +200,23 @@ public class Controllers {
             return "redirect:/compare-prices";
         }
     }
+
+    @PostMapping("/edit-items")
+    public String saveItemChanges(@RequestParam("editedItems") String editedItemsJson, RedirectAttributes redirectAttributes) {
+        try {
+            System.out.println(editedItemsJson);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Item> editedItems = objectMapper.readValue(editedItemsJson, objectMapper.getTypeFactory().constructCollectionType(List.class, Item.class));
+
+            itemService.saveChangedItems(editedItems);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Changes Saved");
+
+            return "redirect:/compare-prices";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
+            return "redirect:/compare-prices";
+        }
+    }
 }
