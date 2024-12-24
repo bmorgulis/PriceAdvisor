@@ -109,7 +109,8 @@ public class EmailNotificationsService {
 //            PublishRequest request = PublishRequest.builder()
 //                    .message(excelFile)
 //                    .topicArn(topicArn)
-//                    .subject(emailNotificationsFrequency.name()) + "Price Advisor Notification")
+//                    .subject(emailNotificationsFrequency.name().substring(0, 1).toUpperCase()
+//                        + emailNotificationsFrequency.name().substring(1).toLowerCase() + "Price Advisor Notification")
 //                    .build();
 //            snsClient.publish(request);
         } catch (SnsException e) {
