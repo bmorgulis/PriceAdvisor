@@ -27,7 +27,7 @@ public class DataFetchingService {
         dataFetchingManager.fetchItemDataImmediately(item);
     }
 
-    // Schedule the fetch to run every hour
+    // Schedule the fetch to run on startup and then every hour
     @Scheduled(fixedRate = 3600000)
     public void fetchDataEveryHour() {
         try {

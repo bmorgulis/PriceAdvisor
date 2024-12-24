@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class EbayDataScraper extends CompetitorWebsiteDataScraper {
+
     private static final Logger logger = LoggerFactory.getLogger(EbayDataScraper.class);
     private final ItemService itemService;
 

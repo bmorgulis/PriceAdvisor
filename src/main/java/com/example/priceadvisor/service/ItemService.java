@@ -111,11 +111,7 @@ public class ItemService {
         if (sku != null) {
             details.append("SKU: \"").append(sku).append("\", ");
         }
-        if (description != null) {
-            details.append("Description: \"").append(description).append("\", ");
-        }
 
-        // Remove trailing comma and space if any
         if (!details.isEmpty() && details.charAt(details.length() - 2) == ',') {
             details.setLength(details.length() - 2);
         }

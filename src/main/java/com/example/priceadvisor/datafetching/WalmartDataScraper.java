@@ -11,22 +11,11 @@ import java.util.Objects;
 @Service
 public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
-
     private final ItemService itemService;
 
     @Autowired
     public WalmartDataScraper(ItemService itemService) {
         this.itemService = itemService;
-    }
-
-    @Override
-    public String scrapeItemUrlFromSearchPage(String pageContent) {
-        return "";
-    }
-
-    @Override
-    public String scrapePriceFromItemPage(String itemPageContent) {
-        return "";
     }
 
     @Override
@@ -36,6 +25,16 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public String buildSearchUrl(Item item) {
+        return "";
+    }
+
+    @Override
+    public String scrapeItemUrlFromSearchPage(String pageContent) {
+        return "";
+    }
+
+    @Override
+    public String scrapePriceFromItemPage(String itemPageContent) {
         return "";
     }
 
