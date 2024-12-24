@@ -1,12 +1,16 @@
 package com.example.priceadvisor.service;
 
 import com.example.priceadvisor.entity.Business;
+import com.example.priceadvisor.entity.Item;
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.repository.BusinessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
+
+import java.util.List;
 
 @Service
 public class EmailNotificationsService {
@@ -14,12 +18,18 @@ public class EmailNotificationsService {
     private final String baseArn = "arn:aws:sns:us-east-1:471112717872:";
     private final SnsClient snsClient;
     private final BusinessRepository businessRepository;
+    private final SecurityContextService securityContextService;
+    private final ItemService itemService;
+    private final InventoryService inventoryService;
 
 
     @Autowired
-    public EmailNotificationsService(SnsClient snsClient, BusinessRepository businessRepository) {
+    public EmailNotificationsService(SnsClient snsClient, BusinessRepository businessRepository, SecurityContextService securityContextService, ItemService itemService, InventoryService inventoryService) {
         this.snsClient = snsClient;
         this.businessRepository = businessRepository;
+        this.securityContextService = securityContextService;
+        this.itemService = itemService;
+        this.inventoryService = inventoryService;
     }
 
     public void subscribeUserToTopic(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
@@ -81,23 +91,54 @@ public class EmailNotificationsService {
         return baseArn + topicName;
     }
 
-    //    public void publishNotification(String message, String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
-//        try {
-//            String businessName = businessRepository.findById(businessId)
-//                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();@
-//
-//
-//            String topicArn = buildTopicArn(emailNotificationsFrequency, businessName);
-//
+    public void publishEmailNotifications(User.EmailNotificationsFrequency emailNotificationsFrequency) {
+        try {
+            Integer businessId = securityContextService.getCurrentBusinessId();
+            String businessName = businessRepository.findById(businessId)
+                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();
+
+            List<Item> items = itemService.findItemsByInventoryId(inventoryService.getInventoryIdByBusinessId(businessId));
+
+            // For Zerach:
+            // Create Excel file
+            // Put item details into Excel file using "items" variable
+            // Send Excel file to the "topicArn" variable
+
+            String topicArn = buildTopicArn(businessName, emailNotificationsFrequency);
 //
 //            PublishRequest request = PublishRequest.builder()
-//                    .message(message)
+//                    .message(excelFile)
 //                    .topicArn(topicArn)
-//                    .subject("Price Advisor Notification")
+//                    .subject(emailNotificationsFrequency.name()) + "Price Advisor Notification")
 //                    .build();
 //            snsClient.publish(request);
-//        } catch (SnsException e) {
-//            System.err.println("Error Sending Notification: " + e.getMessage());
-//        }
-//    }
+        } catch (SnsException e) {
+            System.err.println("Error Sending Notification: " + e.getMessage());
+        }
+    }
+
+
+    // Schedule the fetch to run on startup and then every hour
+    @Scheduled(fixedRate = 3600000)
+    public void publishEmailNotificationsHourly() {
+        publishEmailNotifications(User.EmailNotificationsFrequency.HOURLY);
+    }
+
+    // Schedule the fetch to run on startup and then every day
+    @Scheduled(fixedRate = 86400000)
+    public void publishEmailNotificationsDaily() {
+        publishEmailNotifications(User.EmailNotificationsFrequency.DAILY);
+    }
+
+    // Schedule the fetch to run on startup and then every week
+    @Scheduled(fixedRate = 604800000)
+    public void publishEmailNotificationsWeekly() {
+        publishEmailNotifications(User.EmailNotificationsFrequency.WEEKLY);
+    }
+
+    // Schedule the fetch to run on startup and then every month
+    @Scheduled(fixedRate = 2592000000L)
+    public void fetchDataMonthly() {
+        publishEmailNotifications(User.EmailNotificationsFrequency.MONTHLY);
+    }
 }
