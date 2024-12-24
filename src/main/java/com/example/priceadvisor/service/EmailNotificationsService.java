@@ -9,6 +9,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import java.util.List;
 
@@ -103,8 +107,47 @@ public class EmailNotificationsService {
             // Create Excel file
             // Put item details into Excel file using "items" variable
             // Send Excel file to the "topicArn" variable
-
-            String topicArn = buildTopicArn(businessName, emailNotificationsFrequency);
+            Workbook workbook = new XSSFWorkbook();
+            // Create a new sheet
+            Sheet sheet = workbook.createSheet("Sample Sheet");
+            // Create a header row
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("itemId");
+            headerRow.createCell(1).setCellValue("name");
+            headerRow.createCell(2).setCellValue("upc");
+            headerRow.createCell(3).setCellValue("sku");
+            headerRow.createCell(4).setCellValue("description");
+            headerRow.createCell(5).setCellValue("smallBusinessPrice");
+            headerRow.createCell(6).setCellValue("amazonPrice");
+            headerRow.createCell(7).setCellValue("walmartPrice");
+            headerRow.createCell(8).setCellValue("ebayPrice");
+            headerRow.createCell(9).setCellValue("priceSuggestion");
+            headerRow.createCell(10).setCellValue("inventoryId");
+            // Write the product data to the sheet
+            int rowNum = 1;
+            for (Item item : items) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(item.getItemId());
+                row.createCell(1).setCellValue(item.getName());
+                row.createCell(2).setCellValue(item.getUpc());
+                row.createCell(3).setCellValue(item.getSku());
+                row.createCell(4).setCellValue(item.getDescription());
+                row.createCell(5).setCellValue(item.getSmallBusinessPrice().toString());
+                row.createCell(6).setCellValue(item.getAmazonPrice().toString());
+                row.createCell(7).setCellValue(item.getWalmartPrice().toString());
+                row.createCell(8).setCellValue(item.getEbayPrice().toString());
+                row.createCell(9).setCellValue(item.getPriceSuggestion().toString());
+                row.createCell(10).setCellValue(item.getInventoryId());
+            }
+            // Write the output to a file try
+            try (FileOutputStream fileOut = new FileOutputStream("ItemFile.xlsx")){
+                workbook.write(fileOut);
+                workbook.close();
+                System.out.println("Excel file created successfully.");
+            } catch(IOException e){
+                e.printStackTrace();
+            }
+            String topicArn = buildTopicArn(businessName, emailNotificationsFrequency, workbook);
 //
 //            PublishRequest request = PublishRequest.builder()
 //                    .message(excelFile)
