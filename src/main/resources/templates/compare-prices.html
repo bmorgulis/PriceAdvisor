@@ -153,7 +153,6 @@
             }, 1000);
         }
 
-
         // Handle success message modal display
         const successMessage = /*[[${successMessage}]]*/ null;
         const successModal = new bootstrap.Modal(document.getElementById('success-modal'));
@@ -181,13 +180,11 @@
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '/delete-items';
-
             const itemIdsInput = document.createElement('input');
             itemIdsInput.type = 'hidden';
             itemIdsInput.name = 'itemIds';
             itemIdsInput.value = selectedItemIds.join(',');
             form.appendChild(itemIdsInput);
-
             document.body.appendChild(form);
             form.submit();
         });
