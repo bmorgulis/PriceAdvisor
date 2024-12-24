@@ -15,4 +15,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     List<Item> findByInventoryId(Integer inventoryId);
 
     @Query("SELECT i FROM Item i ORDER BY i.name ASC")
-    List<Item> findAllOrderByName();}
+    List<Item> findAllOrderByName();
+    List<Item> findByItemIdIn(List<Integer> itemIds);
+
+}
