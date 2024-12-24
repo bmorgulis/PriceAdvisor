@@ -186,12 +186,10 @@ public class Controllers {
         }
         return "compare-prices";
     }
-
     @PostMapping("/delete-items")
     public String deleteItems(@RequestParam List<Integer> itemIds, RedirectAttributes redirectAttributes) {
         try {
             itemService.deleteItemsById(itemIds);
-
             redirectAttributes.addFlashAttribute("successMessage", "Item(s) Deleted");
             return "redirect:/compare-prices";
         } catch (Exception e) {

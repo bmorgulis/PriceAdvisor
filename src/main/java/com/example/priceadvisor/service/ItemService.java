@@ -142,7 +142,6 @@ public class ItemService {
     public void saveItem(Item item) {
         itemRepository.save(item); // The built-in save method persists the item
     }
-
     public void deleteItemsById(List<Integer> itemIds) {
         List<Item> itemsToDelete = itemRepository.findByItemIdIn(itemIds);
         itemRepository.deleteAll(itemsToDelete);
