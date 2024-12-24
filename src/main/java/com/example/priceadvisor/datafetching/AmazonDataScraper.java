@@ -1,11 +1,23 @@
 package com.example.priceadvisor.datafetching;
 
 import com.example.priceadvisor.entity.Item;
+import com.example.priceadvisor.service.ItemService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Service
 public class AmazonDataScraper extends CompetitorWebsiteDataScraper {
+
+    private final ItemService itemService;
+
+    @Autowired
+    public AmazonDataScraper(ItemService itemService) {
+        this.itemService = itemService;
+    }
+
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
         return null;
@@ -28,8 +40,8 @@ public class AmazonDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public boolean saveCompetitorPriceIfChanged(Item item, BigDecimal price) {
-        if (!Objects.equals(price, item.getAmazonPrice())) {
-            item.setAmazonPrice(price);
+        if (!Objects.equals(price, item.getWalmartPrice())) {
+            itemService.setAmazonPrice(item, price);
             return true;
         }
         return false;

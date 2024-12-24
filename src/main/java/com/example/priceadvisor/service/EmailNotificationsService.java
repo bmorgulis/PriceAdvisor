@@ -80,6 +80,7 @@ public class EmailNotificationsService {
         String topicName = formattedBusinessName + "_" + emailNotificationsFrequency.name();
         return baseArn + topicName;
     }
+
     //    public void publishNotification(String message, String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
 //        try {
 //            String businessName = businessRepository.findById(businessId)
