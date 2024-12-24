@@ -88,6 +88,9 @@ public class UserService {
             userRepository.save(existingUser);
         }
     }
+    public List<User> getUsersByBusinessId(Integer businessId) {
+        return userRepository.findByBusinessId(businessId);
+    }
 }
 
 

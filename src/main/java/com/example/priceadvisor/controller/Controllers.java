@@ -43,7 +43,10 @@ public class Controllers {
     @GetMapping("/manage-users")
     public String manageUsers(Model model, RedirectAttributes redirectAttributes) {
         try {
-            List<User> users = userService.findAllUsers();
+            Integer businessId = userService.getCurrentBusinessId();
+            List<User> users = userService.getUsersByBusinessId(businessId);
+
+//            List<User> users = userService.findAllUsers();
             model.addAttribute("users", users);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");

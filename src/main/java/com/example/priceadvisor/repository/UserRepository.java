@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAllOrderByEmail();
 
     List<User> findByUserIdIn(List<Integer> userIds);
+
+    List<User> findByBusinessId(Integer businessId); // added to get all users of a business
 }
