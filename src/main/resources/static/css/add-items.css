@@ -5,13 +5,3 @@ textarea {
 .form-control {
     border: 1px solid black;
 }
-
-.input-group-text {
-    border: 1px solid black;
-    border-right: 0;
-    background-color: transparent;
-}
-
-.input-group .form-control {
-    border-left: 0;
-}

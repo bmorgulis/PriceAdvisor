@@ -55,7 +55,7 @@ public class UserService {
         return securityContextService.getCurrentBusinessId();
     }
 
-    public List<User> getAllUsers() {
+    public List<User> findAllUsers() {
         return userRepository.findAllOrderByEmail();
     }
 

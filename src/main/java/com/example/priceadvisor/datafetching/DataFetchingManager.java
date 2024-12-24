@@ -16,12 +16,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Component
 public class DataFetchingManager {
 
-    private static final int MAX_THREADS = 50;  // Adjust based on your system's resources
+    private static final int MAX_THREADS = 150;  // Adjust based on your system's resources
     private static final ExecutorService executorService = Executors.newFixedThreadPool(MAX_THREADS);
     private static final int BATCH_SIZE = 50;
 
     private final AtomicBoolean isFetchingInProgress = new AtomicBoolean(false);
-    private final ItemService itemService;  // Only inject ItemService
+    private final ItemService itemService;
     private final List<CompetitorWebsiteDataFetcher> fetchers;
 
     private CountDownLatch latch;
@@ -35,6 +35,45 @@ public class DataFetchingManager {
         this.itemService = itemService;
         this.fetchers = List.of(amazonDataApiFetcher, walmartDataScraper, ebayDataScraper);
     }
+
+    /**
+     * Scrapes data for a single item immediately, bypassing the batch process.
+     */
+    public void fetchItemDataImmediately(Item item) {
+        CountDownLatch immediateFetchLatch = new CountDownLatch(fetchers.size());
+        ExecutorService immediateExecutor = Executors.newFixedThreadPool(fetchers.size());
+
+        AtomicBoolean priceUpdated = new AtomicBoolean(false);
+
+        for (CompetitorWebsiteDataFetcher fetcher : fetchers) {
+            immediateExecutor.submit(() -> {
+                try {
+                    if (fetcher.fetchAndSaveCompetitorData(item)) {
+                        priceUpdated.set(true);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    immediateFetchLatch.countDown();
+                }
+            });
+        }
+
+        try {
+            immediateFetchLatch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
+        } finally {
+            immediateExecutor.shutdown();
+        }
+
+        if (priceUpdated.get()) {
+            generatePriceSuggestion(item);
+            itemService.saveItem(item);
+        }
+    }
+
     public void fetchAllData() {
         if (isFetchingInProgress.compareAndSet(false, true)) {
             // Fetch data only if it's not already in progress
@@ -95,33 +134,35 @@ public class DataFetchingManager {
         List<Item> itemsToSaveList = new ArrayList<>(itemsToSave);
 
         if (!itemsToSave.isEmpty()) {
-            generatePriceSuggestions(itemsToSaveList);
+            for (Item item : itemsToSaveList) {
+                generatePriceSuggestion(item);
+            }
             itemService.saveItems(itemsToSaveList);
         }
     }
 
-    private void generatePriceSuggestions(List<Item> items) {
-        for (Item item : items) {
-            BigDecimal smallBusinessPrice = item.getSmallBusinessPrice();
-            BigDecimal amazonPrice = item.getAmazonPrice();
-            BigDecimal walmartPrice = item.getWalmartPrice();
-            BigDecimal ebayPrice = item.getEbayPrice();
+    private void generatePriceSuggestion(Item item) {
+        BigDecimal smallBusinessPrice = item.getSmallBusinessPrice();
+        BigDecimal amazonPrice = item.getAmazonPrice();
+        BigDecimal walmartPrice = item.getWalmartPrice();
+        BigDecimal ebayPrice = item.getEbayPrice();
 
-            // If smallBusinessPrice is not null and at least one of the other prices is not null
-            if (smallBusinessPrice != null) {
-                // List of prices to compare against
-                List<BigDecimal> prices = Arrays.asList(amazonPrice, walmartPrice, ebayPrice);
+        // If smallBusinessPrice is not null and at least one of the other prices is not null
+        if (smallBusinessPrice != null) {
+            // List of prices to compare against
+            List<BigDecimal> prices = Arrays.asList(amazonPrice, walmartPrice, ebayPrice);
 
-                // Filter out null values and check if smallBusinessPrice is lower or higher than all others
-                boolean isLower = prices.stream().filter(Objects::nonNull).allMatch(price -> smallBusinessPrice.compareTo(price) < 0);
-                boolean isHigher = prices.stream().filter(Objects::nonNull).allMatch(price -> smallBusinessPrice.compareTo(price) > 0);
+            // Filter out null values and check if smallBusinessPrice is lower or higher than all others
+            boolean isLower = prices.stream().filter(Objects::nonNull).allMatch(price -> smallBusinessPrice.compareTo(price) < 0);
+            boolean isHigher = prices.stream().filter(Objects::nonNull).allMatch(price -> smallBusinessPrice.compareTo(price) > 0);
 
-                // Set the price suggestion based on the comparisons
-                if (isLower) {
-                    itemService.setPriceSuggestion(item, Item.PriceSuggestion.RAISE);
-                } else if (isHigher) {
-                    itemService.setPriceSuggestion(item, Item.PriceSuggestion.LOWER);
-                }
+            // Set the price suggestion based on the comparisons
+            if (isLower) {
+                itemService.setPriceSuggestion(item, Item.PriceSuggestion.RAISE);
+            } else if (isHigher) {
+                itemService.setPriceSuggestion(item, Item.PriceSuggestion.LOWER);
+            } else {
+                itemService.setPriceSuggestion(item, Item.PriceSuggestion.NONE);
             }
         }
     }

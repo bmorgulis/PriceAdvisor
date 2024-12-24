@@ -148,6 +148,7 @@ public class Item {
 
     public enum PriceSuggestion {
         RAISE,
-        LOWER
+        LOWER,
+        NONE
     }
 }

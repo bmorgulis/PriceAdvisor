@@ -1,5 +1,6 @@
 package com.example.priceadvisor.controller;
 
+import com.example.priceadvisor.entity.Item;
 import com.example.priceadvisor.entity.User;
 import com.example.priceadvisor.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +43,7 @@ public class Controllers {
     @GetMapping("/manage-users")
     public String manageUsers(Model model, RedirectAttributes redirectAttributes) {
         try {
-            List<User> users = userService.getAllUsers();
+            List<User> users = userService.findAllUsers();
             model.addAttribute("users", users);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
@@ -175,7 +176,14 @@ public class Controllers {
     }
 
     @GetMapping("/compare-prices")
-    public String comparePrices() {
+    public String comparePrices(Model model, RedirectAttributes redirectAttributes) {
+        try {
+            List<Item> items = itemService.findItemsByInventoryId(inventoryService.getInventoryIdByBusinessId(securityContextService.getCurrentBusinessId()));
+            model.addAttribute("items", items);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
+            e.printStackTrace();
+        }
         return "compare-prices";
     }
 }

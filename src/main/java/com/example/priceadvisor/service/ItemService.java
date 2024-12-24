@@ -13,17 +13,19 @@ import java.util.List;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final DataFetchingService dataFetchingService;
 
     @Autowired
-    public ItemService(ItemRepository itemRepository) {
+    public ItemService(ItemRepository itemRepository, DataFetchingService dataFetchingService) {
         this.itemRepository = itemRepository;
+        this.dataFetchingService = dataFetchingService;
     }
 
     public List<Item> getAllItems() {
         return itemRepository.findAll();
     }
 
-    public List<Item> getItemsByInventoryId(Integer inventoryId) {
+    public List<Item> findItemsByInventoryId(Integer inventoryId) {
         return itemRepository.findByInventoryIdOrderByNameAsc(inventoryId);
     }
 
@@ -55,6 +57,8 @@ public class ItemService {
         }
 
         itemRepository.save(newItem);
+        dataFetchingService.fetchItemDataImmediately(newItem);
+
         return null;
     }
 
@@ -120,6 +124,7 @@ public class ItemService {
     }
 
 
+
     public void setAmazonPrice(Item item, BigDecimal amazonPrice) {
         item.setAmazonPrice(amazonPrice);
     }
@@ -134,6 +139,10 @@ public class ItemService {
 
     public void setPriceSuggestion(Item item, Item.PriceSuggestion priceSuggestion) {
         item.setPriceSuggestion(priceSuggestion);
+    }
+
+    public void saveItem(Item item) {
+        itemRepository.save(item); // The built-in save method persists the item
     }
 }
 

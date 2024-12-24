@@ -1,7 +1,9 @@
 package com.example.priceadvisor.service;
 
 import com.example.priceadvisor.datafetching.DataFetchingManager;
+import com.example.priceadvisor.entity.Item;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,7 @@ public class DataFetchingService {
     private final DataFetchingManager dataFetchingManager;
 
     @Autowired
-    public DataFetchingService(DataFetchingManager dataFetchingManager) {
+    public DataFetchingService(@Lazy DataFetchingManager dataFetchingManager) {
         this.dataFetchingManager = dataFetchingManager;
     }
 
@@ -20,17 +22,18 @@ public class DataFetchingService {
         dataFetchingManager.fetchAllData();
     }
 
+    // Fetch data for a single item immediately
+    public void fetchItemDataImmediately(Item item) {
+        dataFetchingManager.fetchItemDataImmediately(item);
+    }
+
     // Schedule the fetch to run every hour
     @Scheduled(fixedRate = 3600000)
     public void fetchDataEveryHour() {
-        try
-        {
+        try {
             fetchData();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
-

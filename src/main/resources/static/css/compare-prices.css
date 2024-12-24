@@ -1,0 +1,32 @@
+/*textarea {*/
+/*    resize: none;*/
+/*}*/
+
+/*textarea {*/
+/*    overflow: hidden; !* Initially hide scrollbars *!*/
+/*}*/
+
+/*textarea:hover {*/
+/*    overflow: auto; !* Show scrollbars when hovering *!*/
+/*}*/
+
+/* Reduce font size to shrink the grid */
+.gridjs-td, .gridjs-th {
+    font-size: 12px; /* Smaller font size */
+}
+
+/* Remove padding on the left and right of cells */
+.gridjs-td, .gridjs-th {
+    padding: 5px 5px !important; /* Top and bottom padding of 5px, no left or right padding */
+}
+
+
+
+
+
+
+
+
+
+
+
