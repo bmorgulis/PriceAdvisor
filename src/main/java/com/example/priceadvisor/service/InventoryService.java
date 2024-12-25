@@ -20,4 +20,8 @@ public class InventoryService {
                 .map(Inventory::getInventoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Inventory not found for businessId: " + businessId));
     }
+
+    public Integer findBusinessIdByInventoryId(Integer inventoryId) {
+        return inventoryRepository.findBusinessIdByInventoryId(inventoryId);
+    }
 }

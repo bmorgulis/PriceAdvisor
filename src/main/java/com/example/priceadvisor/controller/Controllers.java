@@ -46,7 +46,6 @@ public class Controllers {
             Integer businessId = userService.getCurrentBusinessId();
             List<User> users = userService.getUsersByBusinessId(businessId);
 
-//            List<User> users = userService.findAllUsers();
             model.addAttribute("users", users);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
@@ -65,6 +64,7 @@ public class Controllers {
         try {
             Integer userId = userService.getCurrentUserId();
             User.EmailNotificationsFrequency emailNotificationsFrequency = userService.getCurrentEmailNotificationsFrequency(userId);
+
             model.addAttribute("emailNotificationsFrequency", emailNotificationsFrequency);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred. Please try again.");
@@ -118,11 +118,9 @@ public class Controllers {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             List<User> editedUsers = objectMapper.readValue(editedUsersJson, objectMapper.getTypeFactory().constructCollectionType(List.class, User.class));
-
             userService.saveChangedUsers(editedUsers);
 
             redirectAttributes.addFlashAttribute("successMessage", "Changes Saved");
-
             return "redirect:/manage-users";
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,11 +208,9 @@ public class Controllers {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             List<Item> editedItems = objectMapper.readValue(editedItemsJson, objectMapper.getTypeFactory().constructCollectionType(List.class, Item.class));
-
             itemService.saveChangedItems(editedItems);
 
             redirectAttributes.addFlashAttribute("successMessage", "Changes Saved");
-
             return "redirect:/compare-prices";
         } catch (Exception e) {
             e.printStackTrace();

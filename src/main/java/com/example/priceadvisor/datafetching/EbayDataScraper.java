@@ -27,19 +27,20 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
         try (WebClient webClient = createWebClient()) {
+
             logger.info("Scraping Ebay price for {}", item.getName());
             String searchUrl = buildSearchUrl(item);
-            logger.info("Search URL for {}, URL: {}", item.getName(), searchUrl);
+            logger.info("Ebay search URL for {}, URL: {}", item.getName(), searchUrl);
             String searchPageContent = getPageContentAsString(webClient, searchUrl);
-            logger.info("Search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
-            String itemUrl = scrapeItemUrlFromSearchPage(searchPageContent);
-            logger.info("Item URL for {}, URL: {}", item.getName(), itemUrl);
+            logger.info("Ebay search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
+            String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
+            logger.info("Ebay item page URL for {}, URL: {}", item.getName(), itemUrl);
 
             if (itemUrl != null) {
                 String itemPageContent = getPageContentAsString(webClient, itemUrl);
-                logger.info("Item page content for {}, Item page content: {}", item.getName(), itemPageContent);
+                logger.info("Ebay item page content for {}, Item page content: {}", item.getName(), itemPageContent);
                 String price = scrapePriceFromItemPage(itemPageContent);
-                logger.info("Price for {}, Price: {}", item.getName(), price);
+                logger.info("Ebay price for {}, Price: {}", item.getName(), price);
                 if (price != null) {
                     return new BigDecimal(price);
                 }
@@ -53,12 +54,12 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public String buildSearchUrl(Item item) {
         String searchUrl = "https://www.ebay.com/sch/i.html?_nkw=";
-        searchUrl += buildSearchQuery(item);  // Use the abstracted query builder
+        searchUrl += buildSearchQuery(item);
         return searchUrl;
     }
 
     @Override
-    public String scrapeItemUrlFromSearchPage(String pageContent) {
+    public String scrapeItemPageUrlFromSearchPage(String pageContent) {
         Pattern itemPattern = Pattern.compile("href=\"(https://www\\.ebay\\.com/itm/\\d{12})");
         Matcher itemMatcher = itemPattern.matcher(pageContent);
 

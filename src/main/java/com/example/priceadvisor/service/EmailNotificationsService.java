@@ -1,19 +1,12 @@
 package com.example.priceadvisor.service;
 
-import com.example.priceadvisor.entity.Business;
 import com.example.priceadvisor.entity.Item;
 import com.example.priceadvisor.entity.User;
-import com.example.priceadvisor.repository.BusinessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import java.util.List;
 
@@ -22,24 +15,22 @@ public class EmailNotificationsService {
 
     private final String baseArn = "arn:aws:sns:us-east-1:471112717872:";
     private final SnsClient snsClient;
-    private final BusinessRepository businessRepository;
-    private final SecurityContextService securityContextService;
     private final ItemService itemService;
     private final InventoryService inventoryService;
+    private final BusinessService businessService;
 
 
     @Autowired
-    public EmailNotificationsService(SnsClient snsClient, BusinessRepository businessRepository, SecurityContextService securityContextService, ItemService itemService, InventoryService inventoryService) {
+    public EmailNotificationsService(SnsClient snsClient, ItemService itemService, InventoryService inventoryService, BusinessService businessService) {
         this.snsClient = snsClient;
-        this.businessRepository = businessRepository;
-        this.securityContextService = securityContextService;
         this.itemService = itemService;
         this.inventoryService = inventoryService;
+        this.businessService = businessService;
     }
 
     public void subscribeUserToTopic(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
         try {
-            String businessName = getBusinessName(businessId);
+            String businessName = businessService.getBusinessName(businessId);
             String topicArn = buildTopicArn(businessName, emailNotificationsFrequency);
 
             SubscribeRequest request = SubscribeRequest.builder()
@@ -56,7 +47,7 @@ public class EmailNotificationsService {
 
     public void unsubscribeUserFromTopic(String userEmail, User.EmailNotificationsFrequency emailNotificationsFrequency, int businessId) {
         try {
-            String businessName = getBusinessName(businessId);
+            String businessName = businessService.getBusinessName(businessId);
             String topicArn = buildTopicArn(businessName, emailNotificationsFrequency);
 
             // Create a request to list all subscriptions for the given topic ARN
@@ -71,7 +62,7 @@ public class EmailNotificationsService {
             for (Subscription subscription : response.subscriptions()) {
                 if (subscription.endpoint().equals(userEmail)) {  // If a match is found, unsubscribe the user
                     UnsubscribeRequest unsubscribeRequest = UnsubscribeRequest.builder()
-                            .subscriptionArn(subscription.subscriptionArn())  // Set the Subscription ARN for the unsubscribe request
+                            .subscriptionArn(subscription.subscriptionArn())  // Set the subscription ARN for the unsubscribe request
                             .build();
 
                     snsClient.unsubscribe(unsubscribeRequest);
@@ -84,12 +75,6 @@ public class EmailNotificationsService {
         }
     }
 
-    private String getBusinessName(int businessId) {
-        return businessRepository.findById(businessId)
-                .map(Business::getName)
-                .orElseThrow(() -> new IllegalArgumentException("Business not found."));
-    }
-
     private String buildTopicArn(String businessName, User.EmailNotificationsFrequency emailNotificationsFrequency) {
         String formattedBusinessName = businessName.replaceAll("\\s+", "_");
         String topicName = formattedBusinessName + "_" + emailNotificationsFrequency.name();
@@ -98,70 +83,51 @@ public class EmailNotificationsService {
 
     public void publishEmailNotifications(User.EmailNotificationsFrequency emailNotificationsFrequency) {
         try {
-            Integer businessId = securityContextService.getCurrentBusinessId();
-            String businessName = businessRepository.findById(businessId)
-                    .orElseThrow(() -> new IllegalArgumentException("Business not found.")).getName();
+            List<Integer> inventoryIds = itemService.getAllDistinctInventoryIds();
 
-            List<Item> items = itemService.findItemsByInventoryId(inventoryService.getInventoryIdByBusinessId(businessId));
+            for (Integer inventoryId : inventoryIds) {
 
-            // For Zerach:
-            // Create Excel file
-            // Put item details into Excel file using "items" variable
-            // Send Excel file to the "topicArn" variable
-            Workbook workbook = new XSSFWorkbook();
-            // Create a new sheet
-            Sheet sheet = workbook.createSheet("Sample Sheet");
-            // Create a header row
-            Row headerRow = sheet.createRow(0);
-            headerRow.createCell(0).setCellValue("itemId");
-            headerRow.createCell(1).setCellValue("name");
-            headerRow.createCell(2).setCellValue("upc");
-            headerRow.createCell(3).setCellValue("sku");
-            headerRow.createCell(4).setCellValue("description");
-            headerRow.createCell(5).setCellValue("smallBusinessPrice");
-            headerRow.createCell(6).setCellValue("amazonPrice");
-            headerRow.createCell(7).setCellValue("walmartPrice");
-            headerRow.createCell(8).setCellValue("ebayPrice");
-            headerRow.createCell(9).setCellValue("priceSuggestion");
-            headerRow.createCell(10).setCellValue("inventoryId");
-            // Write the product data to the sheet
-            int rowNum = 1;
-            for (Item item : items) {
-                Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(item.getItemId());
-                row.createCell(1).setCellValue(item.getName());
-                row.createCell(2).setCellValue(item.getUpc());
-                row.createCell(3).setCellValue(item.getSku());
-                row.createCell(4).setCellValue(item.getDescription());
-                row.createCell(5).setCellValue(item.getSmallBusinessPrice().toString());
-                row.createCell(6).setCellValue(item.getAmazonPrice().toString());
-                row.createCell(7).setCellValue(item.getWalmartPrice().toString());
-                row.createCell(8).setCellValue(item.getEbayPrice().toString());
-                row.createCell(9).setCellValue(item.getPriceSuggestion().toString());
-                row.createCell(10).setCellValue(item.getInventoryId());
+                Integer businessId = inventoryService.findBusinessIdByInventoryId(inventoryId);
+                String businessName = businessService.getBusinessName(businessId);
+
+                List<String> priceSuggestionRaiseItemNames = itemService.getItemsWithPriceSuggestionRaise(inventoryId, Item.PriceSuggestion.RAISE);
+                List<String> priceSuggestionLowerItemNames = itemService.getItemsWithPriceSuggestionRaise(inventoryId, Item.PriceSuggestion.LOWER);
+
+                StringBuilder textContent = buildTextContent(priceSuggestionRaiseItemNames, priceSuggestionLowerItemNames);
+
+                String emailSubject = emailNotificationsFrequency.name().substring(0, 1).toUpperCase() + emailNotificationsFrequency.name().substring(1).toLowerCase() + " Price Advisor Notification";
+
+                String topicArn = buildTopicArn(businessName, emailNotificationsFrequency);
+
+                PublishRequest request = PublishRequest.builder()
+                        .message(textContent.toString())
+                        .subject(emailSubject)
+                        .topicArn(topicArn)
+                        .messageStructure("text")
+                        .build();
+                snsClient.publish(request);
             }
-            // Write the output to a file try
-            try (FileOutputStream fileOut = new FileOutputStream("ItemFile.xlsx")) {
-                workbook.write(fileOut);
-                workbook.close();
-                System.out.println("Excel file created successfully.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String topicArn = buildTopicArn(businessName, emailNotificationsFrequency);
-//
-//            PublishRequest request = PublishRequest.builder()
-//                    .message(excelFile)
-//                    .topicArn(topicArn)
-//                    .subject(emailNotificationsFrequency.name().substring(0, 1).toUpperCase()
-//                        + emailNotificationsFrequency.name().substring(1).toLowerCase() + "Price Advisor Notification")
-//                    .build();
-//            snsClient.publish(request);
         } catch (SnsException e) {
-            System.err.println("Error Sending Notification: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    private static StringBuilder buildTextContent(List<String> priceSuggestionRaiseItemNames, List<String> priceSuggestionLowerItemNames) {
+        StringBuilder textContent = new StringBuilder();
+
+        textContent.append("Consider raising the price for the following items:\n\n");
+        for (String itemName : priceSuggestionRaiseItemNames) {
+            textContent.append(itemName);
+        }
+
+        textContent.append("\n\n");
+
+        textContent.append("Consider lowering the price for the following items:\n\n");
+        for (String itemName : priceSuggestionLowerItemNames) {
+            textContent.append(itemName);
+        }
+        return textContent;
+    }
 
     // Schedule the fetch to run on startup and then every hour
     @Scheduled(fixedRate = 3600000)

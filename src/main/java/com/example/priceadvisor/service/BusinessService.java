@@ -1,9 +1,10 @@
 package com.example.priceadvisor.service;
 
+import com.example.priceadvisor.entity.Business;
 import com.example.priceadvisor.repository.BusinessRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BusinessService {
@@ -14,7 +15,11 @@ public class BusinessService {
         this.businessRepository = businessRepository;
     }
 
-    public List<String> getAllBusinessIds() {
-        return businessRepository.findAllBusinessIds();
+    public String getBusinessName(int businessId) {
+        // Retrieve the business by ID from the repository
+        Optional<Business> businessOptional = businessRepository.findById(businessId);
+
+        // Return the business name if found, else return a default message
+        return businessOptional.map(Business::getName).orElse("Unknown Business");
     }
 }

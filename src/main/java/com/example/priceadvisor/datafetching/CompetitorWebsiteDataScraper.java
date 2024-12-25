@@ -10,7 +10,7 @@ public abstract class CompetitorWebsiteDataScraper extends CompetitorWebsiteData
 
     public abstract BigDecimal scrapeCompetitorPrice(Item item);
     public abstract String buildSearchUrl(Item item);
-    public abstract String scrapeItemUrlFromSearchPage(String pageContent);
+    public abstract String scrapeItemPageUrlFromSearchPage(String pageContent);
     public abstract String scrapePriceFromItemPage(String itemPageContent);
 
     @Override
@@ -30,8 +30,8 @@ public abstract class CompetitorWebsiteDataScraper extends CompetitorWebsiteData
         StringBuilder query = new StringBuilder();
 
         appendField(query, item.getName());
-        appendField(query, String.valueOf(item.getUpc()));
-        appendField(query, String.valueOf(item.getSku()));
+        appendField(query, item.getUpc() != null ? String.valueOf(item.getUpc()) : null);
+        appendField(query, item.getSku() != null ? String.valueOf(item.getSku()) : null);
         appendField(query, item.getDescription());
 
         return query.toString();

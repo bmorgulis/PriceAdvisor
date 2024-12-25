@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {
@@ -173,6 +174,19 @@ public class ItemService {
 
             itemRepository.save(existingItem);
         }
+    }
+
+    public List<Integer> getAllDistinctInventoryIds() {
+        return itemRepository.findAllDistinctInventoryIds();
+    }
+
+    public List<String> getItemsWithPriceSuggestionRaise(int inventoryId, Item.PriceSuggestion priceSuggestion) {
+        List<Item> items = itemRepository.findByInventoryIdAndPriceSuggestion(inventoryId, priceSuggestion);
+
+        // Map the items to their names
+        return items.stream()
+                .map(Item::getName)
+                .collect(Collectors.toList());
     }
 }
 

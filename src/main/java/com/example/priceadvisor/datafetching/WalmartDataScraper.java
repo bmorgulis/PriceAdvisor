@@ -29,7 +29,7 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
     }
 
     @Override
-    public String scrapeItemUrlFromSearchPage(String pageContent) {
+    public String scrapeItemPageUrlFromSearchPage(String pageContent) {
         return "";
     }
 
