@@ -381,8 +381,8 @@
         // Handle item actions on the grid (e.g., delete, save changes)
         setTimeout(function () {
             const buttonsContainer = document.getElementById('buttons-container');
-            buttonsContainer.style.display = 'block';
-
+            if(isManager)
+                buttonsContainer.style.display = 'block';
 
             const rows = document.querySelectorAll('.gridjs-tr');
 
