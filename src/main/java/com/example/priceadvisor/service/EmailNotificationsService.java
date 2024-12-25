@@ -11,6 +11,7 @@ import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -140,14 +141,14 @@ public class EmailNotificationsService {
                 row.createCell(10).setCellValue(item.getInventoryId());
             }
             // Write the output to a file try
-            try (FileOutputStream fileOut = new FileOutputStream("ItemFile.xlsx")){
+            try (FileOutputStream fileOut = new FileOutputStream("ItemFile.xlsx")) {
                 workbook.write(fileOut);
                 workbook.close();
                 System.out.println("Excel file created successfully.");
-            } catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            String topicArn = buildTopicArn(businessName, emailNotificationsFrequency, workbook);
+            String topicArn = buildTopicArn(businessName, emailNotificationsFrequency);
 //
 //            PublishRequest request = PublishRequest.builder()
 //                    .message(excelFile)
