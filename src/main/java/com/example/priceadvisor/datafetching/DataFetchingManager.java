@@ -77,7 +77,6 @@ public class DataFetchingManager {
         if (isFetchingInProgress.compareAndSet(false, true)) {
             try {
                 List<Item> items = itemService.getAllItems();
-                latch = new CountDownLatch(items.size() * fetchers.size());
 
                 List<List<Item>> batches = createBatches(items, BATCH_SIZE);
 
