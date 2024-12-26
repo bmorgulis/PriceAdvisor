@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -73,7 +74,14 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public String scrapePriceFromItemPage(String itemPageContent) {
-        return "";
+        Pattern pricePattern = Pattern.compile("\"priceCurrency\":\"USD\",\"price\":([0-9]*\\.?[0-9]+)");
+        Matcher priceMatcher = pricePattern.matcher(itemPageContent);
+
+        if (priceMatcher.find()) {
+            return priceMatcher.group(1).replace(",", "");
+        } else {
+            return null;
+        }
     }
 
     @Override
