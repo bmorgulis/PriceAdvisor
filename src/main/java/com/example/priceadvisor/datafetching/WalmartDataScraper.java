@@ -66,7 +66,7 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public String scrapeItemPageUrlFromSearchPage(String pageContent) {
-        Pattern itemPattern = Pattern.compile("href=\"(/ip/\\S+/\\d{6,10})");
+        Pattern itemPattern = Pattern.compile("href=\"(/p/\\S+/-/\\d{8})");
         Matcher itemMatcher = itemPattern.matcher(pageContent);
 
         if (itemMatcher.find()) {
