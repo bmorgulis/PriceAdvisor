@@ -29,10 +29,13 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
         try (WebClient webClient = createWebClient()) {
 
             logger.info("Scraping Ebay price for {}", item.getName());
+
             String searchUrl = buildSearchUrl(item);
             logger.info("Ebay search URL for {}, URL: {}", item.getName(), searchUrl);
+
             String searchPageContent = getPageContentAsString(webClient, searchUrl);
             logger.info("Ebay search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
+
             String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
             logger.info("Ebay item page URL for {}, URL: {}", item.getName(), itemUrl);
 

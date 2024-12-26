@@ -29,10 +29,13 @@ public class AmazonDataScraper extends CompetitorWebsiteDataScraper {
         try (WebClient webClient = createWebClient()) {
 
             logger.info("Scraping Amazon price for {}", item.getName());
+
             String searchUrl = buildSearchUrl(item);
             logger.info("Amazon search URL for {}, URL: {}", item.getName(), searchUrl);
+
             String searchPageContent = getPageContentAsString(webClient, searchUrl);
             logger.info("Amazon search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
+
             String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
             logger.info("Amazon item page URL for {}, URL: {}", item.getName(), itemUrl);
 
