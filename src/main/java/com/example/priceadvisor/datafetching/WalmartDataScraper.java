@@ -69,14 +69,20 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
     public String scrapeItemPageUrlFromSearchPage(String pageContent) {
         //for url with https://www.walmart.com/ip/<Product-Name>/<Product-ID>?<Query-Parameters> pattern
         Pattern itemPattern = Pattern.compile("href=\"(https://www\\.walmart\\.com/ip/\\S+)");
-        return "";
+//        Pattern itemPattern = Pattern.compile("href=\"(https://www\\.walmart\\.com/ip/[a-zA-Z0-9-]+/\\d+)");
+        Matcher itemMatcher = itemPattern.matcher(pageContent);
+
+        if (itemMatcher.find()) {
+            return itemMatcher.group(1);
+        }
+        logger.warn("No item URL found in search page content");
+        return null;
     }
 
     @Override
     public String scrapePriceFromItemPage(String itemPageContent) {
         Pattern pricePattern = Pattern.compile("\"priceCurrency\":\"USD\",\"price\":([0-9]*\\.?[0-9]+)");
         Matcher priceMatcher = pricePattern.matcher(itemPageContent);
-
         if (priceMatcher.find()) {
             return priceMatcher.group(1).replace(",", "");
         } else {
