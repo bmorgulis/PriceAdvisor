@@ -28,23 +28,23 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
         try (WebClient webClient = createWebClient()) { // Create a WebClient instance to scrape the data
-            logger.info("Scraping Walmart price for {}", item.getName());
+            logger.info("Scraping Target price for {}", item.getName());
 
             String searchUrl = buildSearchUrl(item); // Build the search URL for the item
-            logger.info("Walmart search URL for {}, URL: {}", item.getName(), searchUrl);
+            logger.info("Target search URL for {}, URL: {}", item.getName(), searchUrl);
 
             String searchPageContent = getPageContentAsString(webClient, searchUrl);
-            logger.info("Walmart search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
+            logger.info("Target search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
 
             String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
-            logger.info("Walmart item page URL for {}, URL: {}", item.getName(), itemUrl);
+            logger.info("Target item page URL for {}, URL: {}", item.getName(), itemUrl);
 
             if (itemUrl != null) {
                 String itemPageContent = getPageContentAsString(webClient, itemUrl);
-                logger.info("Walmart item page content for {}, Item page content: {}", item.getName(), itemPageContent);
+                logger.info("Target item page content for {}, Item page content: {}", item.getName(), itemPageContent);
 
                 String price = scrapePriceFromItemPage(itemPageContent);
-                logger.info("Walmart price for {}, Price: {}", item.getName(), price);
+                logger.info("Target price for {}, Price: {}", item.getName(), price);
 
                 if (price != null) {
                     return new BigDecimal(price);
@@ -59,7 +59,7 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public String buildSearchUrl(Item item) {
-        String searchUrl = "https://www.walmart.com/search?q=";
+        String searchUrl = "https://www.target.com/s?searchTerm=";
         searchUrl += buildSearchQuery(item);
         return searchUrl;
     }
@@ -70,7 +70,7 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
         Matcher itemMatcher = itemPattern.matcher(pageContent);
 
         if (itemMatcher.find()) {
-            return "https://www.walmart.com" + itemMatcher.group(1);
+            return "https://www.Target.com" + itemMatcher.group(1);
         }
         logger.warn("No item URL found in search page content");
         return null;
