@@ -27,20 +27,24 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
         try (WebClient webClient = createWebClient()) {
-
             logger.info("Scraping Ebay price for {}", item.getName());
+
             String searchUrl = buildSearchUrl(item);
             logger.info("Ebay search URL for {}, URL: {}", item.getName(), searchUrl);
+
             String searchPageContent = getPageContentAsString(webClient, searchUrl);
             logger.info("Ebay search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
+
             String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
             logger.info("Ebay item page URL for {}, URL: {}", item.getName(), itemUrl);
 
             if (itemUrl != null) {
                 String itemPageContent = getPageContentAsString(webClient, itemUrl);
                 logger.info("Ebay item page content for {}, Item page content: {}", item.getName(), itemPageContent);
+
                 String price = scrapePriceFromItemPage(itemPageContent);
                 logger.info("Ebay price for {}, Price: {}", item.getName(), price);
+
                 if (price != null) {
                     return new BigDecimal(price);
                 }
