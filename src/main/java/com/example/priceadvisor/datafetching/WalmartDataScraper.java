@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Service
 public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
@@ -65,6 +66,8 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public String scrapeItemPageUrlFromSearchPage(String pageContent) {
+        //for url with https://www.walmart.com/ip/<Product-Name>/<Product-ID>?<Query-Parameters> pattern
+        Pattern itemPattern = Pattern.compile("href=\"(https://www\\.walmart\\.com/ip/\\S+)");
         return "";
     }
 
