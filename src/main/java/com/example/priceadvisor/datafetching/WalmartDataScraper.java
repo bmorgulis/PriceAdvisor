@@ -2,6 +2,9 @@ package com.example.priceadvisor.datafetching;
 
 import com.example.priceadvisor.entity.Item;
 import com.example.priceadvisor.service.ItemService;
+import org.htmlunit.WebClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,20 +15,52 @@ import java.util.Objects;
 public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
     private final ItemService itemService;
+    private static final Logger logger = LoggerFactory.getLogger(WalmartDataScraper.class);
 
     @Autowired
     public WalmartDataScraper(ItemService itemService) {
         this.itemService = itemService;
     }
 
+    // This method is used to scrape the competitor price for a given item
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
+        try (WebClient webClient = createWebClient()) { // Create a WebClient instance to scrape the data
+
+            logger.info("Scraping Walmart price for {}", item.getName());
+            String searchUrl = buildSearchUrl(item); // Build the search URL for the item
+
+            logger.info("Walmart search URL for {}, URL: {}", item.getName(), searchUrl);
+            String searchPageContent = getPageContentAsString(webClient, searchUrl);
+
+            logger.info("Walmart search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
+            String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
+
+            logger.info("Walmart item page URL for {}, URL: {}", item.getName(), itemUrl);
+
+            if (itemUrl != null) {
+                String itemPageContent = getPageContentAsString(webClient, itemUrl);
+                logger.info("Walmart item page content for {}, Item page content: {}", item.getName(), itemPageContent);
+
+                String price = scrapePriceFromItemPage(itemPageContent);
+                logger.info("Walmart price for {}, Price: {}", item.getName(), price);
+
+                if (price != null) {
+                    return new BigDecimal(price);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
+
     @Override
     public String buildSearchUrl(Item item) {
-        return "";
+        String searchUrl = "https://www.walmart.com/ip/";
+        searchUrl += buildSearchQuery(item);
+        return searchUrl;
     }
 
     @Override
