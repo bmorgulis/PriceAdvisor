@@ -28,16 +28,15 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
         try (WebClient webClient = createWebClient()) { // Create a WebClient instance to scrape the data
-
             logger.info("Scraping Walmart price for {}", item.getName());
+
             String searchUrl = buildSearchUrl(item); // Build the search URL for the item
-
             logger.info("Walmart search URL for {}, URL: {}", item.getName(), searchUrl);
+
             String searchPageContent = getPageContentAsString(webClient, searchUrl);
-
             logger.info("Walmart search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
-            String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
 
+            String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
             logger.info("Walmart item page URL for {}, URL: {}", item.getName(), itemUrl);
 
             if (itemUrl != null) {
