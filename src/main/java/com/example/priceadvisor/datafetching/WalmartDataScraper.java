@@ -59,20 +59,18 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public String buildSearchUrl(Item item) {
-        String searchUrl = "https://www.walmart.com/ip/";
+        String searchUrl = "https://www.walmart.com/search?q=";
         searchUrl += buildSearchQuery(item);
         return searchUrl;
     }
 
     @Override
     public String scrapeItemPageUrlFromSearchPage(String pageContent) {
-        //for url with https://www.walmart.com/ip/<Product-Name>/<Product-ID>?<Query-Parameters> pattern
-        Pattern itemPattern = Pattern.compile("href=\"(https://www\\.walmart\\.com/ip/\\S+)");
-//        Pattern itemPattern = Pattern.compile("href=\"(https://www\\.walmart\\.com/ip/[a-zA-Z0-9-]+/\\d+)");
+        Pattern itemPattern = Pattern.compile("href=\"(/ip/\\S+/\\d{6,10})");
         Matcher itemMatcher = itemPattern.matcher(pageContent);
 
         if (itemMatcher.find()) {
-            return itemMatcher.group(1);
+            return "https://www.walmart.com" + itemMatcher.group(1);
         }
         logger.warn("No item URL found in search page content");
         return null;
@@ -80,8 +78,11 @@ public class WalmartDataScraper extends CompetitorWebsiteDataScraper {
 
     @Override
     public String scrapePriceFromItemPage(String itemPageContent) {
-        Pattern pricePattern = Pattern.compile("\"priceCurrency\":\"USD\",\"price\":([0-9]*\\.?[0-9]+)");
+//        Pattern pricePattern = Pattern.compile("<span itemprop=\"price\" data-seo-id=\"hero-price\" data-fs-element=\"price\" aria-hidden=\"false\">(Now )?\\$((\\d{1,3},)*\\d{1,3}\\.\\d{2})</span>");
+//        Pattern pricePattern = Pattern.compile("<span itemprop=\"price\" data-seo-id=\"hero-price\" data-fs-element=\"price\" aria-hidden=\"false\">(Now )?\\$\\s*((\\d{1,3},)*\\d{1,3})\\s*(\\.\\d{2})?</span>");
+        Pattern pricePattern = Pattern.compile("<span class=\"w_iUH7\">\\s+current price \\$((\\d{1,3},)*\\d{1,3}\\.\\d{2})\\s+</span>");
         Matcher priceMatcher = pricePattern.matcher(itemPageContent);
+        System.out.println("-------------------------" + priceMatcher.group(1));
         if (priceMatcher.find()) {
             return priceMatcher.group(1).replace(",", "");
         } else {
