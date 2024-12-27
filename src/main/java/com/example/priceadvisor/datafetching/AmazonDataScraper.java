@@ -36,21 +36,24 @@ public class AmazonDataScraper extends CompetitorWebsiteDataScraper {
             String searchPageContent = getPageContentAsString(webClient, searchUrl);
             logger.info("Amazon search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
 
-            String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
-            logger.info("Amazon item page URL for {}, URL: {}", item.getName(), itemUrl);
+            if (searchPageContent != null) {
+                String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
+                logger.info("Amazon item page URL for {}, URL: {}", item.getName(), itemUrl);
 
-            if (itemUrl != null) {
-                String itemPageContent = getPageContentAsString(webClient, itemUrl);
-                logger.info("Amazon item page content for {}, Item page content: {}", item.getName(), itemPageContent);
+                if (itemUrl != null) {
+                    String itemPageContent = getPageContentAsString(webClient, itemUrl);
+                    logger.info("Amazon item page content for {}, Item page content: {}", item.getName(), itemPageContent);
 
-                String price = scrapePriceFromItemPage(itemPageContent);
-                logger.info("Amazon price for {}, Price: {}", item.getName(), price);
+                    if (itemPageContent != null) {
+                        String price = scrapePriceFromItemPage(itemPageContent);
+                        logger.info("Amazon price for {}, Price: {}", item.getName(), price);
 
-                if (price != null) {
-                    return new BigDecimal(price);
+                        if (price != null) {
+                            return new BigDecimal(price);
+                        }
+                    }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
