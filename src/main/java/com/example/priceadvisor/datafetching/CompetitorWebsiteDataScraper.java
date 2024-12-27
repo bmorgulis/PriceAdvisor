@@ -1,7 +1,6 @@
 package com.example.priceadvisor.datafetching;
 
 import com.example.priceadvisor.entity.Item;
-import org.htmlunit.BrowserVersion;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.HtmlPage;
 import org.jsoup.Jsoup;
@@ -22,8 +21,7 @@ public abstract class CompetitorWebsiteDataScraper extends CompetitorWebsiteData
     }
 
     public WebClient createWebClient() {
-        WebClient webClient = new WebClient(BrowserVersion.CHROME);
-        webClient.addRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+        WebClient webClient = new WebClient();
         webClient.getOptions().setThrowExceptionOnScriptError(false);
         webClient.getOptions().setJavaScriptEnabled(false);
         webClient.getOptions().setCssEnabled(false);
