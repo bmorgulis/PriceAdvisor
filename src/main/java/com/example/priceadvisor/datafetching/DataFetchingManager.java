@@ -24,8 +24,6 @@ public class DataFetchingManager {
     private final ItemService itemService;
     private final List<CompetitorWebsiteDataFetcher> fetchers;
 
-    private CountDownLatch latch;
-
     @Autowired
     public DataFetchingManager(ItemService itemService,
                                AmazonDataScraper amazonDataScraper,
@@ -84,7 +82,6 @@ public class DataFetchingManager {
                     processBatch(batch);
                 }
 
-                waitForFetchingToComplete();
             } finally {
                 isFetchingInProgress.set(false);
             }
@@ -93,8 +90,7 @@ public class DataFetchingManager {
 
     private void processBatch(List<Item> batch) {
         Set<Item> itemsToSave = new CopyOnWriteArraySet<>();
-
-        latch = new CountDownLatch(batch.size() * fetchers.size());
+        CountDownLatch latch = new CountDownLatch(batch.size() * fetchers.size());
 
         for (Item item : batch) {
             for (CompetitorWebsiteDataFetcher fetcher : fetchers) {
@@ -102,12 +98,12 @@ public class DataFetchingManager {
                     try {
                         boolean priceUpdated = fetcher.fetchAndSaveCompetitorData(item);
                         if (priceUpdated) {
-                            itemsToSave.add(item); // No need for explicit synchronization
+                            itemsToSave.add(item);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
-                        latch.countDown(); // Decrement the latch count when a task completes
+                        latch.countDown();
                     }
                 });
             }
@@ -169,14 +165,5 @@ public class DataFetchingManager {
             batches.add(items.subList(i, Math.min(i + batchSize, items.size())));
         }
         return batches;
-    }
-
-    private void waitForFetchingToComplete() {
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            e.printStackTrace();
-        }
     }
 }

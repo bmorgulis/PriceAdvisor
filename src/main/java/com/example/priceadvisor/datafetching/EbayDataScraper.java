@@ -30,9 +30,9 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
             logger.info("Scraping Ebay price for {}", item.getName());
 
             String searchUrl = buildSearchUrl(item);
-            logger.info("Ebay search URL for {}, URL: {}", item.getName(), searchUrl);
+            logger.info("Ebay search page URL for {}, URL: {}", item.getName(), searchUrl);
 
-            String searchPageContent = getPageContentAsString(webClient, searchUrl);
+            String searchPageContent = getPageContentAsStringHtmlUnit(webClient, searchUrl);
             logger.info("Ebay search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
 
             if (searchPageContent != null) {
@@ -40,7 +40,7 @@ public class EbayDataScraper extends CompetitorWebsiteDataScraper {
                 logger.info("Ebay item page URL for {}, URL: {}", item.getName(), itemUrl);
 
                 if (itemUrl != null) {
-                    String itemPageContent = getPageContentAsString(webClient, itemUrl);
+                    String itemPageContent = getPageContentAsStringHtmlUnit(webClient, itemUrl);
                     logger.info("Ebay item page content for {}, Item page content: {}", item.getName(), itemPageContent);
 
                     if (itemPageContent != null) {

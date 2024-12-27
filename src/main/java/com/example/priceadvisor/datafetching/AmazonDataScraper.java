@@ -27,13 +27,12 @@ public class AmazonDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
         try (WebClient webClient = createWebClient()) {
-
             logger.info("Scraping Amazon price for {}", item.getName());
 
             String searchUrl = buildSearchUrl(item);
-            logger.info("Amazon search URL for {}, URL: {}", item.getName(), searchUrl);
+            logger.info("Amazon search page URL for {}, URL: {}", item.getName(), searchUrl);
 
-            String searchPageContent = getPageContentAsString(webClient, searchUrl);
+            String searchPageContent = getPageContentAsStringHtmlUnit(webClient, searchUrl);
             logger.info("Amazon search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
 
             if (searchPageContent != null) {
@@ -41,7 +40,7 @@ public class AmazonDataScraper extends CompetitorWebsiteDataScraper {
                 logger.info("Amazon item page URL for {}, URL: {}", item.getName(), itemUrl);
 
                 if (itemUrl != null) {
-                    String itemPageContent = getPageContentAsString(webClient, itemUrl);
+                    String itemPageContent = getPageContentAsStringHtmlUnit(webClient, itemUrl);
                     logger.info("Amazon item page content for {}, Item page content: {}", item.getName(), itemPageContent);
 
                     if (itemPageContent != null) {
