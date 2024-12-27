@@ -27,25 +27,32 @@ public class AmazonDataScraper extends CompetitorWebsiteDataScraper {
     @Override
     public BigDecimal scrapeCompetitorPrice(Item item) {
         try (WebClient webClient = createWebClient()) {
-
             logger.info("Scraping Amazon price for {}", item.getName());
-            String searchUrl = buildSearchUrl(item);
-            logger.info("Amazon search URL for {}, URL: {}", item.getName(), searchUrl);
-            String searchPageContent = getPageContentAsString(webClient, searchUrl);
-            logger.info("Amazon search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
-            String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
-            logger.info("Amazon item page URL for {}, URL: {}", item.getName(), itemUrl);
 
-            if (itemUrl != null) {
-                String itemPageContent = getPageContentAsString(webClient, itemUrl);
-                logger.info("Amazon item page content for {}, Item page content: {}", item.getName(), itemPageContent);
-                String price = scrapePriceFromItemPage(itemPageContent);
-                logger.info("Amazon price for {}, Price: {}", item.getName(), price);
-                if (price != null) {
-                    return new BigDecimal(price);
+            String searchUrl = buildSearchUrl(item);
+            logger.info("Amazon search page URL for {}, URL: {}", item.getName(), searchUrl);
+
+            String searchPageContent = getPageContentAsStringHtmlUnit(webClient, searchUrl);
+            logger.info("Amazon search page content for {}, URL: {}, Content: {}", item.getName(), searchUrl, searchPageContent);
+
+            if (searchPageContent != null) {
+                String itemUrl = scrapeItemPageUrlFromSearchPage(searchPageContent);
+                logger.info("Amazon item page URL for {}, URL: {}", item.getName(), itemUrl);
+
+                if (itemUrl != null) {
+                    String itemPageContent = getPageContentAsStringHtmlUnit(webClient, itemUrl);
+                    logger.info("Amazon item page content for {}, Item page content: {}", item.getName(), itemPageContent);
+
+                    if (itemPageContent != null) {
+                        String price = scrapePriceFromItemPage(itemPageContent);
+                        logger.info("Amazon price for {}, Price: {}", item.getName(), price);
+
+                        if (price != null) {
+                            return new BigDecimal(price);
+                        }
+                    }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,8 +72,7 @@ public class AmazonDataScraper extends CompetitorWebsiteDataScraper {
         Matcher itemMatcher = itemPattern.matcher(pageContent);
 
         if (itemMatcher.find()) {
-            String baseUrl = "https://www.amazon.com";
-            return baseUrl + itemMatcher.group(1);
+            return "https://www.amazon.com" + itemMatcher.group(1);
         }
         logger.warn("No item URL found in search page content");
         return null;

@@ -26,9 +26,8 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
     implementation 'software.amazon.awssdk:sns:2.20.10'
     implementation 'software.amazon.awssdk:auth:2.20.10'
-    implementation 'org.apache.poi:poi:5.2.3'
-    implementation 'org.apache.poi:poi-ooxml:5.2.3'
-    implementation 'org.apache.poi:poi-ooxml-schemas:4.1.2'
+    implementation 'org.jsoup:jsoup:1.15.3'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
 }
