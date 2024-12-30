@@ -27,6 +27,10 @@ dependencies {
     implementation 'software.amazon.awssdk:sns:2.20.10'
     implementation 'software.amazon.awssdk:auth:2.20.10'
     implementation 'org.jsoup:jsoup:1.15.3'
+    implementation 'software.amazon.awssdk:rds:2.20.10'
+
+
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
