@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RDS Instance Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        button {
+            margin: 10px 5px;
+            padding: 10px;
+        }
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        const baseUrl = "http://localhost:8080/rds";  // Adjust this URL if necessary
+
+        async function fetchStatus() {
+            const statusElement = document.getElementById("status");
+            statusElement.innerText = "Checking status...";
+
+            try {
+                const response = await fetch(`${baseUrl}/status/priceadvisordb`);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+                const status = await response.text();
+                statusElement.innerText = `Status: ${status}`;
+            } catch (error) {
+                statusElement.innerText = "Failed to fetch status.";
+                console.error("Error fetching status:", error);
+            }
+        }
+
+        async function startInstance() {
+            const statusElement = document.getElementById("status");
+            statusElement.innerText = "Starting instance...";
+
+            try {
+                const response = await fetch(`${baseUrl}/start/priceadvisordb`, { method: 'POST' });
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+                alert('Instance is starting...');
+                fetchStatus(); // Refresh the status after starting
+            } catch (error) {
+                statusElement.innerText = "Failed to start instance.";
+                console.error("Error starting instance:", error);
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Check and Start RDS Instance</h1>
+<button onclick="fetchStatus()">Check Status</button>
+<!-- The start button is always visible -->
+<button onclick="startInstance()">Start Instance</button>
+<p id="status">Status: N/A</p>
+<button onclick="window.location.href='settings'">Back to Settings</button>
+</body>
+</html>

@@ -1,81 +1,101 @@
 /* This CSS file contains the core styling that applies across the entire website. */
 * {
-	font-family: Helvetica, serif;
+    font-family: Helvetica, serif;
 }
-body{
-	padding-top: 56px;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
+
+body {
+    padding-top: 56px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
+
 .header {
-	text-align: center;
-	font-size: 35px;
+    text-align: center;
+    font-size: 35px;
 }
+
 .button {
-	background-color: #761EE8;
-	color:white !important;
-	border-color: #761EE8;
-	box-shadow: none;
-	font-size: 18px;
-	border-radius: 25px;
+    background-color: #761EE8;
+    color: white !important;
+    border-color: #761EE8;
+    box-shadow: none;
+    font-size: 18px;
+    border-radius: 25px;
 }
+
 .button:hover {
-	background-color: white;
-	color:#761EE8 !important;
-	border-color: white;
-	border-radius: 25px;
-	font-size: 18px;
+    background-color: white;
+    color: #761EE8 !important;
+    border-color: white;
+    border-radius: 25px;
+    font-size: 18px;
 }
+
 .btn {
-	align-self: flex-start;
-	border-radius: 25px;
-	font-size: 18px;
+    align-self: flex-start;
+    border-radius: 25px;
+    font-size: 18px;
 }
+
 .btn:hover {
-	align-self: flex-start;
-	border-radius: 25px;
-	font-size: 18px;
+    align-self: flex-start;
+    border-radius: 25px;
+    font-size: 18px;
 }
+
 #site-title {
-	font-size: 110px;
-	font-variant: small-caps;
-	color: #761EE8;
+    font-size: 110px;
+    font-variant: small-caps;
+    color: #761EE8;
 }
-#slogan
-{
-	font-family: Comic Sans MS, serif;
-	font-size: 50px;
-	padding-top: 30px;
+
+#slogan {
+    font-family: Comic Sans MS, serif;
+    font-size: 50px;
+    padding-top: 30px;
 }
+
 .logo, .logo:hover {
-	font-variant: small-caps;
-	border-radius: 15px;
+    font-variant: small-caps;
+    border-radius: 15px;
 }
+
 .navbar {
-	background-color: #F0F6FA !important;
-	font-size: 20px !important;
+    background-color: #F0F6FA !important;
+    font-size: 20px !important;
 }
-.navbar-nav a{
-  color: #761EE8 !important;
+
+.navbar-nav a {
+    color: #761EE8 !important;
 }
+
 .navbar-nav .active {
-  color: #B187E8 !important;
+    color: #B187E8 !important;
 }
-.navbar-nav a:hover{
-	color: #B187E8 !important;
+
+.navbar-nav a:hover {
+    color: #B187E8 !important;
 }
+
 footer {
-	background-color: #F0F6FA;
-	padding: 30px 15px 15px 50px;
-	color: #761EE8;
-	font-size: 14px;
-	margin-top: auto;
+    background-color: #F0F6FA;
+    padding: 30px 15px 15px 50px;
+    color: #761EE8;
+    font-size: 14px;
+    margin-top: auto;
 }
+
 #terms-of-use-footer {
-	font-size: 17px;
-	text-decoration: none;
-	color: inherit;
+    font-size: 17px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.terms-of-use-footer {
+    font-size: 17px;
+    text-decoration: none;
+    color: inherit;
 }
 
 

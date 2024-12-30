@@ -218,4 +218,8 @@ public class Controllers {
             return "redirect:/compare-prices";
         }
     }
+    @GetMapping("/rds-status")
+    public String rdsStatus() {
+        return "rds-status";
+    }
 }
