@@ -11,8 +11,7 @@ public class RdsService {
     @Value("${spring.datasource.url}")
     private String datasourceUrl;
 
-    @Value("${aws.region:us-east-1}")
-    private String region;
+    private String region = "us-east-1";
 
     private final RdsClient rdsClient;
     private final String dbInstanceIdentifier;
