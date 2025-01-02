@@ -4,9 +4,9 @@ Requires Java 17, not Java 23 to be compatible with Gradle 8.11.1
 
 Price Advisor is a web-based application that recommends prices based on user's current prices.
 
-Runs from an IDE. Click on the link in the console. Runs on PORT 8080
+Runs from an IDE. Click on the link in the console. Runs on PORT 8080.
 
 Future updates intend to fix up Users to make a profitable access model.
 
-Created by Binyomin Zev Morgulis and Avrumi Edelstein and Zerach Berman
+Created by Binyomin Zev Morgulis, Avrumi Edelstein and Zerach Berman
 
