@@ -44,7 +44,7 @@ public class RdsService {
 
     private String getRdsInstanceIdentifier(String datasourceUrl) {
         if (datasourceUrl != null && datasourceUrl.contains("//")) {
-            String part = datasourceUrl.split("//")[1].split("\\.")[0];
+            String part = datasourceUrl.split("//")[1].split("\\.")[0]; // Extract the first part of the URL as the instance identifier gets part after // and before .
             return part;
         } else {
             throw new IllegalStateException("Datasource URL is not properly configured.");
